@@ -1,0 +1,54 @@
+
+PyWeek Project Outline for Team Trailblazer
+
+
+* move around the level
+  - load from pgu
+  - player should be able to move around freely
+  - course grained coordinates / collisions
+
+* calorie system
+  - food 
+  - calories affect counters
+  - change body type
+
+* simple physics
+  - gravity
+  - jumping or flying
+  - fine grained coordinates
+  - collision detection
+
+* world objects
+  - doors
+  - ladders
+  - springs? (like pinball?)
+  - seesaws?
+  - boulders?
+
+* sloped terrain
+  - N tutorials
+
+* scrolling / big rooms
+  -
+
+* sound effects and music
+  -
+
+* animation
+  - walking, climbing, etc
+
+* scoring system
+  - high score list?
+
+* enemies
+  - racing?
+  - joust for air battle
+  - sumo for fat battle ? 
+
+* marketing
+  - game name 
+  - game logo
+
+* loading/saving game
+  - pickle?
+
