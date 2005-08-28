@@ -13,6 +13,10 @@ PyWeek Project Outline for Team Trailblazer
   - change body type
 
 * simple physics
+"""Adam: I'm going to start the physics engine using pyODE 
+if nobody has any objections. I'm also going to have a 
+module that can import different physics for each level
+from a pickle"""
   - gravity
   - jumping or flying
   - fine grained coordinates
