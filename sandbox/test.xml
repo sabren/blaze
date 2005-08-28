@@ -1,0 +1,86 @@
+<?xml version="1.0" standalone="yes"?>
+
+<!--
+Contemplate making support for multiple MoveableInterfaces.
+
+CURRENTLY THERE SHOULD BE *ONLY ONE* OF ANY INTERFACE TYPE WITHIN A GAMEOBJECT!
+
+-->
+
+<!-- Here's the file defining the missile truck -->
+<GameObject Name="Mobile Missile Launcher" Shorthand="missiletruck" Destructable="True" Life="100" Armor="100" LifeRegenRate="1" NumInterfaces="3">
+
+    <MoveableInterface><!-- asd -->
+        <Terrain Type="LAND" Speed="10" />
+    </MoveableInterface>
+
+    <SpawnerInterface>
+        <Spawn Unit="hmissile" CoolDown="0" />
+    </SpawnerInterface>
+
+    <CombatInterface NumWeapons="1">
+        <Weapon Range="30" TargetTerrain="LAND" Action="SPAWN hmissile" Rate="1" />
+    </CombatInterface>
+
+</GameObject>
+
+<!-- Here's the file defining the homing missile -->
+<GameObject Name="Homing Missile" Shorthand="hmissile" Destructable="False" Life="5" LifeRegenRate="-1" NumInterfaces="0">
+<!--    <TrackingInterface OnCollide="SUICIDE" />
+    <DestroyInterface DamageRadius="5" Damage="100" DamageFalloff="True" /> -->
+</GameObject>
+
+
+
+<!-- User interface examples
+
+user interface idea is still uber-beta and shit, aight. panels and shit (i.e. <Panel Name="waffles">) might be thought up l8r g8r LOLOL.
+...
+
+
+Buttons are added from left to right, top to bottom
+i.e. | M | A | S | G |
+     | P |
+
+<GameObject Name="Simple Construction Unit" Shorthand="conunit" Destructable="True" Life="50" Armor="25" LifeRegenRate="1" NumInterfaces="">
+    <MoveableInterface>
+        <Terrain Type="LAND" Speed="10" />
+    </MoveableInterface>
+
+    <UserInterface Name="SimpleConstructionUnit">
+        <Button Icon="move" Hotkey="M" Text="Move" />
+        <Button Icon="attack" Hotkey="A" Text="Attack" />
+        <Button Icon="stop" Hotkey="S" Text="Stop" />
+        <Button Icon="guard" Hotkey="G" Text="Guard" />
+        <Button Icon="patrol" Hotkey="P" Text="Patrol" />
+    </UserInterface>
+</GameObject>
+
+<UserInterface Name="TypicalUnit">
+    <Button Icon="move" Hotkey="M" Text="Move" Action="" />
+    <Button Icon="attack" Hotkey="A" Text="Attack" />
+    <Button Icon="stop" Hotkey="S" Text="Stop" />
+    <Button Icon="guard" Hotkey="G" Text="Guard" />
+    <Button Icon="patrol" Hotkey="P" Text="Patrol" />
+</UserInterface>
+
+<UserInterface Template="TypicalUnit" />
+
+-->
+
+
+
+
+
+<!-- Another idea (by ra):
+
+<GameObject Name="HomingMissileLauncherTruckThing" Destructable="True" Life="100" Armor="100" LifeRegenRate="1" NumInterfaces="5">
+    <Interface Type="Moveable" Speed="10" TerrainType="LAND|AIR" />
+    <Interface Type="Spawner">
+        <Spawn Unit="HomingMissile" Time="10" />
+        <Spawn Unit="SomeOtherProjectile" Time="5" />
+    </Interface>
+    <Interface Type="Combat" Range="30" Target="LAND|AIR" AttackAction="SPAWN HomingMissile" Rate="2" />
+</GameObject>
+
+-->
