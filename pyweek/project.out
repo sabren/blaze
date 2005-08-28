@@ -1,11 +1,11 @@
-
+2
 PyWeek Project Outline for Team Trailblazer
 
 
 * move around the level
   - load from pgu
   - player should be able to move around freely
-  - coarse grained coordinates / collisions
+  - coarse-grained coordinates / collisions
 
 * calorie system
   - food 
