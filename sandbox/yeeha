@@ -1,1 +1,210 @@
 hehehe I figured it out, I can operate cvs!!
+have a log...
+(01:05:47) sabren: do you have cvs set up?
+(01:06:06) zatao_os: nope
+(01:06:07) zatao_os: oops
+(01:06:08) zatao_os: sorry
+(01:06:10) zatao_os: link?
+(01:06:16) sabren: cvshome.org
+(01:06:19) sabren: but
+(01:06:23) sabren: if you're on windows
+(01:06:29) sabren: http://blazeofglory.org/tools/
+(01:06:34) sabren: i put the command line version up there
+(01:07:18) pyTM30: hey have I missed anything?
+(01:07:33) zatao_os: nope
+(01:07:41) zatao_os: what args should i pass it?
+(01:07:44) pyTM30: good
+(01:07:59) sabren: one sec, I'm still setting up names
+(01:08:13) sabren: i'll just go with micah's convention of first names
+(01:08:26) sabren: except we have two lukes, so you're lukem :)
+(01:08:35) zatao_os: aww
+(01:08:38) zatao_os: wait
+(01:08:40) zatao_os: i'm not miller
+(01:08:40) zatao_os: haha
+(01:08:42) zatao_os: i'm paireepinart
+(01:08:56) sabren: ok fine you can be lukep :)
+(01:09:06) zatao_os: or you can use my first name if you want
+(01:09:26) sabren: how bout just luke .. first come first serve :)
+(01:10:33) zatao_os: okay
+(01:10:53) zatao_os: so power is the theme...
+(01:11:04) zatao_os: i got cvs what should i do with it
+(01:11:37) sabren: cvs -d:pserver:USER@blaze.versionhost.com:/cvs/blaze
+login
+(01:11:49) sabren: where USER is luke or adam
+(01:11:54) sabren: one sec on the passwords
+(01:12:14) pyTM30: ok
+(01:13:00) sabren: you probably want to create a working directory
+(01:13:11) sabren: we'll have at least two modules: trailblazer and the game
+(01:13:22) sabren: (so each will have its own directory)
+(01:14:40) sabren: https://blaze.versionhost.com/viewcvs.cgi/
+(01:14:51) sabren: will be the link for the cvs browser on the web
+(01:17:05) sabren: I just moved trailblazer in there
+(01:17:25) sabren: so you can do    cvs
+-d:pserver:USER@blaze.versionhost.com/cvs/blaze co trailblazer
+(01:18:13) pyTM30: hey whaddya know it works
+(01:18:49) pyTM30: :-D
+(01:19:52) pyTM30: ok so what do we do now?
+(01:20:31) zatao_os: yeah
+(01:20:35) zatao_os: what do we do now
+(01:21:52) sabren: ok and I created another one called pyweek
+(01:22:37) sabren: and another one called sandbox, which is so you guys can
+play around with cvs or post whatever
+(01:23:31) sabren: i added a list of topics in pyweek called projects.out
+... just a very rough outline of the features
+(01:24:18) sabren: the basic commands are:   cvs up     # get changes, show
+what's been modified
+(01:24:39) sabren: cvs diff [filename] # show changes you've made to the
+repository
+(01:24:44) sabren: cvs add [filename] # add a file
+(01:24:55) sabren: cvs ci -m"message" [filename] # check in your changes
+(01:24:58) sabren: that's really all you need to know
+(01:25:35) sabren: there's a good tutorial here if you want more:
+(01:25:35) sabren:
+http://cvsbook.red-bean.com/cvsbook.html#A%20Day%20With%20CVS
+(01:25:49) zatao_os: i cant get it to work...
+(01:26:01) zatao_os: am i supposed to quote it? or just type blaze co
+trailblazer?
+(01:26:20) sabren: cvs -d:pserver:USER@blaze.versionhost.com/cvs/blaze co
+trailblazer
+(01:26:26) sabren: the whole thing
+(01:26:34) zatao_os: i see the problem
+(01:26:37) zatao_os: i misspelled pserver
+(01:26:38) zatao_os: oops
+(01:26:47) sabren: once you have the working copy you don't have to type
+that crap
+(01:27:29) zatao_os: it still doesnt work
+(01:27:36) zatao_os: wait
+(01:27:45) zatao_os: yeah
+(01:27:54) zatao_os: it says bad cvsroot
+(01:28:32) sabren: can you paste the whole line you're typing
+(01:29:14) zatao_os: cvs -d:pserver:luke@blaze.versionhost.com/cvs/blaze co
+trailblazer
+(01:29:33) zatao_os: oh
+(01:29:33) zatao_os: duh
+(01:29:34) zatao_os: okay]
+(01:29:35) zatao_os: sorry
+(01:29:39) zatao_os: haha
+(01:29:43) zatao_os: i was reading the wrong one
+(01:30:05) zatao_os: hm
+(01:30:30) zatao_os: can you just message me the exact line i should use
+(01:30:48) sabren: you have it right but you're missing a : before the /cvs
+(01:30:53) sabren: ah
+(01:31:01) sabren: because I told you wrong
+(01:31:09) zatao_os: okay
+(01:31:10) zatao_os: cool
+(01:31:12) sabren: all my fault :)
+(01:31:49) eykd [n=Miranda@adsl-68-72-171-160.dsl.chcgil.ameritech.net]
+entered the room.
+(01:31:54) zatao_os: okay
+(01:32:00) zatao_os: can i just 
+(01:32:03) zatao_os: make a batch for it
+(01:32:38) eykd: Guess we've started then, eh?
+(01:32:46) sabren: you don't have to type the -d: stuff once you have the
+working copy
+(01:32:55) sabren: you just type "cvs up" or whatever
+(01:32:57) sabren: yep
+(01:34:13) zatao_os: okay
+(01:34:14) zatao_os: cool
+(01:34:17) zatao_os: so what do i need cvs for?
+(01:34:57) zatao_os: i mean
+(01:34:59) zatao_os: at the moment
+(01:35:02) zatao_os: ?
+(01:35:50) JtP [n=asdwe@c-24-99-123-97.hsd1.ga.comcast.net] entered the
+room.
+(01:36:13) zatao_os: hello peacock
+(01:38:01) JtP: hey hey
+(01:38:03) JtP: one sec
+(01:38:07) zatao_os: k
+(01:39:01) sabren: luke: what it does is it lets us all edit the files and
+make sure we don't overrite each others changes
+(01:39:11) sabren: overwrite
+(01:39:19) zatao_os: what does it do instead?
+(01:39:27) sabren: david: http://blazeofglory.org/wiki/cvshelp
+(01:39:37) sabren: okay.. check out the sandbox module and I'll show you
+(01:40:28) eykd: Whoops... need to apt-get cvs.
+(01:40:56) JtP: ok
+(01:41:05) JtP: if the main character is a bird...
+(01:41:33) JtP: that would make the majority of puzzles flight and "fit"
+puzzles
+(01:41:42) eykd: sabren: Looks like I need a password. 
+(01:41:48) sabren: yep
+(01:42:25) sabren: sent
+(01:42:40) sabren: so
+(01:42:46) sabren: okay I added an important file to sandbox.txt
+(01:42:57) sabren: change it around, save it, and type cvs up
+(01:43:20) sabren: or cvs diff
+(01:43:53) zatao_os: i dont get it
+(01:43:58) zatao_os: when i cvs 
+(01:44:00) zatao_os: it just ends
+(01:44:02) zatao_os: after i log in
+(01:44:12) sabren: yeah
+(01:44:18) sabren: login is one command
+(01:44:35) sabren: then do the same thing but change login to   "co sandbox"
+(01:44:45) sabren: for "check out sandbox"
+(01:44:55) zatao_os: i thought i didnt have to retype the d stuff?
+(01:45:11) sabren: once you do the co you don't have to retype it
+(01:45:12) sabren: sorry :)
+(01:45:20) sabren: maybe I should make a movie here..
+(01:46:25) sabren: okay. I'm going to make a movie real quick.. hang on
+(01:46:44) zatao_os: i did a co
+(01:46:46) zatao_os: then i edited it
+(01:46:54) zatao_os: then i did an "up sandbox"
+(01:47:02) zatao_os: and it said M (the file i modified)
+(01:47:05) zatao_os: but it didn't overwrite it
+(01:47:07) zatao_os: or anything
+(01:48:00) eykd: Do I need the -d:pserver:blah with every command?
+(01:48:07) zatao_os: yeah
+(01:48:09) zatao_os: ?
+(01:48:10) zatao_os: i think
+(01:48:17) zatao_os: he said after "co" you don't
+(01:48:23) zatao_os: I don't understand cvs though
+(01:48:58) pyTM30: once you get the repository you can then run the commands
+for in that folder without all the other crap
+(01:49:10) pyTM30: just cvs <command> will do
+(01:49:47) pyTM30: check it out I just worked out how to do it and have been
+spamming up the sandbox
+(01:50:13) sabren: movie coming up..
+(01:50:19) sabren: looks like you got it
+(01:51:45) eykd: Yee-haw.  This is fun.
+(01:52:39) eykd: I get it.
+(01:54:59) zatao_os: i dont get how to add files
+(01:55:24) eykd: cvs add filename
+(01:55:37) eykd: Well, you make the file first, edit  it, then run that
+command.
+(01:56:31) sabren: okay guess i'm a bit too late with the demo
+(01:56:36) eykd: :)
+(01:56:44) sabren: but one thing I wanted to do was be able to make a little
+movie of the game to post each night anyway
+(01:56:50) sabren: so i downloaded camtasia studio...
+(01:56:59) sabren: let's see if it worked:
+(01:57:01) zatao_os: is there any way i can participate without using cvs
+(01:57:26) sabren: http://blazeofglory.org/demos/cvsdemo/cvsdemo.html
+(01:57:39) sabren: you only need to use cvs if you want to program :)
+(01:59:26) eykd: Michal, this demo is awesome. :)
+(01:59:48) sabren: haha, thank camtasia
+(02:00:04) eykd: Pretty slick.
+(02:00:55) eykd: So... what's next?  Or, first, I guess?
+(02:03:13) zatao_os: ok man i'm giving up on cvs for tonight
+(02:03:21) sabren: luke: what's it doing?
+(02:03:50) sabren: or what are you trying to do?
+(02:04:43) sabren: okay, well... if the movie doesn't help, send me a
+private message and I'll help you out
+(02:04:49) sabren: I put a summary page up here:
+http://blazeofglory.org/wiki/cvshelp
+(02:04:56) sabren: so..
+(02:05:24) zatao_os: oh...
+(02:05:27) zatao_os: i think i figured it out actually
+(02:05:35) zatao_os: CI is only for already created files
+(02:05:35) sabren: cool :)
+(02:05:39) zatao_os: so you have to "add" a new file
+(02:05:39) sabren: yes
+(02:05:41) zatao_os: and "check in " a change
+(02:05:43) zatao_os: okay...
+(02:05:44) zatao_os: that was the problem
+(02:05:47) sabren: exactly
+(02:05:55) zatao_os: i was tryingto check in a new file
+(02:05:58) zatao_os: :-\
+(02:06:07) zatao_os: is there a "spam" file on there now?
+(02:06:53) sabren: yep!
+(02:06:54) sabren: https://blaze.versionhost.com/viewcvs.cgi/sandbox/
+(02:07:04) zatao_os: excellent
