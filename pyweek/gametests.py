@@ -1,7 +1,7 @@
 #!/usr/bin/python2.4
 import unittest
 from physics import *
-from loadlevel import *
+from loader import *
 
 unittest.main()
 
