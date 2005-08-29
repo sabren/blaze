@@ -1,6 +1,9 @@
 
 """
 
+LOAD LEVEL FROM SVG
+===================
+
 So, our level is defined in an svg file created in inkscape.
 No pgu.
 :()
@@ -25,6 +28,7 @@ nest, so we just need to find the right tags.
 import ode
 import unittest
 import physics
+import xml.sax
 
 
 """
@@ -39,6 +43,21 @@ etc, but we only care about a few:
 inkscape uses matrix transforms, which we will have to
 map to a rotation in pyODE...
 """
+
+
+############################################################
+##
+## GOAL: convert our svg level to a list of Rects
+## 
+############################################################
+
+
+# our scene is just a chunk of svg code.
+# we only care about the rect elements, and we're
+# assuming that we're only dealing with a single
+# layer - the that defines the blocks.
+
+# here is how inkscape saves a rotated rectangle:
 
 SCENE =\
     '''
@@ -57,12 +76,14 @@ SCENE =\
     '''
 
 
-import xml.sax
+# and here's how we want the parsing to work:
 
 class ParserTest(unittest.TestCase):
     """
     test that we can get a list
-    of rectangles from the svg file.
+    of rectangles from the svg file,
+    in this case we want the one rectangle
+    defined in the string above.
     """
 
     def test(self):
@@ -70,6 +91,7 @@ class ParserTest(unittest.TestCase):
         xml.sax.parseString(SCENE, svgh)
 
         assert type(svgh.result) is list
+        assert len(svgh.result) == 1
 
         r = svgh.result[0]
         assert isinstance(r, Rect)
@@ -85,17 +107,29 @@ class ParserTest(unittest.TestCase):
 
 
 
+# so... to make that work, we need to define an
+# object to hold our rectangle data:
 
 class Rect:
     """
-    A holder claass for our Rectangles
+    A simple data class for representing rectangles.
     """
-    def __init__(self):
-        self.x = None
-        self.y = None
-        self.width = None
-        self.height = None
-        self.transform = None
+    def __init__(self, x=0, y=0, width=0, height=0, transform=None):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.transform = transform
+
+
+# now we just loop through the tags in the SVG file
+# and build up a list of Rect objects.
+#
+# we use a sax ContentHandler for this.
+# you can use it with:
+#
+# svgh = SvgHandler() 
+# xml.sax.parseString(xml_string, svgh)
 
 
 class SvgHandler(xml.sax.ContentHandler):
@@ -110,12 +144,17 @@ class SvgHandler(xml.sax.ContentHandler):
             r = Rect()
             self.result.append(r)
 
-            for attr, value in attrs.items(): #getNames():
+            for attr, value in attrs.items():
                 if attr in ["x","y","width","height"]:
-                    setattr(r, attr, float(value)) # attrs.getValue(x)))
+                    setattr(r, attr, float(value))
                 elif attr == "transform":
-                    r.transform = parseMatrix(value) #attrs.getValue(x))
-                  
+                    r.transform = parseMatrix(value)
+
+
+
+# the only tricky part of parsing the tags is the
+# transformation attribute, which uses a matrix()
+# definition. but it's not that hard to parse:
 
 """
 here's how we break that matrix data down into a list:
@@ -128,21 +167,26 @@ def parseMatrix(s):
 
 
 
+# that's it. the test passes.
 
-class ExtrusionTest(unittest.TestCase):
+
+
+############################################################
+##
+## GOAL: convert a Rect into a Block
+## 
+############################################################
+
+"""
+Blocks are 3D representations of our rectangles
+that can be used from PyODE. They 
+"""
+
+class BlockFromRectTest(unittest.TestCase):
+
     def test(self):
-        r = Rect()
-        r.x, r.y = (0, 0) # upper left corner
-        r.width = 100
-        r.height = 10     # so lower right is (100, 10)
+        r = Rect(0, 0, width=100, height=10)
 
-
-
-        #box = extrude(Re
-        
-        #box.y = -r.y
-        #box.x = r.x
-        
 
 
 # interactive:
