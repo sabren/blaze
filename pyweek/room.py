@@ -36,13 +36,13 @@ class RoomTest(unittest.TestCase):
     """
     def test(self):
         world = Room()
-        block = world.addBlock(cx=0, cy=0, lx=5, ly=10)
+        block = world.addBlock((0, 0), lx=5, ly=10)
         assert len(world.blocks) == 1
         assert block.getLengths() == (5, 10, THICKNESS)
         
 
 
-class Room:
+class Room(object):
     """
     Our world is composed of Bodies which have
     both a Mass and Geom(etry)... They're all just
@@ -54,7 +54,7 @@ class Room:
         self.space = ode.Space()
         self.blocks = []
 
-    def addBlock(self, cx, cy, lx, ly):
+    def addBlock(self, (cx, cy), lx, ly):
         """
         add a 2d block (no rotation yet)
         """
