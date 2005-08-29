@@ -40,78 +40,6 @@ SOUND_LIST = get_sound_list()
 
 
 
-class ChannelFader:
-    """ For fading a channel in and out.
-
-        cf = ChannelFader(achannel)
-
-        # fade out to 20% volume over 2.5 seconds.
-        cf.fade_out(2.5, 0.2)
-
-        # fade in to full volume over 12.5 seconds.
-        cf.fade_out(12.5, 1.0)
-
-        # called every tick with the elapsed seconds.
-        cf.Update(0.01)
-    """
-
-    def __init__(self, channel):
-        self.channel = channel
-
-        self.seconds = 0
-        self.volume_to= 0
-        self.fade_direction = -1
-        self.last_volume = self.channel.get_volume()
-        self.elapsed_time = 0
-        self.passed_time = 0
-
-
-    def _fade(self, seconds, volume_to, direction):
-        self.seconds = seconds
-        self.volume_to= volume_to
-        self.fade_direction = direction
-        self.last_volume = self.channel.get_volume()
-        self.change_per_time = (volume_to - self.last_volume) / seconds
-
-    def fade_in(self, seconds, volume_to):
-        self._fade(seconds, volume_to, 1)
-
-
-    def fade_out(self, seconds, volume_to):
-        self._fade(seconds, volume_to, -1)
-
-    def stop_fade(self):
-        self.fade_direction = 0
-
-    def Update(self, elapsed_time):
-        """ - probably needs the real elapsed time.  not gameplay elapsed time.
-        """
-        
-        if self.fade_direction == 0:
-            return
-
-
-        # we use the stored last volume incase something else is changing
-        #  the volume.
-        new_volume = self.last_volume + (self.change_per_time * elapsed_time)
-        #print "prev new volume:%s" % new_volume
-
-      
-        if self.fade_direction == -1:
-            if new_volume < self.volume_to:
-                new_volume = self.volume_to
-                self.stop_fade()
-
-        if self.fade_direction == 1:
-            if new_volume > self.volume_to:
-                new_volume = self.volume_to
-                self.stop_fade()
-
-        # set volume.
-        self.channel.set_volume(new_volume)
-        self.last_volume = new_volume
-
-        #print "new volume:%s" % new_volume
         
 
 
@@ -124,6 +52,12 @@ class SoundManager:
         Useage:
             sm = SoundManager()
             sm.Load()
+
+            Then every loop.
+            sm.Update(elapsed_time_in_seconds)
+
+            Then to play sounds.  eg to play data/sounds/asound.ogg
+            sm.Play("asound")
     """
 
 
@@ -293,3 +227,78 @@ class SoundManager:
 
 
 
+
+
+
+class ChannelFader:
+    """ For fading a channel in and out.
+
+        cf = ChannelFader(achannel)
+
+        # fade out to 20% volume over 2.5 seconds.
+        cf.fade_out(2.5, 0.2)
+
+        # fade in to full volume over 12.5 seconds.
+        cf.fade_out(12.5, 1.0)
+
+        # called every tick with the elapsed seconds.
+        cf.Update(0.01)
+    """
+
+    def __init__(self, channel):
+        self.channel = channel
+
+        self.seconds = 0
+        self.volume_to= 0
+        self.fade_direction = -1
+        self.last_volume = self.channel.get_volume()
+        self.elapsed_time = 0
+        self.passed_time = 0
+
+
+    def _fade(self, seconds, volume_to, direction):
+        self.seconds = seconds
+        self.volume_to= volume_to
+        self.fade_direction = direction
+        self.last_volume = self.channel.get_volume()
+        self.change_per_time = (volume_to - self.last_volume) / seconds
+
+    def fade_in(self, seconds, volume_to):
+        self._fade(seconds, volume_to, 1)
+
+
+    def fade_out(self, seconds, volume_to):
+        self._fade(seconds, volume_to, -1)
+
+    def stop_fade(self):
+        self.fade_direction = 0
+
+    def Update(self, elapsed_time):
+        """ - probably needs the real elapsed time.  not gameplay elapsed time.
+        """
+        
+        if self.fade_direction == 0:
+            return
+
+
+        # we use the stored last volume incase something else is changing
+        #  the volume.
+        new_volume = self.last_volume + (self.change_per_time * elapsed_time)
+        #print "prev new volume:%s" % new_volume
+
+      
+        if self.fade_direction == -1:
+            if new_volume < self.volume_to:
+                new_volume = self.volume_to
+                self.stop_fade()
+
+        if self.fade_direction == 1:
+            if new_volume > self.volume_to:
+                new_volume = self.volume_to
+                self.stop_fade()
+
+        # set volume.
+        self.channel.set_volume(new_volume)
+        self.last_volume = new_volume
+
+        #print "new volume:%s" % new_volume
