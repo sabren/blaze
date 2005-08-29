@@ -1,12 +1,14 @@
+"""
+load rooms from svg description
+
+usage: loader.roomFromFile(f)
+"""
+
+##################################################
 
 """
 
-LOAD LEVEL FROM SVG
-===================
-
-So, our level is defined in an svg file created in inkscape.
-No pgu.
-:()
+So. Our level is defined in an svg file created in inkscape.
 
 From a physics standpoint, our world is composed of:
 
@@ -25,6 +27,7 @@ simplifies our xml parser considerably: the parts will never
 nest, so we just need to find the right tags.
 
 """
+
 import ode
 import unittest
 import physics
@@ -121,6 +124,11 @@ class Rect:
         self.height = height
         self.transform = transform
 
+    # we will need this later:
+    def getCenter(self):
+        return ((self.width / 2.0 + self.x),
+                (self.height / 2.0 + self.y))
+
 
 # now we just loop through the tags in the SVG file
 # and build up a list of Rect objects.
@@ -173,54 +181,205 @@ def parseMatrix(s):
 
 ############################################################
 ##
-## GOAL: convert a Rect into a Block
+## GOAL: RoomLoader : convert list of Rects into a Room
 ## 
 ############################################################
 
 """
-Blocks are 3D representations of our rectangles
-that can be used from PyODE. They 
+Rooms contain our 3D geometry, which is really
+just 2D geometry with a uniform depth to make
+pyODE happy.
+
+Room already has an .addBlock(cx, cy, lx, ly)
+but svg gives us: x, y, w, h, and transform.
+
+Room.addBlock(...) actually makes the ode.GeomBoxes,
+so we only have two jobs:
+
+   - calculate the center of the rect (cx, cy)
+
+   - apply the matrix transformation
+
+
+Calculating the center is easy. We know the width
+and height so we just divide by half and add that
+to the upper left corner. The code is already
+back up there in Rect.getCenter()
+
+We didn't test it yet, though, so:
 """
 
-class BlockFromRectTest(unittest.TestCase):
-
+class RectCenterTest(unittest.TestCase):
     def test(self):
-        r = Rect(0, 0, width=100, height=10)
+        r = Rect(0, 10, width=100, height=9)
+        self.assertEquals((50, 14.5), r.getCenter())
 
 
+"""
+That gives us cx and cy. Then lx and ly are
+just ODE words for width and height, so calling
+Room.addBlock(cx, cy, lx, ly) is trivial.
 
-# interactive:
-# http://www.rfbarrow.btinternet.co.uk/htmasa2/Matrix2D1.htm
+We also need to do this matrix transformation, though
+and while the code for that is also simple, it has a
+little bit more conceptual overhead.
+"""
 
 
-# why there are six elements when ode wants 3x3:
+## Transformation Matrices #################################
+
+# reference:
 # http://www.w3.org/TR/SVG11/coords.html#TransformMatrixDefined
 
+"""
 
-#matrix( 0.854241,  # a / cos(a)
-#        0.519878,  # b / sin(a)
-#        -0.519878, # c / -sin(a)
-#        0.854241,  # d / cos(a)
-#        0.000000,  # e 0
-#        0.000000)  # f 0
+ODE needs a 3x3 transformation matrix, like this:
 
-# "rotation about the origin is equivlanet to:
-# [cos(a) sin(a) -sin(a) cos(a) 0 0]"
+    | a c e |
+    | b d f |
+    | 0 0 1 |
 
-
-# Mathematically, all transformations can be represented as 3x3
-# transformation matrices of the following form:
-
-# | a c e |
-# | b d f |
-# | 0 0 1 |
+That's a 3D transformation matrix. How they work is way
+over my head, but luckily ODE handles it all for us.
+However, there is a small problem: SVG is all 2D, which
+works out so that the bottom row is always 0 0 1 . Since
+these values are constant, svg's matrix operator doesn't
+include them. Instead, of nine values, we get six, like so:
 
 
-# so this maps cleanly to pyODE:
-#
-# http://ode.org/ode-latest-userguide.html#sec_10_6_2
-# http://pyode.sourceforge.net/api/public/ode.GeomObject-class.html#setRotation
-#
+  matrix( 0.854241,  # a =  cos(r)
+          0.519878,  # b =  sin(r)
+         -0.519878,  # c = -sin(r)
+          0.854241,  # d =  cos(r)
+          0.000000,  # e 
+          0.000000)  # f
+
+          # where r is the angle of rotation
+
+
+So we need to fill in the missing (0 0 1) and
+put them in the right order for pyODE.
+
+"""
+
+from room import Room
+
+# Applying this matrix should do
+# nothing, so it's the identity
+# matrix. 
+IDENTITY3D = [1.0, 0.0, 0.0,  # a b 0
+              0.0, 1.0, 0.0,  # c d 0
+              0.0, 0.0, 1.0]  # e f 1
+
+IDENTITY2D = [1.0, 0.0,       # a b
+              0.0, 1.0,       # c d
+              0.0, 0.0]       # e f
+
+
+
+# Note, I am not 100% sure that these orderings are
+# correct: you could serialize a matrix by doing the
+# columns then the rows, or by doing the rows and then
+# the columns. I know I have the 2D stuff correct
+# because it's explained clearly on thw w3.org page
+# that I linked above.
+
+# the question is which order pyODE takes. I was not
+# able to find this in the documentation. However,
+# if you look at testRotation below, it *seems* to
+# show that the numbers are in the correct places
+# given the pattern above.
+
+# basically, this implementation is an educated guess.
+
+class RoomFromRectsTest(unittest.TestCase):
+
+    def testPlain(self):
+        """
+        if we don't pass in a transformation, we
+        should just get back the identity matrix
+        (it's of course the default for ode.Geom)
+        """
+        rm = roomFromRects([Rect(0, 0, width=100, height=10,)])
+        self.assertEquals(IDENTITY3D, rm.blocks[0].getRotation())
+
+    def testIdentity(self):
+        """
+        if we pass in a 2D version of the
+        identity matrix then we should
+        still get the 3D one back
+        """
+        rm = roomFromRects([Rect(0, 0, width=100, height=10,
+                                 transform=IDENTITY2D)])
+        self.assertEquals(IDENTITY3D, rm.blocks[0].getRotation())
+
+
+    def testRotation(self):
+        """
+        if we pass in a real matrix, then it
+        should give us the 3D matrix.
+        """
+        import math
+        a =  math.cos(math.pi)
+        b =  math.sin(math.pi)
+        c = -math.sin(math.pi)
+        d =  math.cos(math.pi)
+        e =  0
+        f =  0
+        rm = roomFromRects([Rect(0, 0, width=100, height=10,
+                                 transform=[a,b,c,d,e,f])])
+        self.assertEquals(
+            [a, b, 0,
+             c, d, 0,
+             e, f, 1],
+            rm.blocks[0].getRotation())
+        
+        
+
+def roomFromRects(rects):
+    """
+    here's where we actually do the work.
+    """
+    rm = Room()
+    for r in rects:
+        block = rm.addBlock(r.getCenter(), r.width, r.height)
+
+        if r.transform:
+            a, b, c, d, e, f = r.transform
+            block.setRotation((a,b,0,c,d,0,e,f,1))
+    return rm
+            
+
+
+# with that, the tests pass... so the evidence supports
+# this implementation, but i don't feel like i've quite
+# proved it beyond a shadow of a doubt.
+
+# but, there's nothing more to do until someone finds a
+# counterexample, so, I'll tentatively mark this complete.
+
+# so... onto something easy. :)
+
+############################################################
+##
+## GOAL: utility script to make it easy to load a room.
+## 
+############################################################
+
+# helper routines:
+
+def rectsFromFile(f):
+    svg = SvgHandler()
+    xml.sax.parse(f, svg)
+    return svg.result
+
+def roomFromFile(f):
+    """
+    most likely, this is the one you want to call.
+    """
+    return roomFromRects(rectsFromFile(f))
+
+
  
 if __name__=="__main__":
     unittest.main()    
