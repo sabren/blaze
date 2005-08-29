@@ -7,7 +7,6 @@ What should be done:
 """
 import unittest
 import pygame
-import os
 
 
 class ImageManager:
@@ -95,7 +94,7 @@ class DisplayTest(unittest.TestCase):
         pass
 
     def test(self):
-        display = Display ((640, 480), "Waffles!")
+        display = Display ((640, 480), "T-Rex and the Waffle House")
 
         imanager = ImageManager (display.buffer)
 
