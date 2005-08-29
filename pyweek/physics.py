@@ -49,8 +49,6 @@ class GravityTest(unittest.TestCase):
         assert obj.getPosition() != (1,2,0), \
                "the object should have fallen."
 
-        #print sphere.getPosition()
-
   
 
 """
@@ -99,13 +97,16 @@ THICKNESS = 1 # arbitrary depth for all our blocks
 
 class BlockWorldTest(unittest.TestCase):
     """
-    add a 2d block to our world
+    add a 2d block to our world.
+
+    we pass it the center and length
     """
     def test(self):
         world = BlockWorld()
-        block = world.addBlock(x=0, y=5, w=10, h=15)
+        block = world.addBlock(cx=0, cy=0, lx=5, ly=10)
         assert len(world.blocks) == 1
-
+        assert block.getLengths() == (5, 10, THICKNESS)
+        
 
 
 class BlockWorld:
@@ -120,15 +121,12 @@ class BlockWorld:
         self.space = ode.Space()
         self.blocks = []
 
-    def addBlock(self, x, y, w, h):
+    def addBlock(self, cx, cy, lx, ly):
         """
         add a 2d block (no rotation yet)
         """
-        lx = w
-        ly = h
-        lz = THICKNESS
         body = ode.Body(self.world)
-        geom = ode.GeomBox(self.space, [lx, ly, lz])
+        geom = ode.GeomBox(self.space, [lx, ly, THICKNESS])
         geom.setBody(body)
 
         self.blocks.append(geom) # body?
@@ -136,9 +134,19 @@ class BlockWorld:
 
 
 
+## class Block(object):
+##     """
+##     we make this a class so that we can map
+##     between rectangles and ode.GeomBoxes
+##
+##     we can't have free standing blocks because
+##     we need a world and space.
+##  
+##     so this is just not feasable here.
+##     """
+##     pass
 
-        
-
+      
 
 def newBody(world, mass):
     body = ode.Body(world)
