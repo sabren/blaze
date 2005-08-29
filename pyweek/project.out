@@ -1,9 +1,59 @@
-2
+
 PyWeek Project Outline for Team Trailblazer
 
 
+* model of the world [in progress]
+  - the model of the world is based on pyODE
+
+* level Loader
+
+  - isolate "blocks" layer before it gets
+    to our parser
+
+  - turn the rect tags into Rects
+
+  - turn Rects into Blocks
+
+
+
+* pygame view
+  - background comes from a PNG file
+  - action layer for our moving sprites
+  - foreground comes from a PNG file
+
+
+
+
+
+
+
+"""
+brain dump
+----------
+
+okay. this file right here is all about physics.
+everything in here should be all about physics.
+so we don't care about screen coordinates here.
+if pyODE uses Boxes where coordiantes are the
+center, then that's what we use.
+# DONE
+
+
+Rect->Block belongs in the loader module because
+we're taking svg and making blocks out of it.
+
+
+Block->Rect is a problem we haven't gotten to yet.
+We never have to map a block back to a screen
+rectangle unless that block moves. We'll need
+that for the hero, but it's a display method
+and we can cross that bridge when we come to it.
+"""
+
+
 * move around the level
-  - load from pgu
+  - populate world with levels from pgu
+  - world is created in inkscape, exported to PNG for viewing, SVG file used for pyODE / collision detection / object placement
   - player should be able to move around freely
   - coarse-grained coordinates / collisions
 
@@ -33,25 +83,31 @@ from a pickle"""
   - N tutorials
 
 * scrolling / big rooms
-  -
+  - I like big rooms. Whatever floats your boat :\
+  - ...
 
 * sound effects and music
-  -
+  - OGGs or MIDI? Ogg 
+  - i don't think there is a midi system for pygame anyway (??)
 
 * animation
   - walking, climbing, etc
+can chickens actually climb? they can fly :o ya don't say oh, i do >_>
+  - obligatory t-rex action
 
 * scoring system
   - high score list?
+  - t-rex tells you your score.. without verbs!
 
 * enemies
   - racing?
   - joust for air battle
-  - sumo for fat battle ? 
+  - sumo for fat battle ? Cool chicken sumo!!
+  - many references to t-rex
 
 * marketing
-  - game name 
-  - game logo
+  - game name - ? Willy Wonkas chicken factory -_-
+  - game logo - a large chicken bar
 
 * loading/saving game
   - pickle?
