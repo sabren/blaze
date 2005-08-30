@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="640px"
+   height="480px"
+   id="svg4078"
+   sodipodi:version="0.32"
+   inkscape:version="0.42"
+   sodipodi:docbase="C:\work\pyweek\demo"
+   sodipodi:docname="gravdemo.svg"
+   inkscape:export-filename="C:\work\pyweek\concept\demoroom-back.png"
+   inkscape:export-xdpi="90.000000"
+   inkscape:export-ydpi="90.000000">
+  <defs
+     id="defs4080">
+    <linearGradient
+       id="linearGradient4838">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1.0000000;"
+         offset="0.00000000"
+         id="stop4840" />
+      <stop
+         id="stop4846"
+         offset="1.0000000"
+         style="stop-color:#b9c2ff;stop-opacity:1.0000000;" />
+      <stop
+         style="stop-color:#535353;stop-opacity:0;"
+         offset="1"
+         id="stop4842" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4838"
+       id="linearGradient4844"
+       x1="68.721130"
+       y1="277.34750"
+       x2="699.29303"
+       y2="456.76596"
+       gradientUnits="userSpaceOnUse"
+       spreadMethod="reflect"
+       gradientTransform="matrix(1.018126,0.000000,0.000000,1.026917,-2.587091,-5.166941)" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4838"
+       id="radialGradient5582"
+       cx="320.75885"
+       cy="239.91489"
+       fx="320.75885"
+       fy="239.91489"
+       r="320.44908"
+       gradientTransform="matrix(1.715303,-1.369394e-7,6.029763e-8,0.768388,-226.2130,56.85797)"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.77472527"
+     inkscape:cx="388.81463"
+     inkscape:cy="248.06159"
+     inkscape:current-layer="layer2"
+     inkscape:document-units="px"
+     inkscape:window-width="1024"
+     inkscape:window-height="708"
+     inkscape:window-x="-4"
+     inkscape:window-y="-4"
+     showguides="true"
+     inkscape:guide-bbox="true">
+    <sodipodi:guide
+       orientation="vertical"
+       position="70.992908"
+       id="guide7805" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata4083">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="background"
+     inkscape:groupmode="layer"
+     sodipodi:insensitive="true"
+     style="display:inline">
+    <rect
+       style="fill:url(#radialGradient5582);fill-opacity:1.0000000;stroke:url(#linearGradient4844);stroke-width:2.0061684;stroke-linecap:round;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
+       id="rect4100"
+       width="650.51746"
+       height="490.44376"
+       x="-1.2729135"
+       y="-4.0162139" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="physics"
+     style="display:inline"
+     sodipodi:insensitive="true">
+    <rect
+       style="fill:#505050;fill-opacity:0.37499997;stroke:#535353;stroke-width:1.9620018;stroke-linecap:round;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
+       id="rect7771"
+       width="197.48955"
+       height="27.106405"
+       x="-90.793236"
+       y="377.32697"
+       transform="matrix(0.907951,-0.419077,0.419077,0.907951,0.000000,0.000000)" />
+    <rect
+       style="fill:#505050;fill-opacity:0.37499997;stroke:#535353;stroke-width:1.9633414;stroke-linecap:round;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
+       id="rect7773"
+       width="188.61891"
+       height="31.418533"
+       x="370.20688"
+       y="-38.107391"
+       transform="matrix(0.886494,0.462741,-0.430817,0.902439,0.000000,0.000000)" />
+    <rect
+       style="fill:#505050;fill-opacity:0.37499997;stroke:#535353;stroke-width:3.2789662;stroke-linecap:round;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
+       id="rect7775"
+       width="64.893417"
+       height="496.95035"
+       x="-65.361603"
+       y="-4.0425563" />
+    <rect
+       style="fill:#505050;fill-opacity:0.37499997;stroke:#535353;stroke-width:2.1468089;stroke-linecap:round;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
+       id="rect7777"
+       width="714.97711"
+       height="62.983807"
+       x="-51.573658"
+       y="484.00455" />
+    <rect
+       style="fill:#505050;fill-opacity:0.37499997;stroke:#535353;stroke-width:2.0361505;stroke-linecap:round;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
+       id="rect7779"
+       width="49.049644"
+       height="557.46594"
+       x="642.80847"
+       y="-10.420905" />
+    <rect
+       style="fill:#505050;fill-opacity:0.37499997;stroke:#535353;stroke-width:1.9620000;stroke-linecap:round;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
+       id="rect7781"
+       width="747.36169"
+       height="36.141846"
+       x="-51.631207"
+       y="-36.312057" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer5"
+     inkscape:label="kiwi">
+    <path
+       style="fill:#000000;fill-opacity:1.0000000;fill-rule:evenodd;stroke:#000000;stroke-width:0.60071665px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"
+       d="M 159.01419,344.07877 C 158.54255,344.13321 156.11632,343.57811 156.11632,343.57811 L 159.11684,345.98587 L 156.56811,345.07517 L 155.69974,344.57917 L 155.68756,346.72887 L 154.39835,344.27170 L 152.92486,343.83724 L 153.29484,342.31781 L 153.29484,339.16705 L 152.51388,338.30767 L 150.96241,337.85022 L 149.48627,339.47457 L 148.64049,342.94796 L 150.08696,344.53966 L 153.23739,345.46856 L 153.89864,346.72887 L 151.71504,345.76179 L 150.38976,345.46856 L 152.10773,347.35901 L 152.98272,348.59037 L 150.27743,346.72887 L 148.29369,345.46856 L 147.30182,346.09872 L 145.80850,347.74195 L 145.80850,346.09872 L 147.36300,344.38813 L 147.79194,342.62661 L 147.79194,340.42735 L 145.80850,338.24477 L 142.94522,335.09402 L 141.77599,332.86553 L 141.77599,327.19417 L 145.08223,320.89266 C 145.08223,320.89266 148.98048,318.32616 149.24444,318.24833 C 149.50841,318.17050 153.09922,317.11175 153.09922,317.11175 L 157.26164,317.11175 L 161.22912,319.63235 L 163.79675,322.45778 L 166.42414,324.12700 L 168.71477,324.12700 L 170.43274,326.01746 L 171.17960,329.08463 L 170.71927,330.97508 L 171.57805,334.50188 L 173.17436,341.05750 L 173.17436,343.57811 L 171.51498,339.37424 L 167.74390,330.97508 L 164.70617,330.97508 L 162.98820,331.48163 L 160.69758,330.80623 L 158.97961,332.69669 L 157.26164,333.20323 L 157.26164,335.75537 L 155.87921,337.27659 L 154.39835,338.90613 L 155.14207,341.96039 L 155.86707,342.75818 L 158.21147,342.97328 L 159.01419,344.07877 z "
+       id="path1649"
+       sodipodi:nodetypes="ccccccccccccccccccccccccccccccccccscccccccccccccccccccccccccc"
+       inkscape:export-filename="C:\work\pyweek\concept\demoroom-kiwi"
+       inkscape:export-xdpi="90.000000"
+       inkscape:export-ydpi="90.000000" />
+    <path
+       style="fill:none;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.62500000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
+       d="M 156.84004,327.23576 L 159.94637,331.57711 L 160.16250,336.98226 L 158.46068,340.77963"
+       id="path1653"
+       sodipodi:nodetypes="cccc"
+       inkscape:export-filename="C:\work\pyweek\concept\demoroom-kiwi"
+       inkscape:export-xdpi="90.000000"
+       inkscape:export-ydpi="90.000000" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="foreground"
+     style="display:inline">
+    <text
+       xml:space="preserve"
+       style="font-size:69.440277px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125.00000%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Frutiger Linotype"
+       x="63.552273"
+       y="274.11652"
+       id="text4086"
+       transform="scale(1.050861,0.951601)"
+       sodipodi:linespacing="125.00000%"><tspan
+         sodipodi:role="line"
+         id="tspan4088"
+         x="63.552273"
+         y="274.11652">FOREGROUND</tspan></text>
+    <rect
+       style="fill:#505050;fill-opacity:0.37499997;stroke:none;stroke-width:1.9620000;stroke-linecap:round;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
+       id="rect4092"
+       width="478.48688"
+       height="21.781914"
+       x="72.699348"
+       y="184.41135" />
+    <use
+       x="0.00000000"
+       y="0.00000000"
+       xlink:href="#rect4092"
+       id="use4096"
+       transform="translate(-3.742920e-6,82.77123)"
+       width="640.00000"
+       height="480.00000" />
+    <text
+       xml:space="preserve"
+       style="font-size:12.000000px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+       x="72.283676"
+       y="58.765953"
+       id="text7801"><tspan
+         sodipodi:role="line"
+         id="tspan7803"
+         x="72.283676"
+         y="58.765953">Trailblazer Gravity Demo</tspan><tspan
+         sodipodi:role="line"
+         x="72.283676"
+         y="73.765953"
+         id="tspan1328">pygame sprites controlled by pyode physics</tspan></text>
+  </g>
+</svg>
