@@ -26,12 +26,16 @@ class ExampleTest(unittest.TestCase):
         hc = HealthModelConfig()
 
         # We could go with the defaults, but here are the options:
-        hc.setStartFat(5000) # How many fat calories to start with
-        hc.setStartBlood(1000) # How many blood sugar calories to start
-        hc.setBloodLimit(1000) # Max blood sugar before fat uptake
-        hc.setExertionRatio(50) # Calories to burn per exertion level
-        hc.setLowBloodLevel(100) # Min blood sugar before recovering from fat
-        hc.setRecoveryRate(5) # Blood sugar recovery rate, in calories/step()
+        hc.startfat = 5000 # How many fat calories to start with
+        hc.startblood = 1000 # How many blood sugar calories to start
+        hc.bloodlimit = 1000 # Max blood sugar before fat uptake
+        hc.exertionratio = 50 # Calories to burn per exertion level
+        hc.lowbloodlevel = 100 # Min blood sugar before recovering from fat
+        hc.recoveryrate = 5 # Blood sugar recovery rate, in calories/step()
+        hc.baseinsulinrate = 2 # Insulin lowers blood sugar, in calories/step()
+        hc.insulinratio = 10 # Insulin penalty ratio for high blood sugar.
+        hc.suppressinsulin = False # If we suppress insulin, new rules take effect.
+        hc.insulin2fatratio = .5 # How many of the calories lost to insulin go to fat?
 
         # Okay, now we pass the configuration to our new health model:
         h = HealthModel(hc)
@@ -58,9 +62,68 @@ class ExampleTest(unittest.TestCase):
         self.assertEqual(h.getFat(), 4950)
 
         # Now, look what happens when we step() and update the model:
+        h.config.suppressinsulin = True # We'll deal with this later.
         h.step()
         self.assertEqual(h.getBlood(), 5)
         self.assertEqual(h.getFat(), 4945)
+
+        # Sugar recovery is slow, so let's eat something.
+        cake = Food(320, 10) # 320 calories from sugar, 10 from fat
+        h.eat(cake)
+        self.assertEqual(h.getBlood(), 325)
+        self.assertEqual(h.getFat(), 4955)
+
+        # Much better.  But we're still hungry.
+        powerbar = Food(700, 0)
+        # MMmmm... carbs...
+        h.eat(powerbar)
+        self.assertEqual(h.getBlood(), 1000)
+        # Wow.  Sugar rush.  But where are the other 25 calories?
+        self.assertEqual(h.getFat(), 4980)
+        # Ah.  When our blood sugar gets too high, it turns to fat.
+        # Yep.  So realistic.
+
+        # Okay, all that was with the insulin response suppressed.
+        h.config.suppressinsulin = False # New rules!
+
+        # Take a step...
+        h.step()
+        self.assertEqual(h.getBlood(), 998)
+        # Did you catch that?
+        # Insulin lowers your blood sugar at a slow rate.
+        # Think of it as a cost-of-living tax.
+
+        # But where do the calories go?
+        self.assertEqual(h.getFat(), 4981)
+        # Straight to the hips of course.
+        # But only one of the two calories went over.
+        # Insulin isn't very efficient at storing fat.
+        # The rate is controlled by h.config.insulin2fatratio
+        # In this case, it's 0.5 fat for every sugar
+
+        # Hey kid, would you like some candy?
+        candy = Food(102, 0)
+        h.eat(candy)
+        self.assertEqual(h.getBlood(), 1100)
+        # Looks like we've got high blood sugar.
+        h.step()
+        self.assertEqual(h.getBlood(), 98)
+        # Whoah! Sugar crash!
+        # That's controlled by the h.config.insulinratio
+        # In this case, it's 10 lost for every 1 above the limit
+        # And 2 for the normal insulin rate.
+        self.assertEqual(h.getFat(), 5482)
+        # And half of that goes to fat.
+        # Bleh.  I feel sick.  No more candy.
+        
+
+        # In summary:
+        hc = HealthModelConfig()         ## set up default model config
+        h = HealthModel(hc)              ## initialize a new model
+        h.exert(level=5)                 ## exertion burns calories.
+        food = Food(sugar=100, fat=100)  ## food can have different nutritional values
+        h.eat(food)                      ## eating increases blood sugar and body fat
+        h.step()                         ## updates the model, handles blood sugar and insulin
 
 """
 It's that simple.  Read on for the rest of the tests and code.
@@ -175,39 +238,58 @@ class HealthModelConfigTest(unittest.TestCase):
     def testConfigStartFat(self):
         """Initial fat calories
         """
-        self.c.setStartFat(5001)
-        self.assertEqual(self.c.getStartFat(), 5001)
+        self.assertEqual(self.c.startfat, 5000)
 
     def testConfigStartBlood(self):
         """We need initial blood sugar calories
         """
-        self.c.setStartBlood(1001)
-        self.assertEqual(self.c.getStartBlood(), 1001)
+        self.assertEqual(self.c.startblood, 1000)
 
     def testConfigBloodLimit(self):
         """We need a blood sugar limit after which we convert to fat.
         """
-        self.c.setBloodLimit(1001)
-        self.assertEqual(self.c.getBloodLimit(), 1001)
+        self.c.bloodlimit = 1000
+        self.assertEqual(self.c.bloodlimit, 1000)
 
     def testConfigExertionRatio(self):
         """We need the number of calories to burn per exertion level.
         """
-        self.c.setExertionRatio(51)
-        self.assertEqual(self.c.getExertionRatio(), 51)
+        self.c.exertionratio = 50
+        self.assertEqual(self.c.exertionratio, 50)
 
     def testConfigLowBloodLevel(self):
         """We need a low blood sugar level.
         """
-        self.c.setLowBloodLevel(101)
-        self.assertEqual(self.c.getLowBloodLevel(), 101)
+        self.c.lowbloodlevel = 100
+        self.assertEqual(self.c.lowbloodlevel, 100)
 
     def testConfigRecoveryRate(self):
         """We need a rate to restore low blood sugar.
         """
-        self.c.setRecoveryRate(6)
-        self.assertEqual(self.c.getRecoveryRate(), 6)
-            
+        self.c.recoveryrate = 5
+        self.assertEqual(self.c.recoveryrate, 5)
+
+    def testConfigBaseInsulinRate(self):
+        """We need a base rate at which to burn blood sugar.
+        """
+        self.c.baseinsulinrate = 2
+        self.assertEqual(self.c.baseinsulinrate, 2)
+
+    def testConfigInsulinRatio(self):
+        """We need a ratio to figure the high blood sugar penalty.
+
+        For every calorie above the high blood sugar limit, insulin
+        will kill this many calories.
+        """
+        self.assertEqual(self.c.insulinratio, 10)
+
+    def testConfigInsulin2FatRatio(self):
+        """We need a ratio of the calories converted by insulin to fat.
+
+        For every blood sugar calorie converted by insulin, this many
+        go to fat.  Ought to be a float between 0 and 1
+        """
+        self.assertEqual(self.c.insulin2fatratio, 0.5)
 
 class HealthModelConfig:
     """Configuration for our Health Model.
@@ -217,82 +299,39 @@ class HealthModelConfig:
 
     Takes no parameters.  Either stick with the defaults and go, or
     set new ones.
+
+    Variables to play with:
+        startfat -- How many fat calories to start with
+        startblood -- How many blood sugar calories to start
+        bloodlimit -- Max blood sugar before fat uptake
+        exertionratio -- Calories to burn per exertion level
+        lowbloodlevel -- Min blood sugar before recovering from fat
+        recoveryrate -- Blood sugar recovery rate, in calories/step()
+        baseinsulinrate -- Insulin lowers blood sugar, in calories/step()
+        insulinratio -- Insulin penalty ratio for high blood sugar.
+        suppressinsulin -- suppresses the insulin response (mainly for testing)
     """
     def __init__(self):
-        self.__startfat = 5000
-        self.__startblood = 1000
-        self.__bloodlimit = 1000
-        self.__exratio = 50
-        self.__lowbloodlevel = 100
-        self.__bloodrecoveryrate = 5
-
-    def setStartFat(self, calories):
-        """Set our starting fat calories.
-        """
-        self.__startfat = calories
-
-    def getStartFat(self):
-        """Get our starting fat calories.
-        """
-        return self.__startfat
-
-    def setStartBlood(self, calories):
-        """Set our starting blood sugar calories.
-        """
-        self.__startblood = calories
-
-    def getStartBlood(self):
-        """Get our starting blood calories.
-        """
-        return self.__startblood
-
-    def setBloodLimit(self, calories):
-        """Set our blood sugar limit, before fat uptake kicks in.
-        """
-        self.__bloodlimit = calories
-
-    def getBloodLimit(self):
-        """Get our blood sugar limit, before fat uptake kicks in.
-        """
-        return self.__bloodlimit
-
-    def setLowBloodLevel(self, calories):
-        """Set our low blood sugar level.
-
-        If blood sugar gets too low, we start drawing from fat reserves.
-        """
-        self.__lowbloodlevel = calories
-
-    def getLowBloodLevel(self):
-        """Set our low blood sugar level.
-
-        If blood sugar gets too low, we start drawing from fat reserves.
-        """
-        return self.__lowbloodlevel
-
-    def setExertionRatio(self, calories):
-        """Set our exertion ration.
-
-        That's the number of calories burned per exertion level.
-        """
-        self.__exratio = calories
-
-    def getExertionRatio(self):
-        """Get our exertion ration.
-
-        That's the number of calories burned per exertion level.
-        """
-        return self.__exratio
-
-    def setRecoveryRate(self, rate):
-        """Set our low blood sugar uptake rate, in calories per step().
-        """
-        self.__bloodrecoveryrate = rate
-
-    def getRecoveryRate(self):
-        """Get our low blood sugar uptake rate, in calories per step().
-        """
-        return self.__bloodrecoveryrate
+        # Set our starting fat calories.
+        self.startfat = 5000
+        # Set our starting blood sugar calories.
+        self.startblood = 1000
+        # Set our blood sugar limit, before fat uptake kicks in.
+        self.bloodlimit = 1000
+        # Set our exertion ration.
+        self.exertionratio = 50
+        # Set our low blood sugar level.
+        self.lowbloodlevel = 100
+        # Set our low blood sugar uptake rate, in calories/step().
+        self.bloodrecoveryrate = 5
+        # Set the base rate at which to burn blood sugar, in calories/step()
+        self.baseinsulinrate = 2
+        # Set the penalty ratio for high blood sugar.
+        self.insulinratio = 10
+        # Should we suppress the insulin response?
+        self.suppressinsulin = False
+        # Set the insulin2fat conversion ratio
+        self.insulin2fatratio = 0.5
 
 class FoodTest(unittest.TestCase):
     """We'll need food to eat to give us calories.
@@ -317,6 +356,9 @@ class Food:
         """You have been eaten by a large kiwi bird.
 
         Hope you invested in life insurance.  Have a nice day.
+
+        Oh, and the kiwi gets a tuple of nutrition (sugar, fat) for
+        his trouble.
         """
         return self.nutrition
     
@@ -330,12 +372,15 @@ class HealthModelTest(unittest.TestCase):
         coded defaults change.  They're not really important.
         """
         self.c = HealthModelConfig()
-        self.c.setStartFat(5000)
-        self.c.setStartBlood(1000)
-        self.c.setBloodLimit(1000)
-        self.c.setExertionRatio(50)
-        self.c.setLowBloodLevel(100)
-        self.c.setRecoveryRate(5)
+        self.c.startfat = 5000
+        self.c.startblood = 1000
+        self.c.bloodlimit = 1000
+        self.c.setexertionratio = 50
+        self.c.lowbloodlevel = 100
+        self.c.recoveryrate = 5
+        self.c.baseinsulinrate = 2
+        self.c.insulinratio = 10
+        self.c.insulin2fatratio = 0.5
         self.h = HealthModel(self.c)
         self.f = Food(100, 100)
 
@@ -343,7 +388,7 @@ class HealthModelTest(unittest.TestCase):
     def testConfig(self):
         """We'll need to retrieve our configuration.
         """
-        self.assertEqual(self.h.getConfig(), self.c)
+        self.assertEqual(self.h.config, self.c)
 
     def testFatReport(self):
         """We'll need a fat calorie report.
@@ -384,18 +429,32 @@ class HealthModelTest(unittest.TestCase):
         self.assertEqual(self.h.getFat(), 5100)
         self.assertEqual(self.h.getBlood(), 1000)
 
+    def testInsulin(self):
+        """Blood sugar should burn at a normal rate.
+        """
+        self.h.step()
+        self.assertEqual(self.h.getBlood(), 998)
+
     def testEatSweets(self):
-        """Too much sugar should turn to fat.
+        """Too much sugar should trigger an insulin response.
         """
         self.h.eat(self.f)
-        self.assertEqual(self.h.getBlood(), 1000)
-        self.assertEqual(self.h.getFat(), 5200)
+        self.h.step()
+        self.assertEqual(self.h.getBlood(), 98 ) # Insulin kills 2+10*100 calories
+
+    def testEatSweetsGetFat(self):
+        """An insulin response converts some sugar to fat.
+        """
+        self.h.eat(self.f)
+        self.h.step()
+        self.assertEqual(self.h.getFat(), 5601) # Insulin produces (2+10*100)*0.5 calories of fat
 
     def testLowBloodSugar(self):
         """Low blood sugar should recover from fat.
         """
         self.h.exert(20) # Burn 1000 calories.
         self.assertEqual(self.h.getBlood(), 0)
+        self.h.config.suppressinsulin = True # suppress insulin response
         self.h.step() # Update the model another step.
         self.assertEqual(self.h.getBlood(), 5)
         
@@ -406,12 +465,9 @@ class HealthModel:
     """
     def __init__(self, config):
         self.config = config
-        self.fat = CalorieBank(self.config.getStartFat())
-        self.blood = CalorieBank(self.config.getStartBlood())
+        self.fat = CalorieBank(self.config.startfat)
+        self.blood = CalorieBank(self.config.startblood)
 
-    def getConfig(self):
-        return self.config
-        
     def getFat(self):
         return self.fat.getCalories()
 
@@ -425,7 +481,7 @@ class HealthModel:
         calories burned.
         """
         try:
-            self.blood.burnCalories(level*self.config.getExertionRatio())
+            self.blood.burnCalories(level*self.config.exertionratio)
         except NotEnoughCalories, e:
             # If we're short on blood sugar, burn fat.
             self.fat.burnCalories(e.calories_short)
@@ -442,20 +498,39 @@ class HealthModel:
         calories = food.consumed() # (sugar, fat)
         self.blood.addCalories(calories[0])
         self.fat.addCalories(calories[1])
-        if self.getBlood() > self.config.getBloodLimit():
-            calories2fat = self.getBlood() - self.config.getBloodLimit()
-            self.blood.burnCalories(calories2fat)
-            self.fat.addCalories(calories2fat)
+        """
+        We used to convert extra blood sugar calories to fat here.
+        Now, however, step() will initiate an insulin response.
+
+        However, we'll still do that if we have the insulin response
+        suppressed:
+        """
+        if self.config.suppressinsulin == True:
+            if self.getBlood() > self.config.bloodlimit:
+                calories2fat = self.getBlood() - self.config.bloodlimit
+                self.blood.burnCalories(calories2fat)
+                self.fat.addCalories(calories2fat)
+        
 
     def step(self):
         """Update the model.
 
         Things this will do:
         * If blood sugar is low, recover from fat.
+        * Burn blood sugar at normal insulin rate
+        * If blood sugar is high, trigger an increased insulin response.
         """
-        if self.getBlood() < self.config.getLowBloodLevel():
-            self.fat.burnCalories(self.config.getRecoveryRate())
-            self.blood.addCalories(self.config.getRecoveryRate())
+        if self.getBlood() < self.config.lowbloodlevel:
+            self.fat.burnCalories(self.config.recoveryrate)
+            self.blood.addCalories(self.config.recoveryrate)
+        if not self.config.suppressinsulin:
+            insulinpenalty = 0
+            if self.getBlood() > self.config.bloodlimit:
+                insulinpenalty = (self.getBlood() - self.config.bloodlimit) * self.config.insulinratio
+            insulin = self.config.baseinsulinrate + insulinpenalty
+            self.blood.burnCalories(insulin)
+            insulin2fat = int(insulin*self.config.insulin2fatratio)
+            self.fat.addCalories(insulin2fat)
 
 class HealthModelHandlerTest(unittest.TestCase):
     """We'll need an event handler for health-related events.
@@ -469,7 +544,7 @@ class HealthModelHandlerTest(unittest.TestCase):
         self.c = HealthModelConfig()
         self.h = HealthModel(self.c)
         self.handler = HealthModelHandler(self.h)
-        
+
 """
 Looks like we're going to use EventNet for our event handling.
 Seems simple enough.
@@ -481,14 +556,24 @@ class HealthModelHandler(eventnet.driver.Handler):
     """
     """
     def __init__(self, model):
+        super(HealthModelHandler, self).__init__()
         self.model = model
 
 """
 Here's what's left:
 
-* Handle fat->blood calorie transfer
 * Set up an event handler.
   * Need to know what events we need to handle.
+
+Should high blood sugar be turned immediately into fat?  Or should
+we simulate insulin and do a sugar crash?  Say, the higher above the
+limit you go, the more gets lost.  If you go too high, your sugar
+crashes.
+
+Perhaps with each step, you burn some blood sugar--the cost-of-living
+tax.  When your blood sugar goes too high, insulin kicks in, and the
+loss rate increases.
+
 """
 
 if __name__ == "__main__":
