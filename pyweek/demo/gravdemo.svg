@@ -16,7 +16,7 @@
    inkscape:version="0.42"
    sodipodi:docbase="C:\work\pyweek\demo"
    sodipodi:docname="gravdemo.svg"
-   inkscape:export-filename="C:\work\pyweek\demo\gravdemo-back.png"
+   inkscape:export-filename="C:\work\pyweek\demo\gravdemo-fore.png"
    inkscape:export-xdpi="90.000000"
    inkscape:export-ydpi="90.000000">
   <defs
@@ -69,7 +69,7 @@
      inkscape:zoom="0.77472527"
      inkscape:cx="388.81463"
      inkscape:cy="248.06159"
-     inkscape:current-layer="layer3"
+     inkscape:current-layer="layer2"
      inkscape:document-units="px"
      inkscape:window-width="1024"
      inkscape:window-height="708"
@@ -98,7 +98,7 @@
      inkscape:label="background"
      inkscape:groupmode="layer"
      sodipodi:insensitive="true"
-     style="display:inline">
+     style="display:none">
     <rect
        style="fill:url(#radialGradient5582);fill-opacity:1.0000000;stroke:url(#linearGradient4844);stroke-width:2.0061684;stroke-linecap:round;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
        id="rect4100"
@@ -111,7 +111,7 @@
      inkscape:groupmode="layer"
      id="layer3"
      inkscape:label="physics"
-     style="display:inline">
+     style="display:none">
     <rect
        style="fill:#505050;fill-opacity:0.37499997;stroke:#535353;stroke-width:1.9620072;stroke-linecap:round;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
        id="rect7771"
@@ -155,12 +155,16 @@
        width="747.36169"
        height="36.141846"
        x="-51.631207"
-       y="-40.312057" />
+       y="-40.312057"
+       inkscape:export-filename="C:\work\pyweek\demo\gravdemo-back.png"
+       inkscape:export-xdpi="90.000000"
+       inkscape:export-ydpi="90.000000" />
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer5"
-     inkscape:label="kiwi">
+     inkscape:label="kiwi"
+     style="display:none">
     <path
        style="fill:#000000;fill-opacity:1.0000000;fill-rule:evenodd;stroke:#000000;stroke-width:0.60071665px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"
        d="M 159.01419,344.07877 C 158.54255,344.13321 156.11632,343.57811 156.11632,343.57811 L 159.11684,345.98587 L 156.56811,345.07517 L 155.69974,344.57917 L 155.68756,346.72887 L 154.39835,344.27170 L 152.92486,343.83724 L 153.29484,342.31781 L 153.29484,339.16705 L 152.51388,338.30767 L 150.96241,337.85022 L 149.48627,339.47457 L 148.64049,342.94796 L 150.08696,344.53966 L 153.23739,345.46856 L 153.89864,346.72887 L 151.71504,345.76179 L 150.38976,345.46856 L 152.10773,347.35901 L 152.98272,348.59037 L 150.27743,346.72887 L 148.29369,345.46856 L 147.30182,346.09872 L 145.80850,347.74195 L 145.80850,346.09872 L 147.36300,344.38813 L 147.79194,342.62661 L 147.79194,340.42735 L 145.80850,338.24477 L 142.94522,335.09402 L 141.77599,332.86553 L 141.77599,327.19417 L 145.08223,320.89266 C 145.08223,320.89266 148.98048,318.32616 149.24444,318.24833 C 149.50841,318.17050 153.09922,317.11175 153.09922,317.11175 L 157.26164,317.11175 L 161.22912,319.63235 L 163.79675,322.45778 L 166.42414,324.12700 L 168.71477,324.12700 L 170.43274,326.01746 L 171.17960,329.08463 L 170.71927,330.97508 L 171.57805,334.50188 L 173.17436,341.05750 L 173.17436,343.57811 L 171.51498,339.37424 L 167.74390,330.97508 L 164.70617,330.97508 L 162.98820,331.48163 L 160.69758,330.80623 L 158.97961,332.69669 L 157.26164,333.20323 L 157.26164,335.75537 L 155.87921,337.27659 L 154.39835,338.90613 L 155.14207,341.96039 L 155.86707,342.75818 L 158.21147,342.97328 L 159.01419,344.07877 z "
@@ -182,7 +186,7 @@
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="foreground"
-     style="display:none">
+     style="display:inline">
     <text
        xml:space="preserve"
        style="font-size:69.440277px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125.00000%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Frutiger Linotype"
@@ -196,7 +200,7 @@
          x="63.552273"
          y="274.11652">FOREGROUND</tspan></text>
     <rect
-       style="fill:#505050;fill-opacity:0.37499997;stroke:none;stroke-width:1.9620000;stroke-linecap:round;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
+       style="fill:#ffffff;fill-opacity:0.80921054;stroke:#030000;stroke-width:1.9620000;stroke-linecap:round;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
        id="rect4092"
        width="478.48688"
        height="21.781914"
