@@ -190,10 +190,10 @@ Rooms contain our 3D geometry, which is really
 just 2D geometry with a uniform depth to make
 pyODE happy.
 
-Room already has an .addBlock(cx, cy, lx, ly)
+Room already has an .addGeom(cx, cy, lx, ly)
 but svg gives us: x, y, w, h, and transform.
 
-Room.addBlock(...) actually makes the ode.GeomBoxes,
+Room.addGeom(...) actually makes the ode.GeomBoxes,
 so we only have two jobs:
 
    - calculate the center of the rect (cx, cy)
@@ -218,7 +218,7 @@ class RectCenterTest(unittest.TestCase):
 """
 That gives us cx and cy. Then lx and ly are
 just ODE words for width and height, so calling
-Room.addBlock(cx, cy, lx, ly) is trivial.
+Room.addGeom(cx, cy, lx, ly) is trivial.
 
 We also need to do this matrix transformation, though
 and while the code for that is also simple, it has a
@@ -342,7 +342,7 @@ def roomFromRects(rects):
     """
     rm = Room()
     for r in rects:
-        block = rm.addBlock(r.getCenter(), r.width, r.height)
+        block = rm.addGeom(r.getCenter(), r.width, r.height)
 
         if r.transform:
             a, b, c, d, e, f = r.transform
