@@ -9,6 +9,7 @@ from loader import *
 from health import *
 from odetest import *
 from room import *
+from eventtest import *
 
 unittest.main()
 
