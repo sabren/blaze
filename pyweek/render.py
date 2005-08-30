@@ -38,7 +38,7 @@ class BlockSpriteTest(unittest.TestCase):
         bk = rm.addBlock((50, 50), *SPRITE_SIZE)
 
         # now the display side:
-        bs = BlockSprite(bk)
+        bs = BlockSprite(bk, pygame.surface.Surface((5,5)))
         self.assertEquals((50,50), bs.rect.center)
         
 
@@ -46,7 +46,7 @@ class BlockSpriteTest(unittest.TestCase):
 class BlockSprite(pygame.sprite.Sprite):
     def __init__(self, block, image):
         super(BlockSprite, self).__init__()
-        self.image = image    
+        self.image = image
         self.rect = self.image.get_rect()
         self.block = block
         self.update()
@@ -60,5 +60,4 @@ class BlockSprite(pygame.sprite.Sprite):
 
 
 if __name__=="__main__":
-    gravityDemo()
     unittest.main()
