@@ -36,9 +36,10 @@ class RoomTest(unittest.TestCase):
     """
     def test(self):
         world = Room()
-        block = world.addBlock((0, 0), lx=5, ly=10)
+        block = world.addBlock((40, 42), lx=5, ly=10)
         assert len(world.blocks) == 1
         assert block.getLengths() == (5, 10, THICKNESS)
+        assert block.getPosition()[:2] == (40,42)
         
 
 
@@ -61,13 +62,14 @@ class Room(object):
         body = ode.Body(self.world)
         geom = ode.GeomBox(self.space, [lx, ly, THICKNESS])
         geom.setBody(body)
+        geom.setPosition((cx, cy, 0))
 
         self.blocks.append(geom) # body?
         return geom
 
 
-
-
+if __name__=="__main__":
+    unittest.main()
 
 
 ##[ DISCARDED IDEAS ]###############################
