@@ -2,29 +2,112 @@
 PyWeek Project Outline for Team Trailblazer
 
 
-* model of the world [in progress]
-  - the model of the world is based on pyODE
+*## complete (more or less?) ######################
 
-* level Loader
+load pyODE room from svg 
+display pngs on screen
+calorie counting
 
-  - isolate "blocks" layer before it gets
-    to our parser
 
-  - turn the rect tags into Rects
+*## in progress ###################################
 
-  - turn Rects into Blocks
+mcferill : main game loop (title->[play,quit])
+sabren: observe pyODE and update sprite position
+hippo: font rendering, high score screen
+StupidMop: break layers into separate files in inkscape
+PyTM30: collision detection and physics
+JtP: build a level
+illume: sound/music system
 
+
+*## most needed ###################################
+
+** workflow 
+*** title screen
+*** level picker
+*** game mode
+**** dialogs
+***** pause
+***** confirm quit
+*** enter your name
+either up front or on high score
+up front is probably better so we
+can track all score data per user 
+per level...
+*** some kind of ending?
+*** high score list
+*** credits
+
+** on screen display
+show the score
+show calorie bar
+show time bar
+
+** event system
+observe pyODE, fire events
+take keyboard events from pygame
+
+** sprite system
+get sprite module working for the pygame display
+http://kai.vm.bytemark.co.uk/~piman/writing/sprite-tutorial.shtml
+http://www.pygame.org/docs/tut/SpriteIntro.html
+
+
+** metabolism
+update the display
+tie movement to calorie bank
+tie mass to calorie bank
+
+** player movement
+left and right
+jumping/"flying"
+update player position in pyODE for the keyboard
+
+
+** time constraint
+end level when time runs out
+some kind of message or animation?
+countdown when end is near?
+
+** interaction (collisions)
+*** automatic (just touch)
+food updates the calorie bank
+handle scoring:eggs give you points
+
+*** objects (press up to activate)
+handle doors (move player to another part of screen)
+handle ladders (allow player to climb)
+
+*** platforms
+normal : pyODE should handle for us
+basic : 
+
+** scoring system
+high score list
+increase score as eggs are found
+
+** save progress
+probably just do this automatically 
+(possibly for each user?)
+
+*## blue sky ######################################
+
+record events for playback of best times, etc...
+
+
+
+*## unfiled #######################################
+
+
+
+different types of food (?)
+   <eykd> Yes, just subclass health.Food(sugar, fat)
 
 
 * pygame view
   - background comes from a PNG file
   - action layer for our moving sprites
   - foreground comes from a PNG file
-
-
-
-
-
 
 
 """
@@ -51,17 +134,6 @@ and we can cross that bridge when we come to it.
 """
 
 
-* move around the level
-  - populate world with levels from pgu
-  - world is created in inkscape, exported to PNG for viewing, SVG file used for pyODE / collision detection / object placement
-  - player should be able to move around freely
-  - coarse-grained coordinates / collisions
-
-* calorie system
-  - food 
-  - calories affect counters
-  - change body type
-
 * simple physics
 """Adam: I'm going to start the physics engine using pyODE 
 if nobody has any objections. I'm also going to have a 
@@ -84,11 +156,6 @@ from a pickle"""
 
 * scrolling / big rooms
   - I like big rooms. Whatever floats your boat :\
-  - ...
-
-* sound effects and music
-  - OGGs or MIDI? Ogg 
-  - i don't think there is a midi system for pygame anyway (??)
 
 * animation
   - walking, climbing, etc
@@ -107,8 +174,14 @@ can chickens actually climb? they can fly :o ya don't say oh, i do >_>
 
 * marketing
   - game name - ? Willy Wonkas chicken factory -_-
-  - game logo - a large chicken bar
+  - game logo - a large chicken bar :)
 
 * loading/saving game
   - pickle?
 
+
+
+
+
+#############################
+credits: ACSpike on #inkscape
