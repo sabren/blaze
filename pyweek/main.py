@@ -9,28 +9,18 @@ PS. It has a bug somewhere.
 
 import pygame, sys, os
 import eventnet.driver
-from pygame.locals import * 
+import events
 
 #initialize pygame
 pygame.init() 
 
 # set screen size and put it up 
 window = pygame.display.set_mode((640, 480)) 
-pygame.display.set_caption('Test01') 
+pygame.display.set_caption('Test') 
 screen = pygame.display.get_surface()
-
-#process a list of events taken from pygame.event.get() (currently)
-#will be replaced with our event handler (import?)
-class Handler(eventnet.driver.Handler):
-    def EVT_K_x(self, event):
-        sys.exit(0)
-
-def event_handler(events):
-    for event in events:
-        eventnet.driver.post(event.type)
 
 #loops to keep checking for events
 while 1:
     #combine all event-getters (for lack of a better term) and make a single
     # list with all events to pass to event_handler
-    event_handler(pygame.event.get())
+    events.Handler(pygame.event.get())
