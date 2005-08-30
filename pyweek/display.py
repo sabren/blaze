@@ -50,6 +50,10 @@ class ImageManager:
 This's our display. Um. Yeah.
 """
 class Display:
+    LEFT = 0
+    CENTER = 1
+    RIGHT = 2
+    
     def __init__(self, s=(640, 480), t=""):
         """
         Setup a pygame window
@@ -62,7 +66,31 @@ class Display:
         self.screen = pygame.display.set_mode (s)
         self.setTitle (t)
 
+        # setup the font stuff..
+        pygame.font.init()
+        self.fonts = {}
+
         self.buffer = pygame.Surface (s)
+
+    def addFont(self, size):
+        """
+        Add support for a font
+        """
+        self.fonts[str(size)] = pygame.font.Font (None, int(size))
+
+    def text(self, words, size, pos=[0, 0], color=(255, 0, 0, 255), justify=None):
+        """
+        Blit some text. I like text!
+        """
+        if str(size) in self.fonts:
+            font = self.fonts[str(size)]
+            
+            if justify == Display.CENTER:
+                pos[0] = pos[0] - font.size (words)[0]*0.5
+            if justify == Display.RIGHT:
+                pos[0] = pos[0] - font.size (words)[0]
+                    
+            self.buffer.blit (font.render (words, True, color), pos)
 
     def setTitle(self, t):
         """
@@ -96,6 +124,8 @@ class DisplayTest(unittest.TestCase):
     def test(self):
         display = Display ((640, 480), "T-Rex and the Waffle House")
 
+        display.addFont (30)
+
         imanager = ImageManager (display.buffer)
 
         imanager.load ("background.png")
@@ -111,8 +141,12 @@ class DisplayTest(unittest.TestCase):
             display.clear()
 
             imanager.blit ("background.png")
-            imanager.blit ("player.png", (55, 55))
+            imanager.blit ("player.png", (55, 275))
             #imanager.blit ("foreground.png")
+
+            display.text ("T-Rex sure does love his waffles!", 30, [320, 80], (0, 0, 0, 255), Display.LEFT)
+            display.text ("T-Rex sure does love his waffles!", 30, [320, 100], (0, 0, 0, 255), Display.CENTER)
+            display.text ("T-Rex sure does love his waffles!", 30, [320, 120], (0, 0, 0, 255), Display.RIGHT)
             
             display.flip()
             
