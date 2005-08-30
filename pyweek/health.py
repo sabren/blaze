@@ -160,6 +160,7 @@ class CalorieBankTest(unittest.TestCase):
         self.c.burnCalories(50)
         self.assertEqual(50, self.c.getCalories())
 
+
     def testDontUseTooMany(self):
         """We need to raise an exception if we burn too many.
         """
@@ -442,6 +443,13 @@ class HealthModelTest(unittest.TestCase):
         self.h.step()
         self.assertEqual(self.h.getBlood(), 98 ) # Insulin kills 2+10*100 calories
 
+    def testSugarCrashEvent(self):
+        """Losing too much sugar all at once should trigger a SUGAR_CRASH
+        """
+        self.h.eat(self.f)
+        self.h.step()
+        
+
     def testEatSweetsGetFat(self):
         """An insulin response converts some sugar to fat.
         """
@@ -457,7 +465,14 @@ class HealthModelTest(unittest.TestCase):
         self.h.config.suppressinsulin = True # suppress insulin response
         self.h.step() # Update the model another step.
         self.assertEqual(self.h.getBlood(), 5)
-        
+
+# We'll need the event driver:
+# http://lgt.berlios.de/#eventnet
+import eventnet.driver
+
+# We're going to need events to throw around.
+from events import Health as h_events
+
 class HealthModel:
     """With this health model, we'll keep track of our hero's health.
 
@@ -485,6 +500,8 @@ class HealthModel:
         except NotEnoughCalories, e:
             # If we're short on blood sugar, burn fat.
             self.fat.burnCalories(e.calories_short)
+            eventnet.driver.post(h_events.FAT_CHANGED)
+        eventnet.driver.post(h_events.BLOOD_CHANGED)
 
     def eat(self, food):
         """Eat food.  Keep your strength up.
@@ -510,6 +527,8 @@ class HealthModel:
                 calories2fat = self.getBlood() - self.config.bloodlimit
                 self.blood.burnCalories(calories2fat)
                 self.fat.addCalories(calories2fat)
+        eventnet.driver.post(h_events.FAT_CHANGED)
+        eventnet.driver.post(h_events.BLOOD_CHANGED)
         
 
     def step(self):
@@ -526,11 +545,17 @@ class HealthModel:
         if not self.config.suppressinsulin:
             insulinpenalty = 0
             if self.getBlood() > self.config.bloodlimit:
+                eventnet.driver.post(h_events.HIGH_BLOOD)
                 insulinpenalty = (self.getBlood() - self.config.bloodlimit) * self.config.insulinratio
             insulin = self.config.baseinsulinrate + insulinpenalty
             self.blood.burnCalories(insulin)
+            if insulin > self.config.bloodlimit/2:
+                # Looks like a sugar crash.
+                eventnet.driver.post(h_events.SUGAR_CRASH)
             insulin2fat = int(insulin*self.config.insulin2fatratio)
             self.fat.addCalories(insulin2fat)
+        eventnet.driver.post(h_events.FAT_CHANGED)
+        eventnet.driver.post(h_events.BLOOD_CHANGED)
 
 class HealthModelHandlerTest(unittest.TestCase):
     """We'll need an event handler for health-related events.
@@ -564,15 +589,6 @@ Here's what's left:
 
 * Set up an event handler.
   * Need to know what events we need to handle.
-
-Should high blood sugar be turned immediately into fat?  Or should
-we simulate insulin and do a sugar crash?  Say, the higher above the
-limit you go, the more gets lost.  If you go too high, your sugar
-crashes.
-
-Perhaps with each step, you burn some blood sugar--the cost-of-living
-tax.  When your blood sugar goes too high, insulin kicks in, and the
-loss rate increases.
 
 """
 
