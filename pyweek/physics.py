@@ -8,9 +8,10 @@ along with the characters collision detection stuff.
 Most of the variables on the level will be passed in from the
 level.physics pickle.
 """
-    def __init__(self, world, space, drag, position):
+    def __init__(self, world, space, room, drag, position):
         self.world = world
         self.space = space
+        self.room = room
         self.position = position
         self.coefficient = drag
         self.friction = 5000
@@ -35,7 +36,7 @@ slow down when no force is applied."""
         self.bird.setMass(fat)
         
         # Creates a box for collision detection.
-        geom = body.addGeom(self.position, 2*fatness, self.height)
+        geom = self.room.addGeom(self.position, 2*fatness, self.height)
         #size = (2*fatness, self.height, 2*fatness)
         #geom = ode.GeomBox(self.space, lengths=size)
         geom.setBody(self.bird)
@@ -100,7 +101,7 @@ creates contact joints if they do.
             contactgroup.empty()
             
 def test():
-    bird = Bird(ode.World(), ode.Space(), 7)
+    bird = Bird(ode.World(), ode.Space(), room.Room(), 7, (0,0))
     bird.hero(1.2, 0.35)
     bird.changeMass(0.1)
     for n in range(50000):
