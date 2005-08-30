@@ -1,4 +1,4 @@
-import ode
+import ode, room
 
 class Bird:
     """This creates the PyODE stuff.
@@ -8,9 +8,10 @@ along with the characters collision detection stuff.
 Most of the variables on the level will be passed in from the
 level.physics pickle.
 """
-    def __init__(self, world, space, drag):
+    def __init__(self, world, space, drag, position):
         self.world = world
         self.space = space
+        self.position = position
         self.coefficient = drag
         self.friction = 5000
         
@@ -21,7 +22,7 @@ slow down when no force is applied."""
         u, v, w = self.bird.getLinearVel()
         self.bird.addForce((u*self.coefficient,0,0))
         
-    def bird(self, fatness, height):
+    def hero(self, fatness, height):
         """This function sets up the bird.
         
         Fatness is the radius of the sphere used to
@@ -32,14 +33,12 @@ slow down when no force is applied."""
         fat = ode.Mass()
         fat.setSphere(1100.0, fatness)
         self.bird.setMass(fat)
-        fat.mass = 5.0
-        self.bird.setMass(fat)
         
         # Creates a box for collision detection.
-        size = (2*fatness, self.height, 2*fatness)
-        geom = ode.GeomBox(self.space, lengths=size)
+        geom = body.addGeom(self.position, 2*fatness, self.height)
+        #size = (2*fatness, self.height, 2*fatness)
+        #geom = ode.GeomBox(self.space, lengths=size)
         geom.setBody(self.bird)
-        return self.bird
     
     def changeMass(self, value):
         """This function changes the mass of the hero.
@@ -102,7 +101,7 @@ creates contact joints if they do.
             
 def test():
     bird = Bird(ode.World(), ode.Space(), 7)
-    bird.bird(1.2, 0.35)
+    bird.hero(1.2, 0.35)
     bird.changeMass(0.1)
     for n in range(50000):
         bird.step()

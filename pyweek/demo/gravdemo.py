@@ -24,12 +24,12 @@ rm = room.Room()
 ## change course, but the collisions don't match where
 ## the rectangles show up on the screen.
 ##
-## rm = loader.roomFromFile(open("gravdemo-geom.svg"))
+rm = loader.roomFromFile(open("gravdemo-geom.svg"))
 
 #import pdb; pdb.set_trace()
 rm.world.setGravity((0,9.81,0)) # in our world y++ is down. :)
 rm.world.setERP(0.8) # ??
-rm.world.setCFM(1E-5) # ??
+rm.world.setCFM(0) # ??
 
 
 
