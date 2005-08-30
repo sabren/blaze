@@ -55,8 +55,11 @@ http://www.pygame.org/docs/tut/SpriteIntro.html
 
 ** metabolism
 update the display
-tie movement to calorie bank
-tie mass to calorie bank
+tie movement to health model
+ - model provides exert(level) method.  The harder the action, the higher the level.
+tie mass to health model
+ - need an algorithm to derive mass from fat. Hrm.
+tune values for playability
 
 ** player movement
 left and right
@@ -72,6 +75,7 @@ countdown when end is near?
 ** interaction (collisions)
 *** automatic (just touch)
 food updates the calorie bank
+  -- Done.  subclass health.Food and pass it to health.HealthModel.eat()
 handle scoring:eggs give you points
 
 *** objects (press up to activate)
@@ -89,6 +93,9 @@ increase score as eggs are found
 ** save progress
 probably just do this automatically 
 (possibly for each user?)
+  -- how about beating levels unlocks new levels, a la N?
+  -- either select level from a menu, or old-skool it with a code
+
 
 *## blue sky ######################################
 
