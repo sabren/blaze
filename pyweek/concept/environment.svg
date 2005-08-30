@@ -1,0 +1,920 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.42"
+   sodipodi:docbase="C:\Program Files\Inkscape"
+   sodipodi:docname="world concept 2.svg"
+   inkscape:export-filename="c:\work\world2.png"
+   inkscape:export-xdpi="90.000000"
+   inkscape:export-ydpi="90.000000">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.53010544"
+     inkscape:cx="359.36230"
+     inkscape:cy="978.64006"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1024"
+     inkscape:window-height="708"
+     inkscape:window-x="-4"
+     inkscape:window-y="-4">
+    <sodipodi:guide
+       orientation="vertical"
+       position="-1.0000000"
+       id="guide4549" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="233.00000"
+       id="guide4551" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="29.000000"
+       id="guide5304" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#ffffff;fill-opacity:1.0000000;stroke:#130000;stroke-width:2.0242817;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
+       id="rect11302"
+       width="765.82068"
+       height="1090.2894"
+       x="-15.059006"
+       y="-13.433645" />
+    <g
+       id="g1448"
+       transform="translate(-12.00000,269.0000)">
+      <rect
+         y="97.362183"
+         x="42.782608"
+         height="28.000000"
+         width="168.43478"
+         id="rect1324"
+         style="fill:#0000ff;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#000000;stroke-width:0.75180942px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000" />
+      <g
+         transform="translate(-445.0000,4.000000)"
+         id="g1342">
+        <path
+           sodipodi:type="star"
+           style="fill:#ffff00;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#000000;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"
+           id="path1332"
+           sodipodi:sides="3"
+           sodipodi:cx="505.00000"
+           sodipodi:cy="111.36218"
+           sodipodi:r1="12.529964"
+           sodipodi:r2="6.2649822"
+           sodipodi:arg1="0.52359878"
+           sodipodi:arg2="1.5707963"
+           inkscape:flatsided="false"
+           inkscape:rounded="0.00000000"
+           inkscape:randomized="0.00000000"
+           d="M 515.85127,117.62716 L 505.00000,117.62716 L 494.14873,117.62716 L 499.57437,108.22969 L 505.00000,98.832218 L 510.42563,108.22969 L 515.85127,117.62716 z " />
+        <use
+           x="0.00000000"
+           y="0.00000000"
+           xlink:href="#path1332"
+           id="use1334"
+           transform="translate(33.00000,0.000000)"
+           width="744.09448"
+           height="1052.3622" />
+        <use
+           x="0.00000000"
+           y="0.00000000"
+           xlink:href="#use1334"
+           id="use1336"
+           transform="translate(33.00000,0.000000)"
+           width="744.09448"
+           height="1052.3622" />
+        <use
+           x="0.00000000"
+           y="0.00000000"
+           xlink:href="#use1336"
+           id="use1338"
+           width="744.09448"
+           height="1052.3622"
+           transform="translate(33.00000,0.000000)" />
+        <use
+           x="0.00000000"
+           y="0.00000000"
+           xlink:href="#use1338"
+           id="use1340"
+           width="744.09448"
+           height="1052.3622"
+           transform="translate(33.00000,0.000000)" />
+      </g>
+    </g>
+    <g
+       id="g1439"
+       transform="translate(-11.00000,300.0000)">
+      <use
+         height="1052.3622"
+         width="744.09448"
+         transform="translate(0.000000,49.00000)"
+         id="use1326"
+         xlink:href="#rect1324"
+         y="0.00000000"
+         x="0.00000000" />
+      <g
+         id="g1349"
+         transform="translate(-447.0000,50.00000)">
+        <path
+           transform="matrix(0.866025,-0.500000,0.500000,0.866025,13.54233,267.0000)"
+           d="M 515.85127,117.62716 L 505.00000,117.62716 L 494.14873,117.62716 L 499.57437,108.22969 L 505.00000,98.832218 L 510.42563,108.22969 L 515.85127,117.62716 z "
+           inkscape:randomized="0.00000000"
+           inkscape:rounded="0.00000000"
+           inkscape:flatsided="false"
+           sodipodi:arg2="1.5707963"
+           sodipodi:arg1="0.52359878"
+           sodipodi:r2="6.2649822"
+           sodipodi:r1="12.529964"
+           sodipodi:cy="111.36218"
+           sodipodi:cx="505.00000"
+           sodipodi:sides="3"
+           id="path1351"
+           style="fill:#ffff00;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#000000;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"
+           sodipodi:type="star" />
+        <use
+           height="1052.3622"
+           width="744.09448"
+           transform="matrix(0.866025,-0.500000,0.500000,0.866025,46.54233,267.0000)"
+           id="use1353"
+           xlink:href="#path1332"
+           y="0.00000000"
+           x="0.00000000" />
+        <use
+           height="1052.3622"
+           width="744.09448"
+           transform="matrix(0.866025,-0.500000,0.500000,0.866025,50.96349,283.5000)"
+           id="use1355"
+           xlink:href="#use1334"
+           y="0.00000000"
+           x="0.00000000" />
+        <use
+           transform="matrix(0.866025,-0.500000,0.500000,0.866025,55.38465,300.0000)"
+           height="1052.3622"
+           width="744.09448"
+           id="use1357"
+           xlink:href="#use1336"
+           y="0.00000000"
+           x="0.00000000" />
+        <use
+           transform="matrix(0.866025,-0.500000,0.500000,0.866025,59.80581,316.5000)"
+           height="1052.3622"
+           width="744.09448"
+           id="use1359"
+           xlink:href="#use1338"
+           y="0.00000000"
+           x="0.00000000" />
+      </g>
+    </g>
+    <g
+       id="g1430"
+       transform="translate(-12.00000,303.0000)">
+      <use
+         height="1052.3622"
+         width="744.09448"
+         transform="translate(0.000000,48.00000)"
+         id="use1328"
+         xlink:href="#use1326"
+         y="0.00000000"
+         x="0.00000000" />
+      <g
+         transform="matrix(-1.000000,1.103176e-17,-1.103176e-17,-1.000000,700.3970,320.8849)"
+         id="g1385">
+        <path
+           sodipodi:type="star"
+           style="fill:#ffff00;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#000000;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"
+           id="path1387"
+           sodipodi:sides="3"
+           sodipodi:cx="505.00000"
+           sodipodi:cy="111.36218"
+           sodipodi:r1="12.529964"
+           sodipodi:r2="6.2649822"
+           sodipodi:arg1="0.52359878"
+           sodipodi:arg2="1.5707963"
+           inkscape:flatsided="false"
+           inkscape:rounded="0.00000000"
+           inkscape:randomized="0.00000000"
+           d="M 515.85127,117.62716 L 505.00000,117.62716 L 494.14873,117.62716 L 499.57437,108.22969 L 505.00000,98.832218 L 510.42563,108.22969 L 515.85127,117.62716 z "
+           transform="matrix(0.866025,-0.500000,0.500000,0.866025,13.54233,267.0000)" />
+        <use
+           x="0.00000000"
+           y="0.00000000"
+           xlink:href="#path1332"
+           id="use1389"
+           transform="matrix(0.866025,-0.500000,0.500000,0.866025,46.54233,267.0000)"
+           width="744.09448"
+           height="1052.3622" />
+        <use
+           x="0.00000000"
+           y="0.00000000"
+           xlink:href="#use1334"
+           id="use1391"
+           transform="matrix(0.866025,-0.500000,0.500000,0.866025,50.96349,283.5000)"
+           width="744.09448"
+           height="1052.3622" />
+        <use
+           x="0.00000000"
+           y="0.00000000"
+           xlink:href="#use1336"
+           id="use1393"
+           width="744.09448"
+           height="1052.3622"
+           transform="matrix(0.866025,-0.500000,0.500000,0.866025,55.38465,300.0000)" />
+        <use
+           x="0.00000000"
+           y="0.00000000"
+           xlink:href="#use1338"
+           id="use1395"
+           width="744.09448"
+           height="1052.3622"
+           transform="matrix(0.866025,-0.500000,0.500000,0.866025,59.80581,316.5000)" />
+      </g>
+    </g>
+    <g
+       id="g1421"
+       transform="translate(-12.00000,35.00000)">
+      <use
+         height="1052.3622"
+         width="744.09448"
+         transform="translate(0.000000,49.00000)"
+         id="use1330"
+         xlink:href="#use1328"
+         y="0.00000000"
+         x="0.00000000" />
+      <g
+         id="g1409"
+         transform="matrix(-1.000000,-1.409463e-17,1.409463e-17,-1.000000,698.0000,365.4594)">
+        <path
+           d="M 515.85127,117.62716 L 505.00000,117.62716 L 494.14873,117.62716 L 499.57437,108.22969 L 505.00000,98.832218 L 510.42563,108.22969 L 515.85127,117.62716 z "
+           inkscape:randomized="0.00000000"
+           inkscape:rounded="0.00000000"
+           inkscape:flatsided="false"
+           sodipodi:arg2="1.5707963"
+           sodipodi:arg1="0.52359878"
+           sodipodi:r2="6.2649822"
+           sodipodi:r1="12.529964"
+           sodipodi:cy="111.36218"
+           sodipodi:cx="505.00000"
+           sodipodi:sides="3"
+           id="path1411"
+           style="fill:#ffff00;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#000000;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"
+           sodipodi:type="star" />
+        <use
+           height="1052.3622"
+           width="744.09448"
+           transform="translate(33.00000,0.000000)"
+           id="use1413"
+           xlink:href="#path1332"
+           y="0.00000000"
+           x="0.00000000" />
+        <use
+           height="1052.3622"
+           width="744.09448"
+           transform="translate(33.00000,0.000000)"
+           id="use1415"
+           xlink:href="#use1334"
+           y="0.00000000"
+           x="0.00000000" />
+        <use
+           transform="translate(33.00000,0.000000)"
+           height="1052.3622"
+           width="744.09448"
+           id="use1417"
+           xlink:href="#use1336"
+           y="0.00000000"
+           x="0.00000000" />
+        <use
+           transform="translate(33.00000,0.000000)"
+           height="1052.3622"
+           width="744.09448"
+           id="use1419"
+           xlink:href="#use1338"
+           y="0.00000000"
+           x="0.00000000" />
+      </g>
+    </g>
+    <g
+       id="g2933"
+       transform="translate(-387.0000,-8.000000)">
+      <path
+         id="path1457"
+         d="M 462.50000,91.375000 C 448.47676,91.375000 437.08519,102.71544 437.00000,116.71875 L 434.00000,114.87500 L 422.75000,107.93750 L 422.37500,121.15625 L 422.00000,134.37500 L 433.62500,128.06250 L 438.56250,125.37500 C 442.08138,135.24666 451.42493,142.37500 462.50000,142.37500 C 476.57600,142.37500 488.00000,130.95100 488.00000,116.87500 C 488.00000,102.79900 476.57600,91.375000 462.50000,91.375000 z "
+         style="fill:#ff0000;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#000000;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000" />
+      <path
+         transform="translate(-93.00000,-5.000000)"
+         d="M 571.63945,136.21273 L 565.39445,129.96773 L 559.14945,123.72274 L 567.68028,121.43691 L 576.21110,119.15108 L 573.92527,127.68191 L 571.63945,136.21273 z "
+         inkscape:randomized="0.00000000"
+         inkscape:rounded="0.00000000"
+         inkscape:flatsided="false"
+         sodipodi:arg2="2.3561945"
+         sodipodi:arg1="1.3089969"
+         sodipodi:r2="5.0990195"
+         sodipodi:r1="10.198039"
+         sodipodi:cy="126.36218"
+         sodipodi:cx="569.00000"
+         sodipodi:sides="3"
+         id="path1459"
+         style="fill:#ffff00;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#000000;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"
+         sodipodi:type="star" />
+      <path
+         sodipodi:nodetypes="cc"
+         id="path2199"
+         d="M 473.00000,139.36218 C 475.73214,133.89790 476.41265,150.01277 478.00000,156.36218"
+         style="fill:none;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#000000;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000" />
+      <path
+         sodipodi:nodetypes="cc"
+         id="path2201"
+         d="M 455.00000,141.36218 L 450.00000,155.36218"
+         style="fill:none;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#000000;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000" />
+      <path
+         transform="translate(-82.00000,29.00000)"
+         d="M 548.00000 79.362183 A 5.5000000 6.0000000 0 1 1  537.00000,79.362183 A 5.5000000 6.0000000 0 1 1  548.00000 79.362183 z"
+         sodipodi:ry="6.0000000"
+         sodipodi:rx="5.5000000"
+         sodipodi:cy="79.362183"
+         sodipodi:cx="542.50000"
+         id="path2203"
+         style="fill:#000000;fill-opacity:0.75000000"
+         sodipodi:type="arc" />
+      <path
+         transform="translate(-65.00000,28.00000)"
+         sodipodi:type="arc"
+         style="fill:#000000;fill-opacity:0.75000000"
+         id="path2205"
+         sodipodi:cx="542.50000"
+         sodipodi:cy="79.362183"
+         sodipodi:rx="5.5000000"
+         sodipodi:ry="6.0000000"
+         d="M 548.00000 79.362183 A 5.5000000 6.0000000 0 1 1  537.00000,79.362183 A 5.5000000 6.0000000 0 1 1  548.00000 79.362183 z" />
+      <text
+         xml:space="preserve"
+         style="font-size:12.000000px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+         x="414"
+         y="66.362183"
+         id="text2941"><tspan
+           sodipodi:role="line"
+           id="tspan2943"
+           x="414.00000"
+           y="66.362183">What if the hero were a little flightless bird? He can only fly if he's skinny and has a LOT of energy.</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:12.000000px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+         x="238"
+         y="90.362183"
+         id="text3715"
+         transform="translate(382.0000,7.000000)"><tspan
+           sodipodi:role="line"
+           id="tspan3717"
+           x="238.00000"
+           y="90.362183">Of course the more he eats, the fatter he gets so he can't fly much at all. :)</tspan></text>
+    </g>
+    <g
+       transform="translate(-19.00000,-70.00000)"
+       id="g2945">
+      <use
+         x="0.00000000"
+         y="0.00000000"
+         xlink:href="#use1328"
+         id="use2947"
+         transform="translate(7.000000,24.00000)"
+         width="744.09448"
+         height="1052.3622" />
+      <use
+         height="1052.3622"
+         width="744.09448"
+         transform="translate(7.000000,24.00000)"
+         id="use5296"
+         xlink:href="#use1328"
+         y="0.00000000"
+         x="0.00000000" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:12.000000px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+       x="31"
+       y="235.36218"
+       id="text2961"><tspan
+         sodipodi:role="line"
+         id="tspan2963"
+         x="31.000000"
+         y="235.36218">There could be different types of blocks to walk on, sort of like arkanoid. </tspan></text>
+    <path
+       sodipodi:type="arc"
+       style="fill:#f2d52e;fill-opacity:0.75000000"
+       id="path2965"
+       sodipodi:cx="147.00000"
+       sodipodi:cy="116.86218"
+       sodipodi:rx="8.0000000"
+       sodipodi:ry="7.5000000"
+       d="M 155.00000 116.86218 A 8.0000000 7.5000000 0 1 1  139.00000,116.86218 A 8.0000000 7.5000000 0 1 1  155.00000 116.86218 z" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#f2d52e;fill-opacity:0.75000000"
+       id="path2967"
+       sodipodi:cx="181.50000"
+       sodipodi:cy="123.36218"
+       sodipodi:rx="7.5000000"
+       sodipodi:ry="7.0000000"
+       d="M 189.00000 123.36218 A 7.5000000 7.0000000 0 1 1  174.00000,123.36218 A 7.5000000 7.0000000 0 1 1  189.00000 123.36218 z" />
+    <text
+       xml:space="preserve"
+       style="font-size:12.000000px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+       x="233"
+       y="126.36218"
+       id="text3695"><tspan
+         sodipodi:role="line"
+         id="tspan3697"
+         x="233.00000"
+         y="126.36218">The food is just birdseed or something.</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12.000000px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+       x="233"
+       y="287.36218"
+       id="text3699"><tspan
+         sodipodi:role="line"
+         id="tspan3701"
+         x="233.00000"
+         y="287.36218">Some platforms could require you to be heavy so that you can lower them.</tspan><tspan
+         sodipodi:role="line"
+         x="233.00000"
+         y="302.36218"
+         id="tspan3703" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12.000000px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+       x="233"
+       y="304.36218"
+       id="text3705"><tspan
+         sodipodi:role="line"
+         id="tspan3707"
+         x="233.00000"
+         y="304.36218">Sometimes if you lower one of these, another one goes up?</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12.000000px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+       x="232.63672"
+       y="456.36218"
+       id="text3709"><tspan
+         sodipodi:role="line"
+         id="tspan3711"
+         x="232.63672"
+         y="456.36218">Others could be like treadmills... You have to walk fast enough on</tspan><tspan
+         sodipodi:role="line"
+         x="232.63672"
+         y="471.36218"
+         id="tspan3713">them in the right direction to power something... Like a door.</tspan><tspan
+         sodipodi:role="line"
+         x="232.63672"
+         y="486.36218"
+         id="tspan6112" /><tspan
+         sodipodi:role="line"
+         x="232.63672"
+         y="501.36218"
+         id="tspan6114">Or to MOVE something, like a ladder or obstacle.</tspan></text>
+    <g
+       id="g4491"
+       transform="translate(-12.00000,386.0000)">
+      <g
+         transform="matrix(-1.000000,1.103176e-17,-1.103176e-17,-1.000000,700.3970,350.8849)"
+         id="g4495">
+        <g
+           id="g4526">
+          <use
+             x="0.00000000"
+             y="0.00000000"
+             xlink:href="#use1326"
+             id="use4493"
+             transform="matrix(-1.000000,-1.103176e-17,1.103176e-17,-1.000000,700.3970,272.8849)"
+             width="744.09448"
+             height="1052.3622" />
+          <path
+             transform="matrix(0.866025,-0.500000,0.500000,0.866025,13.54233,267.0000)"
+             d="M 515.85127,117.62716 L 505.00000,117.62716 L 494.14873,117.62716 L 499.57437,108.22969 L 505.00000,98.832218 L 510.42563,108.22969 L 515.85127,117.62716 z "
+             inkscape:randomized="0.00000000"
+             inkscape:rounded="0.00000000"
+             inkscape:flatsided="false"
+             sodipodi:arg2="1.5707963"
+             sodipodi:arg1="0.52359878"
+             sodipodi:r2="6.2649822"
+             sodipodi:r1="12.529964"
+             sodipodi:cy="111.36218"
+             sodipodi:cx="505.00000"
+             sodipodi:sides="3"
+             id="path4497"
+             style="fill:#ffff00;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#000000;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"
+             sodipodi:type="star" />
+          <use
+             height="1052.3622"
+             width="744.09448"
+             transform="matrix(0.866025,-0.500000,0.500000,0.866025,46.54233,267.0000)"
+             id="use4499"
+             xlink:href="#path1332"
+             y="0.00000000"
+             x="0.00000000" />
+          <use
+             height="1052.3622"
+             width="744.09448"
+             transform="matrix(0.866025,-0.500000,0.500000,0.866025,50.96349,283.5000)"
+             id="use4501"
+             xlink:href="#use1334"
+             y="0.00000000"
+             x="0.00000000"
+             style="fill:#fffe00;fill-opacity:1.0000000" />
+          <use
+             transform="matrix(0.866025,-0.500000,0.500000,0.866025,55.38465,300.0000)"
+             height="1052.3622"
+             width="744.09448"
+             id="use4503"
+             xlink:href="#use1336"
+             y="0.00000000"
+             x="0.00000000"
+             style="fill:#fffe00;fill-opacity:1.0000000" />
+          <use
+             transform="matrix(0.866025,-0.500000,0.500000,0.866025,59.80581,316.5000)"
+             height="1052.3622"
+             width="744.09448"
+             id="use4505"
+             xlink:href="#use1338"
+             y="0.00000000"
+             x="0.00000000"
+             style="fill:#fffe00;fill-opacity:1.0000000" />
+          <use
+             style="fill:#fffe00;fill-opacity:1.0000000"
+             x="0.00000000"
+             y="0.00000000"
+             xlink:href="#use1334"
+             id="use4507"
+             transform="matrix(0.866025,-0.500000,0.500000,0.866025,50.96349,283.5000)"
+             width="744.09448"
+             height="1052.3622" />
+          <use
+             style="fill:#fffe00;fill-opacity:1.0000000"
+             x="0.00000000"
+             y="0.00000000"
+             xlink:href="#use1336"
+             id="use4509"
+             width="744.09448"
+             height="1052.3622"
+             transform="matrix(0.866025,-0.500000,0.500000,0.866025,55.38465,300.0000)" />
+          <use
+             style="fill:#fffe00;fill-opacity:1.0000000"
+             x="0.00000000"
+             y="0.00000000"
+             xlink:href="#use1338"
+             id="use4511"
+             width="744.09448"
+             height="1052.3622"
+             transform="matrix(0.866025,-0.500000,0.500000,0.866025,59.80581,316.5000)" />
+          <use
+             height="1052.3622"
+             width="744.09448"
+             transform="matrix(0.866025,-0.500000,0.500000,0.866025,50.96349,283.5000)"
+             id="use4513"
+             xlink:href="#use1334"
+             y="0.00000000"
+             x="0.00000000"
+             style="fill:#fffe00;fill-opacity:1.0000000" />
+          <use
+             transform="matrix(0.866025,-0.500000,0.500000,0.866025,55.38465,300.0000)"
+             height="1052.3622"
+             width="744.09448"
+             id="use4515"
+             xlink:href="#use1336"
+             y="0.00000000"
+             x="0.00000000"
+             style="fill:#fffe00;fill-opacity:1.0000000" />
+          <use
+             transform="matrix(0.866025,-0.500000,0.500000,0.866025,59.80581,316.5000)"
+             height="1052.3622"
+             width="744.09448"
+             id="use4517"
+             xlink:href="#use1338"
+             y="0.00000000"
+             x="0.00000000"
+             style="fill:#fffe00;fill-opacity:1.0000000" />
+          <use
+             style="fill:#fffe00;fill-opacity:1.0000000"
+             x="0.00000000"
+             y="0.00000000"
+             xlink:href="#use1334"
+             id="use4519"
+             transform="matrix(0.866025,-0.500000,0.500000,0.866025,50.96349,283.5000)"
+             width="744.09448"
+             height="1052.3622" />
+          <use
+             style="fill:#fffe00;fill-opacity:1.0000000"
+             x="0.00000000"
+             y="0.00000000"
+             xlink:href="#use1336"
+             id="use4521"
+             width="744.09448"
+             height="1052.3622"
+             transform="matrix(0.866025,-0.500000,0.500000,0.866025,55.38465,300.0000)" />
+          <use
+             style="fill:#fffe00;fill-opacity:1.0000000"
+             x="0.00000000"
+             y="0.00000000"
+             xlink:href="#use1338"
+             id="use4523"
+             width="744.09448"
+             height="1052.3622"
+             transform="matrix(0.866025,-0.500000,0.500000,0.866025,59.80581,316.5000)" />
+        </g>
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:12.000000px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+         x="245"
+         y="235.36218"
+         id="text4543"><tspan
+           sodipodi:role="line"
+           id="tspan4545"
+           x="245.00000"
+           y="235.36218">The floors can light up showing how much more power/weight you</tspan><tspan
+           sodipodi:role="line"
+           x="245.00000"
+           y="250.36218"
+           id="tspan4547">need to activate the thing.</tspan></text>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:12.000000px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+       x="233"
+       y="378.36218"
+       id="text4553"><tspan
+         sodipodi:role="line"
+         id="tspan4555"
+         x="233.00000"
+         y="378.36218">Some platforms are trampolines. You land on one of these and you</tspan><tspan
+         sodipodi:role="line"
+         x="233.00000"
+         y="393.36218"
+         id="tspan4557">bounce. Your weight and accelleration change how high you bounce.</tspan></text>
+    <g
+       id="g5312"
+       transform="matrix(1.140604,0.000000,0.000000,1.134817,-5.764537,-102.3081)">
+      <path
+         sodipodi:open="true"
+         sodipodi:end="6.4061284"
+         sodipodi:start="3.0607565"
+         transform="translate(-422.0000,-21.00000)"
+         d="M 463.10449,778.05173 A 32.000000,39.500000 0 1 1 526.75846,779.70621"
+         sodipodi:ry="39.500000"
+         sodipodi:rx="32.000000"
+         sodipodi:cy="774.86218"
+         sodipodi:cx="495.00000"
+         id="path4565"
+         style="fill:#7c7c7c;fill-opacity:1.0000000"
+         sodipodi:type="arc" />
+      <path
+         sodipodi:end="6.2960826"
+         sodipodi:start="3.1415927"
+         transform="matrix(1.000000,0.000000,0.000000,0.891566,-488.0000,102.2923)"
+         d="M 532.00000,735.86218 A 28.000000,43.743244 0 1 1 587.99767,736.42634 L 560.00000,735.86218 z"
+         sodipodi:ry="43.743244"
+         sodipodi:rx="28.000000"
+         sodipodi:cy="735.86218"
+         sodipodi:cx="560.00000"
+         id="path4567"
+         style="fill:#000000;fill-opacity:1.0000000"
+         sodipodi:type="arc" />
+    </g>
+    <g
+       id="g5298"
+       transform="translate(-19.00000,539.0000)">
+      <use
+         height="1052.3622"
+         width="744.09448"
+         transform="translate(7.000000,24.00000)"
+         id="use5300"
+         xlink:href="#use1328"
+         y="0.00000000"
+         x="0.00000000" />
+      <use
+         x="0.00000000"
+         y="0.00000000"
+         xlink:href="#use1328"
+         id="use5302"
+         transform="translate(7.000000,24.00000)"
+         width="744.09448"
+         height="1052.3622" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:12.000000px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+       x="234"
+       y="763.36218"
+       id="text5306"><tspan
+         sodipodi:role="line"
+         id="tspan5308"
+         x="234.00000"
+         y="763.36218">We still have doors, which lead to other doors on screen or to the exit</tspan><tspan
+         sodipodi:role="line"
+         x="234.00000"
+         y="778.36218"
+         id="tspan5310">for the level, and ladders.</tspan></text>
+    <g
+       id="g5316"
+       transform="matrix(0.562566,0.000000,0.000000,1.000000,16.93410,152.0000)">
+      <path
+         sodipodi:type="arc"
+         style="fill:#7c7c7c;fill-opacity:1.0000000"
+         id="path5318"
+         sodipodi:cx="495.00000"
+         sodipodi:cy="774.86218"
+         sodipodi:rx="32.000000"
+         sodipodi:ry="39.500000"
+         d="M 463.10449,778.05173 A 32.000000,39.500000 0 1 1 526.75846,779.70621"
+         transform="translate(-422.0000,-21.00000)"
+         sodipodi:start="3.0607565"
+         sodipodi:end="6.4061284"
+         sodipodi:open="true" />
+      <path
+         sodipodi:type="arc"
+         style="fill:#000000;fill-opacity:1.0000000"
+         id="path5320"
+         sodipodi:cx="560.00000"
+         sodipodi:cy="735.86218"
+         sodipodi:rx="28.000000"
+         sodipodi:ry="43.743244"
+         d="M 532.00000,735.86218 A 28.000000,43.743244 0 1 1 587.99767,736.42634 L 560.00000,735.86218 z"
+         transform="matrix(1.000000,0.000000,0.000000,0.891566,-488.0000,102.2923)"
+         sodipodi:start="3.1415927"
+         sodipodi:end="6.2960826" />
+    </g>
+    <g
+       transform="translate(-20.00000,690.0000)"
+       id="g6090">
+      <use
+         x="0.00000000"
+         y="0.00000000"
+         xlink:href="#use1328"
+         id="use6092"
+         transform="translate(7.000000,24.00000)"
+         width="744.09448"
+         height="1052.3622" />
+      <use
+         height="1052.3622"
+         width="744.09448"
+         transform="translate(7.000000,24.00000)"
+         id="use6094"
+         xlink:href="#use1328"
+         y="0.00000000"
+         x="0.00000000" />
+    </g>
+    <rect
+       style="fill:#7c7c7c;fill-opacity:1.0000000"
+       id="rect6096"
+       width="8.0000000"
+       height="154.00000"
+       x="142.00000"
+       y="756.36218" />
+    <rect
+       style="fill:#7c7c7c;fill-opacity:1.0000000"
+       id="rect6098"
+       width="10.000000"
+       height="151.00000"
+       x="183.00000"
+       y="757.36218" />
+    <rect
+       style="fill:#7c7c7c;fill-opacity:1.0000000"
+       id="rect6100"
+       width="42.000000"
+       height="15.000000"
+       x="144.00000"
+       y="873.36218" />
+    <rect
+       style="fill:#7c7c7c;fill-opacity:1.0000000"
+       id="rect6102"
+       width="45.000000"
+       height="18.000000"
+       x="144.00000"
+       y="834.36218" />
+    <rect
+       style="fill:#7c7c7c;fill-opacity:1.0000000"
+       id="rect6104"
+       width="38.000000"
+       height="11.000000"
+       x="149.00000"
+       y="774.36218" />
+    <rect
+       style="fill:#7c7c7c;fill-opacity:1.0000000"
+       id="rect6106"
+       width="40.000000"
+       height="10.000000"
+       x="145.00000"
+       y="803.36218" />
+    <text
+       xml:space="preserve"
+       style="font-size:12.000000px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+       x="231.82813"
+       y="921.36218"
+       id="text6108"><tspan
+         sodipodi:role="line"
+         id="tspan6110"
+         x="231.82813"
+         y="921.36218">Maybe we can move the ladders around with the platforms?</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12.000000px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+       x="235"
+       y="158.36218"
+       id="text8364"><tspan
+         sodipodi:role="line"
+         id="tspan8366"
+         x="235.00000"
+         y="158.36218">The game could be sort of like an elaborate  chicken coop that you are</tspan><tspan
+         sodipodi:role="line"
+         x="235.00000"
+         y="173.36218"
+         id="tspan8368">trying to ecsape. </tspan></text>
+    <g
+       transform="translate(-20.00000,790.0000)"
+       id="g8370">
+      <use
+         x="0.00000000"
+         y="0.00000000"
+         xlink:href="#use1328"
+         id="use8372"
+         transform="translate(7.000000,24.00000)"
+         width="744.09448"
+         height="1052.3622" />
+      <use
+         height="1052.3622"
+         width="744.09448"
+         transform="translate(7.000000,24.00000)"
+         id="use8374"
+         xlink:href="#use1328"
+         y="0.00000000"
+         x="0.00000000" />
+    </g>
+    <path
+       sodipodi:type="arc"
+       style="fill:#fffcfc;fill-opacity:1.0000000;stroke:#130000;stroke-width:3.8503830;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000"
+       id="path8376"
+       sodipodi:cx="294.50000"
+       sodipodi:cy="987.86218"
+       sodipodi:rx="19.500000"
+       sodipodi:ry="29.500000"
+       d="M 275.00000,987.86218 A 19.500000,29.500000 0 1 1 275.00272,988.35525"
+       sodipodi:start="3.1415927"
+       sodipodi:end="9.4080631"
+       sodipodi:open="true"
+       transform="matrix(0.433888,0.000000,0.000000,0.433235,-71.77974,569.8859)" />
+    <text
+       xml:space="preserve"
+       style="font-size:12.000000px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+       x="234"
+       y="1023.3622"
+       id="text10556"><tspan
+         sodipodi:role="line"
+         id="tspan10558"
+         x="234.00000"
+         y="1023.3622">Get points by rescuing the eggs on the level before you escape?</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12.000000px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+       x="27.916016"
+       y="25.362183"
+       id="text10560"><tspan
+         sodipodi:role="line"
+         id="tspan10562"
+         x="27.916016"
+         y="25.362183">more concept art for trailblazer game</tspan></text>
+  </g>
+</svg>
