@@ -100,9 +100,19 @@ class ParserTest(unittest.TestCase):
         assert isinstance(r, Rect)
 
         self.assertEquals(float(u"102.61992"), r.x)
-        self.assertEquals(float(u"58.551853"), r.y)
         self.assertEquals(float(u"198.86618"), r.width)
         self.assertEquals(float(u"21.259426"), r.height)
+
+        # this one is a little tricky:
+        # in svg and pyode, y++ is upward motion,
+        # (in other words, (0,0) is lower left)
+        #
+        # but in pygame, y++ is downward motion
+        # (so (0,0) is upper left)
+        #
+        # since pygame is the one we actually see,
+        # it takes precedence, and so we flip the y:
+        self.assertEquals(-float(u"58.551853"), r.y)
 
         self.assertEquals([0.854241,0.519878,-0.519878,
                            0.854241,0.000000,0.000000],
@@ -153,8 +163,10 @@ class SvgHandler(xml.sax.ContentHandler):
             self.result.append(r)
 
             for attr, value in attrs.items():
-                if attr in ["x","y","width","height"]:
+                if attr in ["x","width","height"]:
                     setattr(r, attr, float(value))
+                elif attr == "y":
+                    r.y = -float(value)
                 elif attr == "transform":
                     r.transform = parseMatrix(value)
 
