@@ -34,13 +34,25 @@ class RoomTest(unittest.TestCase):
 
     we pass it the center and length
     """
-    def test(self):
+    def testAddBlock(self):
         world = Room()
         block = world.addBlock((40, 42), lx=5, ly=10)
         assert len(world.blocks) == 1
         assert block.getLengths() == (5, 10, THICKNESS)
         assert block.getPosition()[:2] == (40,42)
-        
+        assert block.getBody()
+
+    def testAddGeom(self):
+        """
+        A Geom is like a block that doesn't move.
+        It doesn't have a body so the physics
+        engine can't see it, but the space/collision
+        engine can.
+        """
+        rm = Room()
+        floor = rm.addGeom((50, 95), 100, 10)
+        assert not floor.getBody()
+
 
 
 class Room(object):
@@ -55,17 +67,25 @@ class Room(object):
         self.space = ode.Space()
         self.blocks = []
 
+    def addGeom(self, (cx, cy), lx, ly):
+        #ref: http://ode.org/ode-latest-userguide.html#sec_12_4_0
+        #     "how can an immovable body be created?"
+        geom = ode.GeomBox(self.space, [lx, ly, THICKNESS])
+        geom.setPosition((cx, cy, 0))
+        self.blocks.append(geom)
+        return geom
+    
     def addBlock(self, (cx, cy), lx, ly):
         """
-        add a 2d block (no rotation yet)
+        add a 2d block (a geom with a body)
         """
-        body = ode.Body(self.world)
-        geom = ode.GeomBox(self.space, [lx, ly, THICKNESS])
-        geom.setBody(body)
-        geom.setPosition((cx, cy, 0))
-
-        self.blocks.append(geom) # body?
-        return geom
+        block = self.addGeom((cx,cy), lx, ly)
+        block.setBody(ode.Body(self.world))
+        
+        # i think setting the body resets the position,
+        # because if you take this line out, the tests fail:
+        block.setPosition((cx, cy, 0))
+        return block
 
 
 if __name__=="__main__":
