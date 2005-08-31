@@ -1,10 +1,7 @@
 """events.py -- the general purpose event register.
 
 Home for all event constants.
-Home for the main event handler.
-"""
 
-"""
 Register your event today!
 
 The purpose of this module is to register any events that we'll need
@@ -19,9 +16,6 @@ Then, when you post an event, post it like:
 eventnet.driver.post(events.MODULE_EVENTNAME)
 
 This should make refactoring easier.
-
-Then, register your event with event_handler, using the appropriate
-syntax.
 """
 import pygame, eventnet.driver, sys, os
 from pygame.locals import *
@@ -32,14 +26,20 @@ HEALTH_FAT_CHANGED = "HEALTH_FAT_CHANGED"
 HEALTH_SUGAR_CRASH = "HEALTH_SUGAR_CRASH"
 HEALTH_HIGH_BLOOD = "HEALTH_HIGH_BLOOD"
 
+import unittest
+
 
 #modified this to be a single class that's imported by main script
 #Micah
+#
+#I don't think we actually need this.  Each object that needs to handle
+#events will be its own handler. 
+#--David
 class event_handler(eventnet.driver.Handler):
     """
-    this class is imported by the main script and will handle ALL events,
-    all handlers should call functions from the physics system when that is
-    ready
+    this class is imported by the main script and will handle ALL
+    events, all handlers should call functions from the physics system
+    when that is ready
 
     How to use this:
     http://lgt.berlios.de/#eventnet
@@ -49,13 +49,11 @@ class event_handler(eventnet.driver.Handler):
         sys.exit(0)
 
     # Metabolism-related events
-    def EVT_HEALTH_BLOOD_CHANGED(self, event):
-        # sugar = a_health_model.getBlood()
-        pass
+    def EVT_HEALTH_BLOOD_CHANGED(self, event): pass
 
     def EVT_HEALTH_FAT_CHANGED(self, event): pass
 
     def EVT_HEALTH_SUGAR_CRASH(self, event): pass
     
-    def EVT_HIGH_BLOOD(self, event): pass
+    def EVT_HEALTH_HIGH_BLOOD(self, event): pass
 

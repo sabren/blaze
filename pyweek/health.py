@@ -17,6 +17,14 @@ Here, let me show a usage example:
 """
 import unittest
 class ExampleTest(unittest.TestCase):
+    def setUp(self):
+        """
+        Don't worry about this.  This is to keep eventnet from
+        complaining about unhandled events in our tests.
+        """
+        self.e = events.event_handler()
+        self.e.capture()
+
     def testHealthExample(self):
         """We need a working tutorial.
 
@@ -372,6 +380,7 @@ class HealthModelTest(unittest.TestCase):
         We're going to explicitly declare our defaults, in case the
         coded defaults change.  They're not really important.
         """
+        import events
         self.c = HealthModelConfig()
         self.c.startfat = 5000
         self.c.startblood = 1000
@@ -384,6 +393,9 @@ class HealthModelTest(unittest.TestCase):
         self.c.insulin2fatratio = 0.5
         self.h = HealthModel(self.c)
         self.f = Food(100, 100)
+        # keep eventnet from complaining about unhandled events in our tests.
+        self.e = events.event_handler()
+        self.e.capture()
 
 
     def testConfig(self):
@@ -474,7 +486,7 @@ import eventnet.driver
 import events
 
 
-class HealthModel:
+class HealthModel(eventnet.driver.Handler):
     """With this health model, we'll keep track of our hero's health.
 
     A HealthModel needs a HealthModelConfig and a HealthModelHandler.
@@ -559,39 +571,39 @@ class HealthModel:
         eventnet.driver.post(events.HEALTH_BLOOD_CHANGED)
 
 class HealthModelHandlerTest(unittest.TestCase):
-    """We'll need an event handler for health-related events.
-    """
-    def testEventHandler(self):
-        """Is there an EventHandler in the house?
-        
-        Hello.  We're from the government, and we're here to handle
-        your events.
+        """We'll need an event handler for health-related events.
         """
-        self.c = HealthModelConfig()
-        self.h = HealthModel(self.c)
-        self.handler = HealthModelHandler(self.h)
-
-"""
-Looks like we're going to use EventNet for our event handling.
-Seems simple enough.
--> http://lgt.berlios.de/#eventnet
-"""
-import eventnet.driver
-
+        def testEventHandler(self):
+            """Is there an EventHandler in the house?
+            
+            Hello.  We're from the government, and we're here to handle
+            your events.
+            """
+            self.c = HealthModelConfig()
+            self.h = HealthModel(self.c)
+            self.handler = HealthModelHandler(self.h)
+            
+        """
+        Looks like we're going to use EventNet for our event handling.
+        Seems simple enough.
+        -> http://lgt.berlios.de/#eventnet
+        """
+        import eventnet.driver
+        
 class HealthModelHandler(eventnet.driver.Handler):
     """
     """
     def __init__(self, model):
         super(HealthModelHandler, self).__init__()
         self.model = model
-
+                
 """
 Here's what's left:
 
 * Set up an event handler.
-  * Need to know what events we need to handle.
-
+* Need to know what events we need to handle.
 """
+                                                                          
 
 if __name__ == "__main__":
     unittest.main()
