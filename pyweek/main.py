@@ -5,11 +5,12 @@ Micah
 """
 
 # not sure if we need all of these but they're here just in case
-import pygame, sys, os, cPickle, loader, eventnet.driver, eventnet._pygame, events, string
-from pygame.locals import *
-
-#initialize pygame
-pygame.init() 
+import os, sys, string
+import unittest
+import eventnet.driver
+#import pygame
+#import cPickle, loader, eventnet.driver, eventnet._pygame, events, string
+#from pygame.locals import *
 
 # load all levels and parse into dict
 lvl_list = []
@@ -26,6 +27,110 @@ def load(file):
     for x in range(3):
         list += [string.join([file, lst[x]], '-')]
     return list
+
+
+def allThreeFilenames(base):
+    suffixes = ['back.png', 'geom.svg', 'fore.png']
+    return ["-".join([base, suf]) for suf in suffixes]
+
+
+class TestAllThreeFilenames(unittest.TestCase):
+
+    def test(self):
+        goal = ["xyz-back.png","xyz-geom.svg","xyz-fore.png"]
+        self.assertEquals(goal, load("xyz"))
+        self.assertEquals(goal, allThreeFilenames("xyz"))
+
+# master class for game modes
+class State(object):
+    def run(self):
+        raise NotImplementedError("Abstract Class")
+
+
+class ExitState(State):
+    pass
+
+class MenuState(State):
+
+    def run(self):
+        return self.pick(GameState, HighScoreState, CreditsState, ExitState)
+
+    def pick(self, modes):
+        # really show a menu and let user pick
+        return modes[0]
+    
+class GameState(State):
+
+    def run(self):
+        while True:
+            if pause: pass
+            if quit: break
+            eventStuff()
+
+class HighScoreState(State):
+    def run(self):
+        #showScoresOnScreen()
+        while True:        
+            if escape:
+                break
+            # maybe blit some background animation or whatever..
+            
+class CreditsState(State):
+    def run(self):
+        pass
+    
+
+class StateManager(object):
+    pass
+
+
+
+# The game Console (our master object)
+class Console(eventnet.driver.Handler):
+    def __init__(self):
+        super(Console, self).__init__()
+        self.state = MenuState()
+        self.capture()
+
+    def EVT_MENU_PLAY(self, event):
+        self.state = GameState()
+
+
+MENU_PLAY="MENU_PLAY"
+
+class ConsoleTest(unittest.TestCase):
+    def test(self):
+        con = Console()
+        
+        # on start, we go to the menu state:
+        assert isinstance(con.state, MenuState)
+
+        # so now we're sitting here looking at
+        # the console and it's showing us a menu
+        
+        # really we're going to hit some buttons
+        # so... we're firing off an event.
+
+        # so.. let's say we pick "play!"
+        eventnet.driver.post(MENU_PLAY)
+
+        # now we should be in the game mode:
+        assert isinstance(con.state, GameState),\
+               "the game should start when we pick play"
+
+
+
+
+unittest.main()
+
+## stop execution here for now while i show you this:
+import sys; sys.exit()
+
+##########################################################
+
+#initialize pygame
+pygame.init() 
+
 
 # set screen size and put it up 
 window = pygame.display.set_mode((640, 480)) 
