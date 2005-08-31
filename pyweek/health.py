@@ -471,7 +471,8 @@ class HealthModelTest(unittest.TestCase):
 import eventnet.driver
 
 # We're going to need events to throw around.
-from events import Health as h_events
+import events
+
 
 class HealthModel:
     """With this health model, we'll keep track of our hero's health.
@@ -500,8 +501,8 @@ class HealthModel:
         except NotEnoughCalories, e:
             # If we're short on blood sugar, burn fat.
             self.fat.burnCalories(e.calories_short)
-            eventnet.driver.post(h_events.FAT_CHANGED)
-        eventnet.driver.post(h_events.BLOOD_CHANGED)
+            eventnet.driver.post(events.HEALTH_FAT_CHANGED)
+        eventnet.driver.post(events.HEALTH_BLOOD_CHANGED)
 
     def eat(self, food):
         """Eat food.  Keep your strength up.
@@ -527,8 +528,8 @@ class HealthModel:
                 calories2fat = self.getBlood() - self.config.bloodlimit
                 self.blood.burnCalories(calories2fat)
                 self.fat.addCalories(calories2fat)
-        eventnet.driver.post(h_events.FAT_CHANGED)
-        eventnet.driver.post(h_events.BLOOD_CHANGED)
+        eventnet.driver.post(events.HEALTH_FAT_CHANGED)
+        eventnet.driver.post(events.HEALTH_BLOOD_CHANGED)
         
 
     def step(self):
@@ -545,17 +546,17 @@ class HealthModel:
         if not self.config.suppressinsulin:
             insulinpenalty = 0
             if self.getBlood() > self.config.bloodlimit:
-                eventnet.driver.post(h_events.HIGH_BLOOD)
+                eventnet.driver.post(events.HEALTH_HIGH_BLOOD)
                 insulinpenalty = (self.getBlood() - self.config.bloodlimit) * self.config.insulinratio
             insulin = self.config.baseinsulinrate + insulinpenalty
             self.blood.burnCalories(insulin)
             if insulin > self.config.bloodlimit/2:
                 # Looks like a sugar crash.
-                eventnet.driver.post(h_events.SUGAR_CRASH)
+                eventnet.driver.post(events.HEALTH_SUGAR_CRASH)
             insulin2fat = int(insulin*self.config.insulin2fatratio)
             self.fat.addCalories(insulin2fat)
-        eventnet.driver.post(h_events.FAT_CHANGED)
-        eventnet.driver.post(h_events.BLOOD_CHANGED)
+        eventnet.driver.post(events.HEALTH_FAT_CHANGED)
+        eventnet.driver.post(events.HEALTH_BLOOD_CHANGED)
 
 class HealthModelHandlerTest(unittest.TestCase):
     """We'll need an event handler for health-related events.
