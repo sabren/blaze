@@ -11,10 +11,11 @@ import sys
 sys.path.append("..")
 import room, ode, pygame, render, random, loader
 #from pygame.locals import KEYDOWN
+
 from pygame.locals import *
 
 
-from cgtypes import *
+#from cgtypes import *
 from math import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -26,9 +27,13 @@ from ode_to_pixel import *
 
 
 
+camx, camy, camz = (-0.5, -0.5, 1.)
+
+camx, camy, camz = -0.5, 0., 1.0
 
 # prepare_GL
 def prepare_GL():
+    global camx, camy, camz
     """Prepare drawing.
     """
     
@@ -45,34 +50,39 @@ def prepare_GL():
     glShadeModel(GL_FLAT)
 
     # Projection
-    doit = 1
+    doit = 0
 
-    if doit:
-        glMatrixMode(GL_PROJECTION)
-        glLoadIdentity()
-        P = mat4(1).perspective(45,1.3333,0.2,20)
-        glMultMatrixd(P.toList())
+    #if doit:
+    #    glMatrixMode(GL_PROJECTION)
+    #    glLoadIdentity()
+    #    P = mat4(1).perspective(45,1.3333,0.2,20)
+    #    glMultMatrixd(P.toList())
 
     # Initialize ModelView matrix
     glMatrixMode(GL_MODELVIEW)
     glLoadIdentity()
 
     #glTranslate(-.5, -.5, 1.1)
-    if not doit:
-        glTranslate(1., .0, 1.5)
-        glRotate(180, 0., 1.0, 0.)
+    #glTranslate(-.5, -.5, camz)
+    #if not doit:
+
+    #glTranslate(0., .0, 1.1)
+    #glRotate(180, 0., 1.0, 0.)
 
     # Light source
     glLightfv(GL_LIGHT0,GL_POSITION,[0,0,1,0])
     glLightfv(GL_LIGHT0,GL_DIFFUSE,[1,1,1,1])
     glLightfv(GL_LIGHT0,GL_SPECULAR,[1,1,1,1])
     glEnable(GL_LIGHT0)
-    if doit:
-        # View transformation
-        V = mat4(1).lookAt(1.2*vec3(2,3,4),(0.5,0.5,0), up=(0,-1,0))
-        V.rotate(pi,vec3(0,1,0))  
-        V = V.inverse()
-        glMultMatrixd(V.toList())
+    #if doit:
+    #    # View transformation
+    #    V = mat4(1).lookAt(1.2*vec3(2,3,4),(0.5,0.5,0), up=(0,-1,0))
+    #    V.rotate(pi,vec3(0,1,0))  
+    #    V = V.inverse()
+    #    glMultMatrixd(V.toList())
+
+    glTranslate(camx, camy, camz)
+    glRotate(180, 1., 0.0, 0.)
 
 
 # draw_body
@@ -82,20 +92,57 @@ def draw_body(body):
     
     x,y,z = body.getPosition()
     R = body.getRotation()
-    T = mat4()
-    T[0,0] = R[0]
-    T[0,1] = R[1]
-    T[0,2] = R[2]
-    T[1,0] = R[3]
-    T[1,1] = R[4]
-    T[1,2] = R[5]
-    T[2,0] = R[6]
-    T[2,1] = R[7]
-    T[2,2] = R[8]
-    T[3] = (x,y,z,1.0)
+    usectypes = 0
+
+    translation_part = (x,y,z,1.0)
+
+    if 0:
+        T = mat4()
+        T[0,0] = R[0]
+        T[0,1] = R[1]
+        T[0,2] = R[2]
+        T[1,0] = R[3]
+        T[1,1] = R[4]
+        T[1,2] = R[5]
+        T[2,0] = R[6]
+        T[2,1] = R[7]
+        T[2,2] = R[8]
+        T[3] = (x,y,z,1.0)
+
+        thelist = T.toList()
+
+
+    T2 = [[0. for x in range(4)] for x in range(4)]
+    T2[0][0] = R[0]
+    T2[0][1] = R[1]
+    T2[0][2] = R[2]
+    T2[1][0] = R[3]
+    T2[1][1] = R[4]
+    T2[1][2] = R[5]
+    T2[2][0] = R[6]
+    T2[2][1] = R[7]
+    T2[2][2] = R[8]
+
+
+
+
+
+    thelist2 = []
+    for ixx in range(4):
+        for ix in range(4):
+            thelist2.append(T2[ix][ixx])
+
+    thelist2[-1] = translation_part[-1]
+    thelist2[-2] = translation_part[-2]
+    thelist2[-3] = translation_part[-3]
+    thelist2[-4] = translation_part[-4]
+
+
+
 
     glPushMatrix()
-    glMultMatrixd(T.toList())
+    #glMultMatrixd(T.toList())
+    glMultMatrixd(thelist2)
     if body.shape=="box":
         sx,sy,sz = body.boxsize
         glScale(sx, sy, sz)
@@ -193,8 +240,8 @@ floor = rm.addGeom(pixel2world(WIDTH/2, HEIGHT-25), px2w(WIDTH), px2w(50))
 
 class myBlockSprite(render.BlockSprite):
     def update(self):
-        print self.block.getPosition()
-        print self.block.getRotation()
+        #print self.block.getPosition()
+        #print self.block.getRotation()
 
         if self.old_position:
             #self.old_position = self.block.getPosition()[:2]
@@ -291,8 +338,24 @@ while going:
     event_list = pygame.event.get()
     for event in event_list:
         if event.type == KEYDOWN:
-            going = False
+            #going = False
+            if event.key == K_p:
+                camz += 0.1
+            if event.key == K_o:
+                camz += -0.1
+            if event.key == K_x:
+                camx += 0.1
+            if event.key == K_z:
+                camx += -0.1
+            if event.key == K_w:
+                camy += 0.1
+            if event.key == K_s:
+                camy += -0.1
 
+            if event.key == K_ESCAPE:
+                going = False
+
+    #print camx, camy, camz
 
     #speed = 0.3
     speed = 1.0 / fps

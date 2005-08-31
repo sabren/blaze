@@ -1,5 +1,5 @@
 
-scale_factor = 64. * 4
+scale_factor = 64. * 9
 
 def pixel2world(x,y):
     return x / scale_factor,y / scale_factor
