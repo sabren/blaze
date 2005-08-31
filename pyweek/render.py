@@ -45,18 +45,36 @@ class BlockSpriteTest(unittest.TestCase):
 # here's the implementation
 class BlockSprite(pygame.sprite.Sprite):
     def __init__(self, block, image):
+        self.old_position = None
+
         super(BlockSprite, self).__init__()
         self.image = image
         self.rect = self.image.get_rect()
         self.block = block
         self.update()
 
+
     def update(self):
         # ode tracks the center, so we just assign that
         # directly to our rect.center ... the [:2] of
         # course just drops the Z coordinate, which is
         # always 0 for our 2d world. :)
-        self.rect.center = self.block.getPosition()[:2]
+        self.rect.center = map(round, self.block.getPosition()[:2])
+        return
+
+        if self.old_position:
+            #self.old_position = self.block.getPosition()[:2]
+            new_pos = map(round, self.block.getPosition()[:2])
+            x = new_pos[0] - self.old_position[0]
+            y = new_pos[1] - self.old_position[1]
+
+            self.rect.move_ip(x,y)
+            self.old_position = new_pos
+
+        else:
+            self.old_position = map(round, self.block.getPosition()[:2])
+            self.rect.center = map(round, self.block.getPosition()[:2])
+        #self.rect.center = map(round, self.block.getPosition()[:2])
 
 
 if __name__=="__main__":

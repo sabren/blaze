@@ -72,6 +72,8 @@ class Room(object):
         #     "how can an immovable body be created?"
         geom = ode.GeomBox(self.space, [lx, ly, THICKNESS])
         geom.setPosition((cx, cy, 0))
+        geom.shape = "box"
+        geom.boxsize = [lx, ly, THICKNESS]
         self.blocks.append(geom)
         return geom
     
