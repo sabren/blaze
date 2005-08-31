@@ -91,6 +91,7 @@ class MultipleHandlersTest(unittest.TestCase):
         assert not b.gotIt
         assert a.gotIt
 
+        ## now tell one to stop listening:
         a.release()
         eventnet.driver.post(AN_EVENT)
         assert a.count == 1
