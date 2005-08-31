@@ -5,7 +5,7 @@ Micah
 """
 
 # not sure if we need all of these but they're here just in case
-import pygame
+import pygame, unittest
 import cPickle, os, sys, string, loader, eventnet.driver, eventnet._pygame, events, string
 from pygame.locals import *
 
@@ -18,7 +18,6 @@ for lvl in os.listdir('rooms'):
         lvl_list += [os.path.splitext(lvl)[0]]
 
 MENU_PLAY="MENU_PLAY"
-eventnet.driver.register_events('MENU_PLAY') # this can be moved after it has run once
 
 #function to load all 3 level elements
 def load(file):
@@ -118,7 +117,6 @@ pygame.display.set_caption('Test')
 screen = pygame.display.get_surface()
 
 # activate the event_handler
-eventnet._pygame.register_events()
 handle = events.event_handler()
 handle.capture()
 
