@@ -33,6 +33,8 @@ import unittest
 import physics
 import xml.sax
 
+from ode_to_pixel import *
+
 
 """
 So let's start with boxes because it's the only one we
@@ -348,13 +350,15 @@ class RoomFromRectsTest(unittest.TestCase):
         
         
 
+
 def roomFromRects(rects):
     """
     here's where we actually do the work.
     """
     rm = Room()
+    print rects
     for r in rects:
-        block = rm.addGeom(r.getCenter(), r.width, r.height)
+        block = rm.addGeom(pixel2world(*r.getCenter()), px2w(r.width), px2w(r.height))
 
         if r.transform:
             a, b, c, d, e, f = r.transform

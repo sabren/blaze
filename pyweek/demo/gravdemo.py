@@ -21,6 +21,12 @@ from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
 
+from ode_to_pixel import *
+
+
+
+
+
 # prepare_GL
 def prepare_GL():
     """Prepare drawing.
@@ -63,7 +69,7 @@ def prepare_GL():
     glEnable(GL_LIGHT0)
     if doit:
         # View transformation
-        V = mat4(1).lookAt(1.2*vec3(2,3,4),(0.5,0.5,0), up=(0,1,0))
+        V = mat4(1).lookAt(1.2*vec3(2,3,4),(0.5,0.5,0), up=(0,-1,0))
         V.rotate(pi,vec3(0,1,0))  
         V = V.inverse()
         glMultMatrixd(V.toList())
@@ -102,21 +108,6 @@ WIDTH = 640
 HEIGHT = 480
 WHITE = [255, 255, 255]
 
-scale_factor = 64. * 4
-
-#room.THICKNESS *= scale_factor
-def pixel2world(x,y):
-    return x / scale_factor,y / scale_factor
-
-def world2pixel(x,y):
-    return x * scale_factor ,y * scale_factor
-
-
-def px2w(x):
-    return x / scale_factor
-
-def w2px(x):
-    return x * scale_factor
 
 
 
