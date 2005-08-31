@@ -57,9 +57,11 @@ class EventHandler(eventnet.driver.Handler):
     def __init__(self):
         super(EventHandler, self).__init__()
         self.gotIt = False
+        self.count = 0
 
     def EVT_THE_BIG_EVENT(self, event):
         self.gotIt = True
+        self.count += 1
 
 
 class HowToUseEventHandlerClasses(unittest.TestCase):
@@ -69,6 +71,32 @@ class HowToUseEventHandlerClasses(unittest.TestCase):
         assert not h.gotIt
         eventnet.driver.post(AN_EVENT)
         assert h.gotIt
+
+
+
+class MultipleHandlersTest(unittest.TestCase):
+
+    def test(self):
+        
+        a = EventHandler()
+        b = EventHandler()
+        c = EventHandler()
+        
+        a.capture()
+        # b will not capture
+        c.capture()
+        
+        eventnet.driver.post(AN_EVENT)
+        assert a.gotIt
+        assert not b.gotIt
+        assert a.gotIt
+
+        a.release()
+        eventnet.driver.post(AN_EVENT)
+        assert a.count == 1
+        assert b.count == 0
+        assert c.count == 2
+    
 
 
 if __name__=="__main__":
