@@ -51,12 +51,12 @@ class Console(eventnet.driver.Handler):
         startState(GameState())
 
     def EVT_Quit(self, event):
-        pygame.quit()
+        sys.exit(0)
 
     # this proves that the event dictionary is there and functional
     def EVT_KeyDown(self, event):
         if event.key == K_x:
-            pygame.quit()
+            sys.exit(0)
 
 con = Console()
 
