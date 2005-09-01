@@ -6,6 +6,18 @@ since this is just a demo, I stole the physics
 simulation from a pyODE tutorial:
 
 http://pyode.sourceforge.net/tutorials/tutorial3.html
+
+
+1,2 keys to toggle a rotation.
+
+a - left
+d - right
+w - up
+s - down
+
+ESC - quit.
+
+
 """
 import sys
 sys.path.append("..")
@@ -31,9 +43,21 @@ camx, camy, camz = (-0.5, -0.5, 1.)
 
 camx, camy, camz = -0.5, 0., -1.0
 
+
+rot_keys = {}
+rot_keys[K_1] = 0
+rot_keys[K_2] = 0
+rot_keys[K_3] = 0
+rot_keys[K_4] = 0
+rot_keys[K_5] = 0
+rot_keys[K_6] = 0
+rot_keys[K_7] = 0
+rot_keys[K_8] = 0
+rot_keys[K_9] = 0
+
 # prepare_GL
 def prepare_GL():
-    global camx, camy, camz
+    global camx, camy, camz, rot_keys
     """Prepare drawing.
     """
     
@@ -70,6 +94,11 @@ def prepare_GL():
     #glRotate(180, 0., 1.0, 0.)
     glTranslate(camx, camy, camz)
     glRotate(180, 1., 0.0, 0.)
+
+    if rot_keys[K_1]:
+        glRotate(45, 0., 1.0, 0.)
+    if rot_keys[K_2]:
+        glRotate(-45, 0., 0.0, 1.)
 
     # Light source
     glLightfv(GL_LIGHT0,GL_POSITION,[0,0,1,0])
@@ -343,14 +372,16 @@ while going:
                 camz += 0.1
             if event.key == K_o:
                 camz += -0.1
-            if event.key == K_x:
+            if event.key == K_d:
                 camx += 0.1
-            if event.key == K_z:
+            if event.key == K_a:
                 camx += -0.1
             if event.key == K_w:
                 camy += 0.1
             if event.key == K_s:
                 camy += -0.1
+            if event.key in [K_1, K_2, K_3, K_4]:
+                rot_keys[event.key] = not rot_keys[event.key]
 
             if event.key == K_ESCAPE:
                 going = False
