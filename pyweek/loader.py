@@ -114,7 +114,7 @@ class ParserTest(unittest.TestCase):
         #
         # since pygame is the one we actually see,
         # it takes precedence, and so we flip the y:
-        self.assertEquals(480-float(u"58.551853"), r.y)
+        self.assertEquals(float(u"58.551853"), r.y)
 
         self.assertEquals([0.854241,0.519878,-0.519878,
                            0.854241,0.000000,0.000000],
@@ -168,7 +168,7 @@ class SvgHandler(xml.sax.ContentHandler):
                 if attr in ["x","width","height"]:
                     setattr(r, attr, float(value))
                 elif attr == "y":
-                    r.y = 480-float(value) #@TODO: HEIGHT
+                    r.y = float(value) #@TODO: HEIGHT
                 elif attr == "transform":
                     r.transform = parseMatrix(value)
 
@@ -359,7 +359,6 @@ def roomFromRects(rects):
     print rects
     for r in rects:
         block = rm.addGeom(pixel2world(*r.getCenter()), px2w(r.width), px2w(r.height))
-
         if r.transform:
             a, b, c, d, e, f = r.transform
             block.setRotation((a,b,0,c,d,0,e,f,1))
