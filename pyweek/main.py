@@ -9,6 +9,7 @@ import pygame, unittest
 import cPickle, os, sys, string, loader, eventnet.driver, eventnet._pygame, events, string
 from pygame.locals import *
 from states import *
+from display import Display
 
 # load all levels and parse into list
 lvl_list = []
@@ -22,17 +23,8 @@ MENU_PLAY="MENU_PLAY"
 
 #function to load all 3 level elements
 def load(file):
-    list = []
-    lst = ['back.png', 'geom.svg', 'fore.png']
-    for x in range(3):
-        list += [string.join([file, lst[x]], '-')]
-    return list
-
-
-def allThreeFilenames(base):
     suffixes = ['back.png', 'geom.svg', 'fore.png']
     return ["-".join([base, suf]) for suf in suffixes]
-
 
 class TestAllThreeFilenames(unittest.TestCase):
 
@@ -51,7 +43,7 @@ class Console(eventnet.driver.Handler):
         self.state.run()
 
     def startState(state):
-        self.state = state
+        self.state = States[state]
         self.state.kick()
         self.state.run()
 
@@ -142,10 +134,6 @@ class ConsoleTest(unittest.TestCase):
         assert isinstance(con.state, GameState),\
                "the game should start when we pick play"
 
-
-
-         
-        
 #initialize pygame
 pygame.init() 
 
@@ -160,6 +148,7 @@ screen = pygame.display.get_surface()
 #handle.capture()
 
 #loop to keep checking for mode changes
-#while 1:
-#    for event in pygame.event.get():
-#        eventnet.driver.post(event.type, **event.dict)
+event_name = pygame.event.event_name
+while True:
+    for event in pygame.event.get():
+        eventnet.driver.post(event)
