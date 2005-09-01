@@ -1,5 +1,5 @@
 """
-will eventually become script to tie all components together and run game,
+script to tie all components together and run game,
 please feel free to send me feedack!
 Micah
 """
@@ -43,12 +43,20 @@ class Console(eventnet.driver.Handler):
         self.state.run()
 
     def startState(state):
-        self.state = States[state]
+        self.state = state
         self.state.kick()
         self.state.run()
 
     def EVT_MENU_PLAY(self, event):
         startState(GameState())
+
+    def EVT_Quit(self, event):
+        pygame.quit()
+
+    # this proves that the event dictionary is there and functional
+    def EVT_KeyDown(self, event):
+        if event.key == K_x:
+            pygame.quit()
 
 con = Console()
 
@@ -134,21 +142,10 @@ class ConsoleTest(unittest.TestCase):
         assert isinstance(con.state, GameState),\
                "the game should start when we pick play"
 
-#initialize pygame
-pygame.init() 
-
-
-# set screen size and put it up 
-window = pygame.display.set_mode((640, 480)) 
-pygame.display.set_caption('Test') 
-screen = pygame.display.get_surface()
-
-# activate the event_handler
-#handle = events.event_handler()
-#handle.capture()
+disp = Display(t='Kiwi Run')
 
 #loop to keep checking for mode changes
-event_name = pygame.event.event_name
 while True:
     for event in pygame.event.get():
-        eventnet.driver.post(event)
+        eventnet.driver.post(pygame.event.event_name(event.type), **event.dict)
+        
