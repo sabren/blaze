@@ -18,13 +18,14 @@ Here, let me show a usage example:
 import unittest
 class ExampleTest(unittest.TestCase):
     def setUp(self):
-        """
-        Don't worry about this.  This is to keep eventnet from
-        complaining about unhandled events in our tests.
-        """
-        self.e = events.event_handler()
-        self.e.capture()
+        """Don't worry about this.
 
+        This will just keep eventnet from complaining about our
+        unhandled events in the test.
+        """
+        self.handler = events.event_handler()
+        self.handler.capture()
+        
     def testHealthExample(self):
         """We need a working tutorial.
 
@@ -47,6 +48,9 @@ class ExampleTest(unittest.TestCase):
 
         # Okay, now we pass the configuration to our new health model:
         h = HealthModel(hc)
+
+        # HealthModel is its own event handler.  We need to start it up.
+        h.capture()
 
         # We can find out where our calorie levels are at:
         self.assertEqual(h.getBlood(), 1000)
@@ -197,6 +201,8 @@ class NotEnoughCalories(HealthError):
 
 class CalorieBank:
     """Calories == Energy.  Eat lots, don't work too hard.
+
+    This is just a simple class that gets used by the HealthModel.
     """
     def __init__(self, calories):
         self.__calories = calories
@@ -319,6 +325,8 @@ class HealthModelConfig:
         baseinsulinrate -- Insulin lowers blood sugar, in calories/step()
         insulinratio -- Insulin penalty ratio for high blood sugar.
         suppressinsulin -- suppresses the insulin response (mainly for testing)
+        fatmass -- mass/fat calorie
+        fatdensity -- area/fat calorie 
     """
     def __init__(self):
         # Set our starting fat calories.
@@ -341,6 +349,10 @@ class HealthModelConfig:
         self.suppressinsulin = False
         # Set the insulin2fat conversion ratio
         self.insulin2fatratio = 0.5
+        # Set the amount of mass/fat calorie
+        self.fatmass = 1
+        # Set the space taken up by a fat calorie
+        self.fatspace = 1
 
 class FoodTest(unittest.TestCase):
     """We'll need food to eat to give us calories.
@@ -381,6 +393,8 @@ class HealthModelTest(unittest.TestCase):
         coded defaults change.  They're not really important.
         """
         import events
+        self.testhandler = events.event_handler()
+        self.testhandler.capture()
         self.c = HealthModelConfig()
         self.c.startfat = 5000
         self.c.startblood = 1000
@@ -392,11 +406,8 @@ class HealthModelTest(unittest.TestCase):
         self.c.insulinratio = 10
         self.c.insulin2fatratio = 0.5
         self.h = HealthModel(self.c)
+        self.h.capture()
         self.f = Food(100, 100)
-        # keep eventnet from complaining about unhandled events in our tests.
-        self.e = events.event_handler()
-        self.e.capture()
-
 
     def testConfig(self):
         """We'll need to retrieve our configuration.
@@ -492,6 +503,7 @@ class HealthModel(eventnet.driver.Handler):
     A HealthModel needs a HealthModelConfig and a HealthModelHandler.
     """
     def __init__(self, config):
+        super(HealthModel, self).__init__()
         self.config = config
         self.fat = CalorieBank(self.config.startfat)
         self.blood = CalorieBank(self.config.startblood)
@@ -570,32 +582,11 @@ class HealthModel(eventnet.driver.Handler):
         eventnet.driver.post(events.HEALTH_FAT_CHANGED)
         eventnet.driver.post(events.HEALTH_BLOOD_CHANGED)
 
-class HealthModelHandlerTest(unittest.TestCase):
-        """We'll need an event handler for health-related events.
-        """
-        def testEventHandler(self):
-            """Is there an EventHandler in the house?
-            
-            Hello.  We're from the government, and we're here to handle
-            your events.
-            """
-            self.c = HealthModelConfig()
-            self.h = HealthModel(self.c)
-            self.handler = HealthModelHandler(self.h)
-            
-        """
-        Looks like we're going to use EventNet for our event handling.
-        Seems simple enough.
-        -> http://lgt.berlios.de/#eventnet
-        """
-        import eventnet.driver
+    def EVT_EVENT(self, event):
+        pass
+
+
         
-class HealthModelHandler(eventnet.driver.Handler):
-    """
-    """
-    def __init__(self, model):
-        super(HealthModelHandler, self).__init__()
-        self.model = model
                 
 """
 Here's what's left:

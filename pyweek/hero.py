@@ -1,63 +1,97 @@
-import ode, room
+import ode, room, health
 
-class Bird:
-    """This creates the PyODE stuff.
+import unittest
+class BirdTest(unittest.TestCase):
+    """We're going to flip the Bird, er I mean, test it.
+    """
+    def setUp(self):
+        #import events
+        #self.handler = events.event_handler()
+        #self.handler.capture()
+        self.bird = Bird(ode.World(), ode.Space(), room.Room(), (0,0))
+        config = health.HealthModelConfig()
+        self.bird.makeHero(1.2, 0.35, config)
+        self.bird.capture()
+        
+    
+    def testBirdMove(self):
+        """Is there a bird?  Can it move?
+        """
+        self.bird.move((8,0))
 
-It creates the world and space in which the character will live
-along with the characters collision detection stuff.
-Most of the variables on the level will be passed in from the
-level.physics pickle.
-"""
+    def testBirdMass(self):
+        """Bird should gain mass when it eats.
+
+        What is the mass of an unladen kiwi?
+        """
+        initialmass = self.bird.bird.getMass().mass
+        food = health.Food(0,100)
+        self.bird.metabolism.eat(food)
+        self.bird.updateMass()
+        newmass = self.bird.bird.getMass().mass
+        self.assertNotEqual(initialmass, newmass)
+
+
+import eventnet
+class Bird(eventnet.driver.Handler):
+    """A plump little kiwi bird who likes physics, eggs, and running around.
+    """
     def __init__(self, world, space, room, position):
+        super(Bird, self).__init__()
         self.world = world
         self.space = space
         self.room = room
         self.position = position
         
-    def hero(self, fatness, height):
-        """This function sets up the bird.
+    def makeHero(self, radius, height, healthconfig):
+        """This function sets us up the bird.
         
         Fatness is the radius of the sphere used to
-        represent the hero in the world."""
+        represent the hero in the world.
+        """
         self.height = height
-        self.fatness = fatness
+        self.radius = radius
+        self.hlthcfg = healthconfig
+        self.metabolism = health.HealthModel(self.hlthcfg)
         self.bird = ode.Body(self.world)
-        fat = ode.Mass()
-        fat.setSphere(1100.0, fatness)
-        self.bird.setMass(fat)
+        self.updateMass()
         
         # Creates a box for collision detection.
-        geom = self.room.addGeom(self.position, 2*self.fatness, self.height)
+        # Does this do anything?
+        geom = self.room.addGeom(self.position, 2*self.radius, self.height)
         geom.setBody(self.bird)
     
-    def changeMass(self, value):
-        """This function changes the mass of the hero.
+    def updateMass(self):
+        """Updates the mass of the hero by adjusting his density.
         
         This function can be called when the hero eats or uses
-        energy."""
-        self.fatness += value
-        fat = ode.Mass()
-        fat.setSphere(1100.0, self.fatness)
-        self.bird.setMass(fat)
-        
-        # Creates a box for collision detection.
-        geom = self.room.addGeom(self.position, 2*self.fatness, self.height)
-        geom.setBody(self.bird)        
+        energy.
+
+        You must update your mass.  It is your density.
+        """
+        totalfatmass = self.hlthcfg.fatmass * self.metabolism.getFat()
+        # density = mass * volume... sorta.  Okay, so we're fudging it.
+        # The units are all arbitrary anyway. :)
+        density = totalfatmass * self.hlthcfg.fatspace
+        density = float(density)
+        mass = ode.Mass()
+        mass.setSphere(density, self.radius)
+        self.bird.setMass(mass)
+
+    def EVT_FAT_CHANGED(self, event):
+        """When our fat changes, update our mass.
+        """
+        self.updateMass()
         
     def move(self, force):
-        """Pass in the 2d vector that you want the hero to
-        travel in."""
+        """Pass in the 2d vector that you want the hero to travel in.
+        """
         x, y = force
         self.bird.setForce((x,y,0))
         
             
-def test():
-    bird = Bird(ode.World(), ode.Space(), room.Room(), (0,0))
-    bird.hero(1.2, 0.35)
-    bird.changeMass(0.1)
-    bird.move((8,0))
     
         
         
 if __name__ == "__main__":
-    test()
+    unittest.main()
