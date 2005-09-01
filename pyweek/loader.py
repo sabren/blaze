@@ -358,11 +358,13 @@ def roomFromRects(rects):
     rm = Room()
     print rects
     for r in rects:
-        block = rm.addGeom(pixel2world(*r.getCenter()), px2w(r.width), px2w(r.height),
+        block = rm.addGeom(pixel2world(*r.getCenter()), px2w(r.width), px2w(r.height)),
                            transform=bool(r.transform))
+        trans = ode.GeomTransform(rm.space)
+        trans.setGeom(block)
         if r.transform:
             a, b, c, d, e, f = r.transform
-            block.setRotation((a,b,0,c,d,0,e,f,1))
+            trans.setRotation((a,b,0,c,d,0,e,f,1))
     return rm
             
 
