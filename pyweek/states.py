@@ -65,7 +65,6 @@ class MenuState(State):
         
     def pick(self, modes):
         # show a menu and let user pick
-        pygame.font.Font(None, 12)
         return modes[0]
 
 class GameState(State):
