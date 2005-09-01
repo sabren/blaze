@@ -27,7 +27,7 @@ The idea is to
 
 """
 
-THICKNESS = 1 # arbitrary depth for all our blocks
+THICKNESS = 32 # arbitrary depth for all our blocks
 
 
 class RoomTest(unittest.TestCase):
