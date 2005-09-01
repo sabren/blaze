@@ -69,15 +69,31 @@ class Room(object):
         self.space = ode.Space()
         self.blocks = []
 
-    def addGeom(self, (cx, cy), lx, ly):
+    def addGeom(self, (cx, cy), lx, ly, transform=False):
         #ref: http://ode.org/ode-latest-userguide.html#sec_12_4_0
         #     "how can an immovable body be created?"
-        geom = ode.GeomBox(self.space, [lx, ly, px2w(THICKNESS)])
+
+        # if we need to rotate this thing, we attach the space to
+        # the transformation, not the geom itself.
+        if transform:
+            space = None
+        else:
+            space = self.space
+        
+        geom = ode.GeomBox(space, lengths=[lx, ly, px2w(THICKNESS)])
         geom.setPosition((cx, cy, 0))
         geom.shape = "box"
         geom.boxsize = [lx, ly, px2w(THICKNESS)]
         self.blocks.append(geom)
-        return geom
+
+        if transform:
+            # this allows us to set the center of rotation at the origin
+            trans = ode.GeomTransform(self.space)
+            trans.setPosition((0,0,0))
+            trans.setGeom(geom)
+            return trans.getGeom()
+        else:
+            return geom
     
     def addBlock(self, (cx, cy), lx, ly):
         """
