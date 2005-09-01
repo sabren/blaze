@@ -60,7 +60,7 @@ class MenuState(State):
         eventnet.driver.post(self.pick([GameState, HighScoreState,
                                        CreditsState, ExitState]))
 
-    def EVT_MENU_EXIT:
+    def EVT_MENU_EXIT(self, event):
         pygame.quit()
         
     def pick(self, modes):
