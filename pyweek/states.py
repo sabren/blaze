@@ -3,8 +3,15 @@
 here we define some states for our console.
 """
 import eventnet.driver
+import pygame
 
 # this is the base state. it's the superclass.
+
+GameState = 'MENU_PLAY'
+MenuState = 'MenuState'
+HighScoreState = 'HighScoreState'
+CreditsState = 'CreditsState'
+ExitState = 'ExitState'
 
 class State(eventnet.driver.Handler):
 
@@ -50,12 +57,20 @@ class State(eventnet.driver.Handler):
 class MenuState(State):
 
     def run(self):
-        return self.pick(GameState, HighScoreState, CreditsState, ExitState)
+        eventnet.driver.post(self.pick([GameState, HighScoreState,
+                                       CreditsState, ExitState]))
 
+    def EVT_MENU_EXIT:
+        pygame.quit()
+        
     def pick(self, modes):
-        # really show a menu and let user pick
+        # show a menu and let user pick
+        pygame.font.Font(None, 12)
         return modes[0]
 
+class GameState(State):
+    def run(self):
+        pass
 
 class HighScoreState(State):
     def run(self):
@@ -64,11 +79,14 @@ class HighScoreState(State):
             if escape:
                 break
             # maybe blit some background animation or whatever..
-            
+
 class CreditsState(State):
     def run(self):
         pass
     
+class ExitState(State):
+    def run(self):
+        pass
 
 class StateManager(object):
     pass
