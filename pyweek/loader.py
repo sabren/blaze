@@ -114,7 +114,7 @@ class ParserTest(unittest.TestCase):
         #
         # since pygame is the one we actually see,
         # it takes precedence, and so we flip the y:
-        self.assertEquals(-float(u"58.551853"), r.y)
+        self.assertEquals(480-float(u"58.551853"), r.y)
 
         self.assertEquals([0.854241,0.519878,-0.519878,
                            0.854241,0.000000,0.000000],
