@@ -7,7 +7,6 @@ simulation from a pyODE tutorial:
 
 http://pyode.sourceforge.net/tutorials/tutorial3.html
 
-
 1,2 keys to toggle a rotation.
 
 a - left
@@ -17,10 +16,32 @@ s - down
 
 ESC - quit.
 
-
 """
 import sys
 sys.path.append("..")
+
+import room, ode, pygame, render, random, loader
+from pygame.locals import *
+
+from math import *
+from OpenGL.GL import *
+from OpenGL.GLU import *
+from OpenGL.GLUT import *
+
+from ode_to_pixel import *
+
+###########################################################33
+
+if "2d" in sys.argv:
+    sys.argv.remove("2d")
+    DIMENSIONS=2
+
+    #def pixel2world(a,b): return (a,b)
+    #def px2w(a): return a
+    #def world2pixel(a,b): return (a,b)
+    
+else:
+    DIMENSIONS=3
 
 if len(sys.argv) > 1:
     FILENAME = sys.argv[1]
@@ -29,26 +50,9 @@ else:
         
 
 
-import room, ode, pygame, render, random, loader
-#from pygame.locals import KEYDOWN
-
-from pygame.locals import *
-
-
-#from cgtypes import *
-from math import *
-from OpenGL.GL import *
-from OpenGL.GLU import *
-from OpenGL.GLUT import *
-
-
-from ode_to_pixel import *
-
-
 
 
 camx, camy, camz = (-0.5, -0.5, 1.)
-
 camx, camy, camz = -0.5, 0., -1.0
 
 
@@ -216,8 +220,11 @@ rm.world.setCFM(10E-5) # ??
 ### pygame : sprite layers ##############################
 
 pygame.init()
-#screen = pygame.display.set_mode([WIDTH,HEIGHT]) # pygame.FULLSCREEN)
-srf = pygame.display.set_mode((640,480), OPENGL | DOUBLEBUF)
+
+if DIMENSIONS==3:
+    screen = pygame.display.set_mode((WIDTH,HEIGHT), OPENGL | DOUBLEBUF)
+else:
+    screen = pygame.display.set_mode([WIDTH,HEIGHT]) # pygame.FULLSCREEN)
 
 pygame.display.set_caption("trailblazer gravity demo")
 
@@ -238,25 +245,23 @@ class WithForeground(pygame.sprite.RenderUpdates):
         return all
 
 
-if 1:
-    ## BACKGROUND
-    background = pygame.image.load("gravdemo-back.png")
-    #screen.blit(background, (0,0))
+## BACKGROUND
+background = pygame.image.load("gravdemo-back.png")
 
-    ## FOREGROUND
-    foreground = pygame.image.load("gravdemo-fore.png")
-    #screen.blit(foreground, (0,0))
+## FOREGROUND
+foreground = pygame.image.load("gravdemo-fore.png")
 
-    fgSprite = pygame.sprite.Sprite()
-    fgSprite.image = foreground
-    fgSprite.rect = foreground.get_rect()
+fgSprite = pygame.sprite.Sprite()
+fgSprite.image = foreground
+fgSprite.rect = foreground.get_rect()
 
-    ## sprite group
-    group = WithForeground(fgSprite)
+## sprite group
+group = WithForeground(fgSprite)
 
-
-                            
-
+if DIMENSIONS==2:
+    screen.blit(background, (0,0))
+    screen.blit(foreground, (0,0))
+                         
 
 
 ## FLOORS ####################################
@@ -295,7 +300,7 @@ class myBlockSprite(render.BlockSprite):
             self.rect.center = world2pixel( *map(round, self.block.getPosition()[:2]) )
 
 
-if 0:
+if DIMENSIONS==2:
     # here's a little drawing of the floor:
     floorImg = pygame.surface.Surface((WIDTH, 50))
     group.add(myBlockSprite(floor, floorImg))
@@ -360,13 +365,13 @@ def onNearCollision(args, geom1, geom2):
 
 ### main loop ####################################
 
-#pygame.display.update()
-pygame.display.flip()
+if DIMENSIONS==2:
+    pygame.display.update()
+else:
+    pygame.display.flip()
 
 
 tick = 0
-#while pygame.event.poll().type != KEYDOWN:
-
 going = True
 clock = pygame.time.Clock()
 fps = 50
@@ -432,14 +437,15 @@ while going:
             if y > HEIGHT:
                 block.setBody(None)"""
 
-    #group.update()
-    #rects = group.draw(screen)    
-    #pygame.display.update(rects)
-    #group.clear(screen, background)
-
-    prepare_GL()
-    for b in rm.blocks:
-        draw_body(b)
-
-    pygame.display.flip()
+    if DIMENSIONS==2:
+        group.update()
+        rects = group.draw(screen)    
+        pygame.display.update(rects)
+        group.clear(screen, background)
+    else:
+        prepare_GL()
+        for b in rm.blocks:
+            draw_body(b)
+        pygame.display.flip()
+        
     clock.tick(fps)
