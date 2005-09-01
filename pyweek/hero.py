@@ -15,7 +15,7 @@ class BirdTest(unittest.TestCase):
         """Can the bird move?
         """
         oldposition = self.bird.getPosition()
-        self.bird.move((8,0))
+        self.bird.move((30,0))
         self.rp.step()
         self.assertNotEqual(oldposition, self.bird.getPosition())
 
@@ -23,12 +23,12 @@ class BirdTest(unittest.TestCase):
         """Walk or waddle, he should.
         """
         oldposition = self.bird.getPosition()
-        self.bird.walk(8)
-        self.rp.step()
+        self.bird.move((30,0))
+        self.rp.step(self.bird.bird)
         newposition = self.bird.getPosition()
         self.assertNotEqual(oldposition, newposition)
-        self.bird.walk(-8)
-        self.rp.step()
+        self.bird.move((-30,0))
+        self.rp.step(self.bird.bird)
         newerposition = self.bird.getPosition()
         self.assertNotEqual(newposition, newerposition)
 
@@ -85,31 +85,18 @@ class Bird(eventnet.driver.Handler):
         totalfatmass = self.hlthcfg.fatmass * self.metabolism.getFat()
         # density = mass * volume... sorta.  Okay, so we're fudging it.
         # The units are all arbitrary anyway. :)
-        density = totalfatmass * self.hlthcfg.fatspace
-        density = float(density)
+        density = float(totalfatmass * self.hlthcfg.fatspace)
+        #density = float(density)
         mass = ode.Mass()
         mass.setSphere(density, self.radius)
         self.bird.setMass(mass)
 
-    def move(self, (dx, dy)):
+    def move(self, (x, y)):
         """Generic move method to move the hero.
 
         Pass in the 2d vector that you want the hero to travel in.
         """
-        self.bird.setForce((dx,dy,0))
-
-    def walk(self, speed):
-        """Walk the hero.
-
-        speed -- Left is negative, right is positive.
-        """
-        self.move((speed, 0))
-
-    def run(self, speed):
-        pass
-
-    def jump(self):
-        pass
+        self.bird.setForce((x,y,0))
 
     # Okay, here are the events we'll want to handle.
     def EVT_HEALTH_FAT_CHANGED(self, event):
