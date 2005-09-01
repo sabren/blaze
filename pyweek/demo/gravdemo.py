@@ -201,7 +201,7 @@ rm = loader.roomFromFile(open("gravdemo-geom.svg"))
 #import pdb; pdb.set_trace()
 rm.world.setGravity((0,9.81,0)) # in our world y++ is down. :)
 rm.world.setERP(0.8) # ??
-rm.world.setCFM(0) # ??
+rm.world.setCFM(10E-5) # ??
 
 
 
@@ -418,11 +418,11 @@ while going:
     # this is a hack for if they fall off the floor
     # if I don't do this, then they just keep acellerating
     # forever due to gravity
-    if (tick % 50)==0:
+    """if (tick % 50)==0:
         for block in rm.blocks:
             x,y,z = block.getPosition()
             if y > HEIGHT:
-                block.setBody(None)
+                block.setBody(None)"""
 
     #group.update()
     #rects = group.draw(screen)    
