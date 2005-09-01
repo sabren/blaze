@@ -8,6 +8,7 @@ Micah
 import pygame, unittest
 import cPickle, os, sys, string, loader, eventnet.driver, eventnet._pygame, events, string
 from pygame.locals import *
+from states import *
 
 # load all levels and parse into list
 lvl_list = []
@@ -40,57 +41,22 @@ class TestAllThreeFilenames(unittest.TestCase):
         self.assertEquals(goal, load("xyz"))
         self.assertEquals(goal, allThreeFilenames("xyz"))
 
-# superclass for game modes
-class State(object):
-    def run(self):
-        raise NotImplementedError("Abstract Class")
-
-
-class ExitState(State):
-    pass
-
-class MenuState(State):
-
-    def run(self):
-        return self.pick(GameState, HighScoreState, CreditsState, ExitState)
-
-    def pick(self, modes):
-        # really show a menu and let user pick
-        return modes[0]
-    
-class GameState(State):
-
-    def run(self):
-        while True:
-            if pause: pass
-            if quit: break
-            eventStuff()
-
-class HighScoreState(State):
-    def run(self):
-        #showScoresOnScreen()
-        while True:        
-            if escape:
-                break
-            # maybe blit some background animation or whatever..
-            
-class CreditsState(State):
-    def run(self):
-        pass
-    
-
-class StateManager(object):
-    pass
-
 # The game Console (our master object)
 class Console(eventnet.driver.Handler):
     def __init__(self):
         super(Console, self).__init__()
         self.state = MenuState()
         self.capture()
+        self.state.kick()
+        self.state.run()
+
+    def startState(state):
+        self.state = state
+        self.state.kick()
+        self.state.run()
 
     def EVT_MENU_PLAY(self, event):
-        self.state = GameState()
+        startState(GameState())
 
 con = Console()
 
@@ -161,7 +127,7 @@ class ConsoleTest(unittest.TestCase):
         con = Console()
         
         # on start, we go to the menu state
-         assert isinstance(con.state, MenuState)
+        assert isinstance(con.state, MenuState)
         
         # so now we're sitting here looking at
         # the console and it's showing us a menu
