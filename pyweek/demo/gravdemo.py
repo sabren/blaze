@@ -29,7 +29,7 @@ from ode_to_pixel import *
 
 camx, camy, camz = (-0.5, -0.5, 1.)
 
-camx, camy, camz = -0.5, 0., 1.0
+camx, camy, camz = -0.5, 0., -1.0
 
 # prepare_GL
 def prepare_GL():
@@ -68,6 +68,8 @@ def prepare_GL():
 
     #glTranslate(0., .0, 1.1)
     #glRotate(180, 0., 1.0, 0.)
+    glTranslate(camx, camy, camz)
+    glRotate(180, 1., 0.0, 0.)
 
     # Light source
     glLightfv(GL_LIGHT0,GL_POSITION,[0,0,1,0])
@@ -81,8 +83,6 @@ def prepare_GL():
     #    V = V.inverse()
     #    glMultMatrixd(V.toList())
 
-    glTranslate(camx, camy, camz)
-    glRotate(180, 1., 0.0, 0.)
 
 
 # draw_body
