@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="640px"
+   height="480px"
+   id="svg5858"
+   sodipodi:version="0.32"
+   inkscape:version="0.42"
+   sodipodi:docbase="C:\work\pyweek\demo"
+   sodipodi:docname="centers.svg">
+  <defs
+     id="defs5860" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.77472527"
+     inkscape:cx="320.00000"
+     inkscape:cy="240.00000"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="px"
+     inkscape:window-width="1024"
+     inkscape:window-height="708"
+     inkscape:window-x="-4"
+     inkscape:window-y="-4" />
+  <metadata
+     id="metadata5863">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer">
+    <rect
+       style="fill:#ff9898;fill-opacity:1.0000000;stroke:none;stroke-opacity:1.0000000"
+       id="rect5099"
+       width="8.3900709"
+       height="128.43263"
+       x="138.11346"
+       y="129.55319" />
+    <rect
+       y="-136.52014"
+       x="-260.39755"
+       height="128.43257"
+       width="8.3900671"
+       id="rect5101"
+       style="fill:#ff9898;fill-opacity:1.0000000;stroke:none;stroke-opacity:1.0000000"
+       transform="matrix(-0.842896,-0.538076,0.538076,-0.842896,0.000000,0.000000)" />
+    <rect
+       style="fill:#ff9898;fill-opacity:1.0000000;stroke:none;stroke-opacity:1.0000000"
+       id="rect5103"
+       width="8.3900681"
+       height="128.43259"
+       x="248.45961"
+       y="20.366243"
+       transform="matrix(0.866025,0.500000,-0.500000,0.866025,0.000000,0.000000)" />
+    <text
+       xml:space="preserve"
+       style="font-size:18.867918px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+       x="252.00343"
+       y="251.45328"
+       id="text5869"
+       transform="scale(0.839567,1.191090)"><tspan
+         sodipodi:role="line"
+         id="tspan5871"
+         x="252.00343"
+         y="251.45328">there are three rectangles here. the original is </tspan><tspan
+         sodipodi:role="line"
+         x="252.00343"
+         y="275.03818"
+         id="tspan5873">vertical and the other two are at an angle.</tspan><tspan
+         sodipodi:role="line"
+         x="252.00343"
+         y="298.62307"
+         id="tspan5875" /><tspan
+         sodipodi:role="line"
+         x="252.00343"
+         y="322.20797"
+         id="tspan5879">while the two at an angle look about the same,</tspan><tspan
+         sodipodi:role="line"
+         x="252.00343"
+         y="345.79287"
+         id="tspan5881">the position and tansforms are VERY different </tspan><tspan
+         sodipodi:role="line"
+         x="252.00343"
+         y="369.37777"
+         id="tspan5883">because I rotated them around different centers.</tspan></text>
+  </g>
+</svg>
