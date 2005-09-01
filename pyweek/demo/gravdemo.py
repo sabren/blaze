@@ -2,7 +2,7 @@
 gravity demo: shows how to put render and room
 together to move sprites around based on physics.
 
-since this is just a demo, I stole the physics
+since theis is just a demo, I stole the physics
 simulation from a pyODE tutorial:
 
 http://pyode.sourceforge.net/tutorials/tutorial3.html
@@ -21,6 +21,14 @@ ESC - quit.
 """
 import sys
 sys.path.append("..")
+
+if len(sys.argv) > 1:
+    FILENAME = sys.argv[1]
+else:
+    FILENAME = "gravdemo"
+        
+
+
 import room, ode, pygame, render, random, loader
 #from pygame.locals import KEYDOWN
 
@@ -196,7 +204,7 @@ rm = room.Room()
 ## change course, but the collisions don't match where
 ## the rectangles show up on the screen.
 ##
-rm = loader.roomFromFile(open("gravdemo-geom.svg"))
+rm = loader.roomFromFile(open(FILENAME))
 
 #import pdb; pdb.set_trace()
 rm.world.setGravity((0,9.81,0)) # in our world y++ is down. :)
