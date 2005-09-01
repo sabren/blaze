@@ -52,7 +52,7 @@ class Bird(eventnet.driver.Handler):
         self.geom.setBody(self.bird)
     
     def getPosition(self):
-        self.geom.getPosition()[:2] # x,y, but not z
+        return self.geom.getPosition()[:2] # x,y, but not z
 
     def updateMass(self):
         """Updates the mass of the hero by adjusting his density.

@@ -113,7 +113,7 @@ class Game(State):
     
 
     def heroPosition(self):
-        return self.hero.geom.getPosition()[:2] # x,y, but not z
+        return self.hero.getPosition()
 
 
     def tick(self):
