@@ -13,13 +13,10 @@ The idea is, assign your events a name like MODULE_EVENTNAME, then
 assign that name to a constant here.
 
 Then, when you post an event, post it like:
-eventnet.driver.post(events.MODULE_EVENTNAME)
+eventnet.driver.post(events.CLASS.EVENTNAME)
 
 This should make refactoring easier.
 """
-#import pygame
-#from pygame.locals import *
-import eventnet
 
 # Health-related events
 class HEALTH:
@@ -48,5 +45,3 @@ class INPUT:
 
 class MENU:
     PLAY="MENU_PLAY"
-
-

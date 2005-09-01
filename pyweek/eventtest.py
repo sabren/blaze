@@ -15,6 +15,55 @@ have to do anything special to set it up, just
 create some listeners and start sending events.
 """
 
+"""
+About Events:
+
+[20:25] <sabren> think of it like this:
+
+[20:25] <sabren> there's a field full of objects
+
+[20:25] <sabren> like a soccer field
+
+[20:26] <sabren> and the objects are all out there doing there thing
+
+[20:26] <sabren> their
+
+[20:26] <eykd> mcferrill: I know the syntax for handling events :)
+
+[20:26] <sabren> and the event handler is a guy with a megaphone
+
+[20:26] <sabren> and all of a sudden he yells "THE BLOOD SUGAR HAS CHANGED!!!"
+
+[20:26] <sabren> now
+
+[20:26] <sabren> most of the objects don't care about that
+
+[20:26] <sabren> so they don't do anything
+
+[20:27] <sabren> but one guy over in the corner...
+
+[20:27] <sabren> his job is to update the blood sugar display
+
+[20:27] <sabren> so he's registered to handle that event
+
+[20:27] <sabren> and he does the right thing
+
+[20:27] <sabren> so each object is its own little event handler
+
+[20:27] <sabren> does that make sense?
+
+[20:28] <sabren> the events keep us from having to constantly be checking for everyting all at once
+
+[20:28] <eykd> Oh, so *any* object that has a method EVT_EVENT will trigger it when EVENT gets fired?
+
+[20:28] <sabren> i hope so
+
+[20:28] <sabren> we didn't test that.
+
+[20:28] <sabren> let's try it
+"""
+
+
 AN_EVENT="THE_BIG_EVENT"
 
 class HowNotToUseEventNet(unittest.TestCase):
