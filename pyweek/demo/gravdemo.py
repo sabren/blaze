@@ -361,7 +361,7 @@ tick = 0
 
 going = True
 clock = pygame.time.Clock()
-fps = 30
+fps = 50
 while going:
 
     event_list = pygame.event.get()
@@ -389,11 +389,22 @@ while going:
     #print camx, camy, camz
 
     #speed = 0.3
+
     speed = 1.0 / fps
+    n = 2.0
+
+    for i in range(n):
+        rm.space.collide ((rm.world, contactgroup), onNearCollision)
+
+        rm.world.step (speed / n)
+
+        contactgroup.empty()
+
+    """speed = 1.0 / fps
     rm.world.step(speed/2)
     rm.space.collide((rm.world, contactgroup), onNearCollision)
     rm.world.step(speed/2)
-    contactgroup.empty()
+    contactgroup.empty()"""
 
     # add the blocks slowly:        
     tick += 1
