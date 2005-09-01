@@ -113,6 +113,8 @@ class Game(State):
     
 
     def heroPosition(self):
+        """Get the position of our intrepid kiwi.
+        """
         return self.hero.getPosition()
 
 

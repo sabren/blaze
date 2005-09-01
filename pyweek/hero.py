@@ -5,14 +5,32 @@ class BirdTest(unittest.TestCase):
     """We're going to flip the Bird, er I mean, test it.
     """
     def setUp(self):
-        self.bird = Bird(room.Room(), (0,0), 1.0)
+        from roomphysics import RoomPhysics
+        self.r = room.Room()
+        self.bird = Bird(self.r, (0,0), 1.0)
         self.bird.capture()
+        self.rp = RoomPhysics(self.r, self.bird.geom.getBody())
     
     def testBirdMove(self):
         """Can the bird move?
         """
-        #assert self.bird.move((8,0)), "the bird should move"
-        
+        oldposition = self.bird.getPosition()
+        self.bird.move((8,0))
+        self.rp.step()
+        self.assertNotEqual(oldposition, self.bird.getPosition())
+
+    def testBirdWalk(self):
+        """Walk or waddle, he should.
+        """
+        oldposition = self.bird.getPosition()
+        self.bird.walk(8)
+        self.rp.step()
+        newposition = self.bird.getPosition()
+        self.assertNotEqual(oldposition, newposition)
+        self.bird.walk(-8)
+        self.rp.step()
+        newerposition = self.bird.getPosition()
+        self.assertNotEqual(newposition, newerposition)
 
     def testBirdMass(self):
         """Bird should gain mass when it eats.
@@ -52,6 +70,8 @@ class Bird(eventnet.driver.Handler):
         self.geom.setBody(self.bird)
     
     def getPosition(self):
+        """Get the position of our intrepid hero-kiwi.
+        """
         return self.geom.getPosition()[:2] # x,y, but not z
 
     def updateMass(self):
