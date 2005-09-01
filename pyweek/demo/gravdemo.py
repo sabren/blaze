@@ -25,7 +25,7 @@ sys.path.append("..")
 if len(sys.argv) > 1:
     FILENAME = sys.argv[1]
 else:
-    FILENAME = "gravdemo"
+    FILENAME = "gravdemo-geom.svg"
         
 
 
