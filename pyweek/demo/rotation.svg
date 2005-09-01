@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="640px"
+   height="480px"
+   id="svg1522"
+   sodipodi:version="0.32"
+   inkscape:version="0.42"
+   sodipodi:docbase="C:\work\pyweek\demo"
+   sodipodi:docname="rotation.svg">
+  <defs
+     id="defs1524" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.5494505"
+     inkscape:cx="267.96676"
+     inkscape:cy="194.46515"
+     inkscape:current-layer="svg1522"
+     inkscape:document-units="px"
+     inkscape:window-width="1024"
+     inkscape:window-height="708"
+     inkscape:window-x="-4"
+     inkscape:window-y="-4" />
+  <metadata
+     id="metadata1527">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer">
+    <path
+       style="fill:none;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#000000;stroke-width:0.53921890px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"
+       d="M 384.45037,17.163799 L 383.84099,78.376599"
+       id="path1545" />
+    <path
+       style="fill:none;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#000000;stroke-width:0.47209665px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"
+       d="M 376.52852,73.573509 L 443.55954,74.182879"
+       id="path1547" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#ff0000;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#000000;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"
+       id="path1549"
+       sodipodi:cx="495.37845"
+       sodipodi:cy="242.23660"
+       sodipodi:rx="34.455158"
+       sodipodi:ry="38.334213"
+       d="M 496.74747,203.93266 A 34.455158,38.334213 0 0 1 529.82858,242.89171 L 495.37845,242.23660 z"
+       transform="matrix(0.472097,0.000000,0.000000,0.472097,149.8892,-40.84595)"
+       sodipodi:start="4.7521330"
+       sodipodi:end="6.3002754" />
+    <path
+       style="fill:none;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#000000;stroke-width:0.47209665px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"
+       d="M 383.64802,73.297719 L 435.78593,62.956319"
+       id="path1551" />
+    <path
+       style="fill:none;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#000000;stroke-width:0.47209665px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"
+       d="M 383.43258,73.728609 L 411.65599,37.964599"
+       id="path1553" />
+    <path
+       sodipodi:end="6.0758434"
+       sodipodi:start="5.3406126"
+       transform="matrix(1.173291,0.000000,0.000000,1.145058,-197.3314,-204.4127)"
+       d="M 515.62804,216.02140 A 34.455158,32.401539 0 0 1 529.09563,235.56644 L 495.37845,242.23660 z"
+       sodipodi:ry="32.401539"
+       sodipodi:rx="34.455158"
+       sodipodi:cy="242.23660"
+       sodipodi:cx="495.37845"
+       id="path1555"
+       style="fill:#ff0000;fill-opacity:0.42763159;fill-rule:evenodd;stroke:#000000;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"
+       sodipodi:type="arc" />
+    <text
+       xml:space="preserve"
+       style="font-size:5.6651597px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+       x="425.44452"
+       y="70.927803"
+       id="text2284"><tspan
+         sodipodi:role="line"
+         id="tspan2286"
+         x="425.44452"
+         y="70.927803">P=(x,y)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.6651597px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+       x="392.9122"
+       y="35.810139"
+       id="text2288"><tspan
+         sodipodi:role="line"
+         x="392.91220"
+         y="35.810139"
+         id="tspan2292">P'=(x',y')</tspan></text>
+    <path
+       sodipodi:type="arc"
+       style="fill:#000000;fill-opacity:1.0000000"
+       id="path2296"
+       sodipodi:cx="293.21112"
+       sodipodi:cy="202.76149"
+       sodipodi:rx="3.4226978"
+       sodipodi:ry="3.4226978"
+       d="M 295.22267,199.99228 A 3.4226978,3.4226978 0 1 1 295.12917,199.92672"
+       sodipodi:start="5.3406126"
+       sodipodi:end="11.590433"
+       sodipodi:open="true"
+       transform="matrix(0.472097,0.000000,0.000000,0.472097,284.9738,-30.50455)" />
+    <path
+       transform="matrix(0.472097,0.000000,0.000000,0.472097,269.4617,-52.47995)"
+       sodipodi:open="true"
+       sodipodi:end="11.590433"
+       sodipodi:start="5.3406126"
+       d="M 295.22267,199.99228 A 3.4226978,3.4226978 0 1 1 295.12917,199.92672"
+       sodipodi:ry="3.4226978"
+       sodipodi:rx="3.4226978"
+       sodipodi:cy="202.76149"
+       sodipodi:cx="293.21112"
+       id="path3024"
+       style="fill:#000000;fill-opacity:1.0000000"
+       sodipodi:type="arc" />
+    <text
+       xml:space="preserve"
+       style="font-size:5.6651597px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+       x="377.61554"
+       y="81.269218"
+       id="text3026"><tspan
+         sodipodi:role="line"
+         id="tspan3028"
+         x="377.61554"
+         y="81.269218">O=(0,0)</tspan></text>
+    <path
+       transform="matrix(0.472097,0.000000,0.000000,0.472097,245.7627,-22.10215)"
+       sodipodi:open="true"
+       sodipodi:end="11.590433"
+       sodipodi:start="5.3406126"
+       d="M 295.22267,199.99228 A 3.4226978,3.4226978 0 1 1 295.12917,199.92672"
+       sodipodi:ry="3.4226978"
+       sodipodi:rx="3.4226978"
+       sodipodi:cy="202.76149"
+       sodipodi:cx="293.21112"
+       id="path3030"
+       style="fill:#000000;fill-opacity:1.0000000"
+       sodipodi:type="arc" />
+    <text
+       xml:space="preserve"
+       style="font-size:5.7708645px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125.00000%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Arial Narrow"
+       x="404.27325"
+       y="13.009794"
+       id="text3034"
+       sodipodi:linespacing="125.00000%"
+       transform="scale(1.025699,0.974945)"><tspan
+         sodipodi:role="line"
+         id="tspan3036"
+         x="404.27325"
+         y="13.009794">len(OP~)==len(OP'~)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.7209663px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125.00000%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Arial"
+       x="380.41632"
+       y="60.586414"
+       id="text3038"
+       sodipodi:linespacing="125.00000%"><tspan
+         sodipodi:role="line"
+         id="tspan3040"
+         x="380.41632"
+         y="60.586414">j~</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.7209663px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125.00000%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Arial"
+       x="411.87143"
+       y="79.545647"
+       id="text3042"
+       sodipodi:linespacing="125.00000%"><tspan
+         sodipodi:role="line"
+         id="tspan3044"
+         x="411.87143"
+         y="79.545647">i~</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:6.9250374px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+       x="403.3548"
+       y="21.851698"
+       id="text3064"
+       transform="scale(1.025699,0.974945)"><tspan
+         sodipodi:role="line"
+         id="tspan3066"
+         x="403.35480"
+         y="21.851698">xi~+ yj~=OP~</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.6651597px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+       x="381.70901"
+       y="92.903282"
+       id="text3068"><tspan
+         sodipodi:role="line"
+         id="tspan3070"
+         x="381.70901"
+         y="92.903282">~ means a vector</tspan><tspan
+         sodipodi:role="line"
+         x="381.70901"
+         y="99.984732"
+         id="tspan3072">(should be an arrow really) </tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.6651597px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+       x="400.6532"
+       y="64.513191"
+       id="text3080"><tspan
+         sodipodi:role="line"
+         id="tspan3082"
+         x="400.65320"
+         y="64.513191">t</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.6651597px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+       x="381.76263"
+       y="109.91146"
+       id="text3084"><tspan
+         sodipodi:role="line"
+         id="tspan3086"
+         x="381.76263"
+         y="109.91146">t is theta, the angle of rotation</tspan><tspan
+         sodipodi:role="line"
+         x="381.76263"
+         y="116.99291"
+         id="tspan3096"></tspan><tspan
+         sodipodi:role="line"
+         x="381.76263"
+         y="124.07436"
+         id="tspan3098">phi is the lower angle</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.1237602px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125.00000%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Arial Narrow"
+       x="370.24078"
+       y="3.9801562"
+       id="text3090"
+       sodipodi:linespacing="125.00000%"
+       transform="scale(1.284207,0.778691)"><tspan
+         sodipodi:role="line"
+         id="tspan3092"
+         x="370.24078"
+         y="3.9801562">pythagorean theorem:      </tspan><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="10.384856"
+         id="tspan3840">a^2+b^2=c^2</tspan><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="16.789557"
+         id="tspan3846">(a^2/c^2) + (b^2/c^2)=1</tspan><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="23.194257"
+         id="tspan3850">turns out this is the same as:</tspan><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="29.598957"
+         id="tspan3848">(sin(phi)^2) + (cos(phi)^2)=1</tspan><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="36.003658"
+         id="tspan3902" /><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="42.408358"
+         id="tspan3842">|OP~| = |OP'~|    (|| means len())</tspan><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="48.813058"
+         id="tspan3904" /><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="55.217758"
+         id="tspan3856">def sin(h) = opp/hyp</tspan><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="61.622459"
+         id="tspan3862">def cos(h)= adj/hyp</tspan><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="68.027159"
+         id="tspan3870" /><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="74.431859"
+         id="tspan3892">so: cos(phi)=xi~/|OP~|</tspan><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="80.836560"
+         id="tspan3896" /><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="87.241260"
+         id="tspan3906">so....</tspan><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="93.645960"
+         id="tspan3888">OP~==xi~ + yj~   </tspan><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="100.05066"
+         id="tspan3890">      ==|OP~|*cos(phi)*i~+|OP~|*sin(phi)*j~</tspan><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="106.45536"
+         id="tspan3908">      ==|OP'~|*cos(phi)*i~+|OP~'|*sin(phi)*j~</tspan><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="112.86006"
+         id="tspan3910" /><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="119.26476"
+         id="tspan3912">OP'~==x'i~ + y'j~</tspan><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="125.66946"
+         id="tspan3914">==|OP~'|*cos(theta+phi)..</tspan><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="132.07416"
+         id="tspan3872"></tspan><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="138.47886"
+         id="tspan3886">==|OP~|</tspan><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="144.88356"
+         id="tspan3874" /><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="151.28826"
+         id="tspan3832">so in this case:</tspan><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="157.69296"
+         id="tspan3830">x^2+y^2 = len(OP~)  = len(OP'~)</tspan><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="164.09766"
+         id="tspan3838" /><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="170.50236"
+         id="tspan3834"></tspan><tspan
+         sodipodi:role="line"
+         x="370.24078"
+         y="176.90706"
+         id="tspan3836" /></text>
+    <path
+       style="fill:none;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#00a9ff;stroke-width:0.47209665px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"
+       d="M 423.50469,65.274899 L 423.50469,73.806119"
+       id="path3100" />
+    <path
+       style="fill:none;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#00a9ff;stroke-width:0.47209665px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"
+       d="M 423.35234,71.673319 L 420.30548,71.673319 L 420.30548,73.349089 L 420.30548,73.653779"
+       id="path3828" />
+    <text
+       xml:space="preserve"
+       style="font-size:5.6651597px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
+       x="405.52817"
+       y="73.349098"
+       id="text3852"><tspan
+         sodipodi:role="line"
+         id="tspan3854"
+         x="405.52817"
+         y="73.349098">phi</tspan></text>
+  </g>
+</svg>
