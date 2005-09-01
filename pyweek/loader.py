@@ -168,7 +168,7 @@ class SvgHandler(xml.sax.ContentHandler):
                 if attr in ["x","width","height"]:
                     setattr(r, attr, float(value))
                 elif attr == "y":
-                    r.y = -float(value)
+                    r.y = 480-float(value) #@TODO: HEIGHT
                 elif attr == "transform":
                     r.transform = parseMatrix(value)
 
