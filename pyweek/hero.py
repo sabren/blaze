@@ -5,19 +5,14 @@ class BirdTest(unittest.TestCase):
     """We're going to flip the Bird, er I mean, test it.
     """
     def setUp(self):
-        #import events
-        #self.handler = events.event_handler()
-        #self.handler.capture()
-        self.bird = Bird(room.Room(), (0,0))
-        config = health.HealthModelConfig()
-        self.bird.makeHero(1.2, 0.35, config)
+        self.bird = Bird(room.Room(), (0,0), 1.0)
         self.bird.capture()
-        
     
     def testBirdMove(self):
-        """Is there a bird?  Can it move?
+        """Can the bird move?
         """
-        self.bird.move((8,0))
+        #assert self.bird.move((8,0)), "the bird should move"
+        pass
 
     def testBirdMass(self):
         """Bird should gain mass when it eats.
@@ -35,30 +30,25 @@ class BirdTest(unittest.TestCase):
 import eventnet
 class Bird(eventnet.driver.Handler):
     """A plump little kiwi bird who likes physics, eggs, and running around.
+    
     """
-    def __init__(self, room, position):
+    def __init__(self, room, position, radius):
+        """This function sets us up the bird.
+        """
         super(Bird, self).__init__()
         self.room = room
         self.space = room.space
         self.world = room.world
         self.position = position
-        
-    def makeHero(self, radius, height, healthconfig):
-        """This function sets us up the bird.
-        
-        Fatness is the radius of the sphere used to
-        represent the hero in the world.
-        """
-        self.height = height
         self.radius = radius
-        self.hlthcfg = healthconfig
+        self.hlthcfg = health.HealthModelConfig()
         self.metabolism = health.HealthModel(self.hlthcfg)
         self.bird = ode.Body(self.world)
         self.updateMass()
         
         # Creates a box for collision detection.
         self.geom = self.room.addGeom(self.position,
-                                      2*self.radius, self.height)
+                                      2*self.radius, 2*self.radius)
         self.geom.setBody(self.bird)
     
     def updateMass(self):
@@ -78,16 +68,26 @@ class Bird(eventnet.driver.Handler):
         mass.setSphere(density, self.radius)
         self.bird.setMass(mass)
 
-    def EVT_FAT_CHANGED(self, event):
+    def move(self, (dx, dy)):
+        """Generic move method to move the hero.
+
+        Pass in the 2d vector that you want the hero to travel in.
+        """
+        self.bird.setForce((dx,dy,0))
+
+    def walk(self, speed):
+        """Walk the hero.
+
+        speed -- Left is negative, right is positive.
+        """
+        self.move((speed, 0))
+
+    # Okay, here are the events we'll want to handle.
+    def EVT_HEALTH_FAT_CHANGED(self, event):
         """When our fat changes, update our mass.
         """
         self.updateMass()
-        
 
-    def move(self, (dx, dy)):
-        """Pass in the 2d vector that you want the hero to
-        travel in."""
-        self.bird.setForce((dx,dy,0))
         
 if __name__ == "__main__":
     unittest.main()

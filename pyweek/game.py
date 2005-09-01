@@ -93,10 +93,9 @@ class Game(State):
 
         ## @TODO: load hero position from level definition
         ## @TODO: clean this up. :)
-        heroPos = (100,100) 
-        self.hero = Bird(self.room, heroPos)
-        self.hero.hero(32, 32)
-
+        heroPos = (100,100)
+        heroRadius = 32
+        self.hero = Bird(self.room, heroPos, heroRadius)
 
         self.physics = RoomPhysics(self.room, self.hero.geom.getBody())
 
@@ -105,10 +104,12 @@ class Game(State):
         when the player tells us to go right, we
         should move the hero to the right in our world.
         """
-        self.hero.move((self.HERO_SPEED,0))
+        self.hero.walk((self.HERO_SPEED))
 
     def EVT_INPUT_LEFT(self, event):
-        self.hero.move((-self.HERO_SPEED,0))
+        self.hero.walk((-self.HERO_SPEED))
+
+    
 
     def heroPosition(self):
         return self.hero.geom.getPosition()[:2] # x,y, but not z

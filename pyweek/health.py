@@ -23,8 +23,7 @@ class ExampleTest(unittest.TestCase):
         This will just keep eventnet from complaining about our
         unhandled events in the test.
         """
-        self.handler = events.event_handler()
-        self.handler.capture()
+        pass
         
     def testHealthExample(self):
         """We need a working tutorial.
@@ -393,8 +392,6 @@ class HealthModelTest(unittest.TestCase):
         coded defaults change.  They're not really important.
         """
         import events
-        self.testhandler = events.event_handler()
-        self.testhandler.capture()
         self.c = HealthModelConfig()
         self.c.startfat = 5000
         self.c.startblood = 1000
@@ -494,7 +491,7 @@ class HealthModelTest(unittest.TestCase):
 import eventnet.driver
 
 # We're going to need events to throw around.
-import events
+from events import HEALTH
 
 
 class HealthModel(eventnet.driver.Handler):
@@ -525,8 +522,8 @@ class HealthModel(eventnet.driver.Handler):
         except NotEnoughCalories, e:
             # If we're short on blood sugar, burn fat.
             self.fat.burnCalories(e.calories_short)
-            eventnet.driver.post(events.HEALTH_FAT_CHANGED)
-        eventnet.driver.post(events.HEALTH_BLOOD_CHANGED)
+            eventnet.driver.post(HEALTH.FAT_CHANGED)
+        eventnet.driver.post(HEALTH.BLOOD_CHANGED)
 
     def eat(self, food):
         """Eat food.  Keep your strength up.
@@ -552,8 +549,8 @@ class HealthModel(eventnet.driver.Handler):
                 calories2fat = self.getBlood() - self.config.bloodlimit
                 self.blood.burnCalories(calories2fat)
                 self.fat.addCalories(calories2fat)
-        eventnet.driver.post(events.HEALTH_FAT_CHANGED)
-        eventnet.driver.post(events.HEALTH_BLOOD_CHANGED)
+        eventnet.driver.post(HEALTH.FAT_CHANGED)
+        eventnet.driver.post(HEALTH.BLOOD_CHANGED)
         
 
     def step(self):
@@ -570,17 +567,17 @@ class HealthModel(eventnet.driver.Handler):
         if not self.config.suppressinsulin:
             insulinpenalty = 0
             if self.getBlood() > self.config.bloodlimit:
-                eventnet.driver.post(events.HEALTH_HIGH_BLOOD)
+                eventnet.driver.post(HEALTH.HIGH_BLOOD)
                 insulinpenalty = (self.getBlood() - self.config.bloodlimit) * self.config.insulinratio
             insulin = self.config.baseinsulinrate + insulinpenalty
             self.blood.burnCalories(insulin)
             if insulin > self.config.bloodlimit/2:
                 # Looks like a sugar crash.
-                eventnet.driver.post(events.HEALTH_SUGAR_CRASH)
+                eventnet.driver.post(HEALTH.SUGAR_CRASH)
             insulin2fat = int(insulin*self.config.insulin2fatratio)
             self.fat.addCalories(insulin2fat)
-        eventnet.driver.post(events.HEALTH_FAT_CHANGED)
-        eventnet.driver.post(events.HEALTH_BLOOD_CHANGED)
+        eventnet.driver.post(HEALTH.FAT_CHANGED)
+        eventnet.driver.post(HEALTH.BLOOD_CHANGED)
 
     def EVT_EVENT(self, event):
         pass
