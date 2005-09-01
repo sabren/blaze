@@ -27,7 +27,9 @@ The idea is to
 
 """
 
-THICKNESS = 32 # arbitrary depth for all our blocks
+WIDTH = px2w(640)
+HEIGHT = px2w(480)
+THICKNESS = px2w(32) # arbitrary depth for all our blocks
 
 
 class RoomTest(unittest.TestCase):
@@ -68,32 +70,37 @@ class Room(object):
         self.world = ode.World()
         self.space = ode.Space()
         self.blocks = []
+        self._setupGlass()
 
-    def addGeom(self, (cx, cy), lx, ly, transform=False):
+    def _setupGlass(self):
+        """
+        add the "glass walls" holding all the data in
+        """
+        # i think z++ is "into" the screen, but it doesn't matter..
+        front=ode.GeomBox(self.space, lengths=[WIDTH,HEIGHT,THICKNESS])
+        front.setPosition((WIDTH/2,HEIGHT/2,THICKNESS * -1.5))
+        
+        back=ode.GeomBox(self.space, lengths=[WIDTH,HEIGHT,THICKNESS])
+        back.setPosition((WIDTH/2,HEIGHT/2,THICKNESS * 1.5))
+
+        left=ode.GeomBox(self.space, lengths=(THICKNESS, HEIGHT, THICKNESS*3))
+        left.setPosition((THICKNESS * -1.5, HEIGHT/2, 0))
+
+        right=ode.GeomBox(self.space, lengths=(THICKNESS, HEIGHT, THICKNESS*3))
+        right.setPosition((WIDTH+(THICKNESS * -1.5), HEIGHT/2, 0))
+
+    def addGeom(self, (cx, cy), w, h, transform=None):
         #ref: http://ode.org/ode-latest-userguide.html#sec_12_4_0
         #     "how can an immovable body be created?"
 
-        # if we need to rotate this thing, we attach the space to
-        # the transformation, not the geom itself.
-        if transform:
-            space = None
-        else:
-            space = self.space
-        
-        geom = ode.GeomBox(space, lengths=[lx, ly, px2w(THICKNESS)])
+        geom = ode.GeomBox(self.space, lengths=[w, h, THICKNESS])
         geom.setPosition((cx, cy, 0))
-        geom.shape = "box"
-        geom.boxsize = [lx, ly, px2w(THICKNESS)]
-        self.blocks.append(geom)
-
         if transform:
-            # this allows us to set the center of rotation at the origin
-            trans = ode.GeomTransform(self.space)
-            trans.setPosition((0,0,0))
-            trans.setGeom(geom)
-            return trans.getGeom()
-        else:
-            return geom
+            geom.setRotation(transform)
+        geom.shape = "box"
+        geom.boxsize = [w, h, THICKNESS]
+        self.blocks.append(geom)
+        return geom
     
     def addBlock(self, (cx, cy), lx, ly):
         """

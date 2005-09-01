@@ -350,21 +350,32 @@ class RoomFromRectsTest(unittest.TestCase):
         
         
 
+from rotate import rotate
 
 def roomFromRects(rects):
     """
     here's where we actually do the work.
     """
     rm = Room()
-    print rects
-    for r in rects:
-        block = rm.addGeom(pixel2world(*r.getCenter()), px2w(r.width), px2w(r.height)),
-                           transform=bool(r.transform))
-        trans = ode.GeomTransform(rm.space)
-        trans.setGeom(block)
+    #print rects
+    for r in rects:        
+        cx = r.x + (r.width / 2.0)
+        cy = r.y + (r.height / 2.0)
+        
         if r.transform:
             a, b, c, d, e, f = r.transform
-            trans.setRotation((a,b,0,c,d,0,e,f,1))
+
+            
+            ode_matrix = (-a,b,0,c,d,0,e,f,1)
+            
+            # rotate the "original" center back to new position
+            # (see rotate.py for why we need this):
+            cx, cy = rotate((cx,cy),(a,b,c,d,e,f))
+        else:
+            ode_matrix = None
+    
+        rm.addGeom(pixel2world(cx, cy), px2w(r.width), px2w(r.height),
+                   transform=ode_matrix)
     return rm
             
 
