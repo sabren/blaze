@@ -380,7 +380,9 @@ class Food:
         Oh, and the kiwi gets a tuple of nutrition (sugar, fat) for
         his trouble.
         """
-        return self.nutrition
+        calories = self.nutrition
+        self.nutrition = (0,0)
+        return calories
     
 
 class HealthModelTest(unittest.TestCase):

@@ -62,7 +62,8 @@ class GameTest(unittest.TestCase):
 # goal: tie keyboard keys to events
 
 # goal: on collide with egg, increase score
-# goal: on collide with food, talk to calorie bank
+# goal: on collide with food, talk to hero's health model
+#       --  pass the food to hero_instance.metabolism.eat(food)
 
 # goal: on collide with exit
 # goal: GAME_up to go up (ladder) or through door

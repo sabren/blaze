@@ -12,7 +12,7 @@ class BirdTest(unittest.TestCase):
         """Can the bird move?
         """
         #assert self.bird.move((8,0)), "the bird should move"
-        pass
+        
 
     def testBirdMass(self):
         """Bird should gain mass when it eats.
@@ -51,6 +51,9 @@ class Bird(eventnet.driver.Handler):
                                       2*self.radius, 2*self.radius)
         self.geom.setBody(self.bird)
     
+    def getPosition(self):
+        self.geom.getPosition()[:2] # x,y, but not z
+
     def updateMass(self):
         """Updates the mass of the hero by adjusting his density.
         
@@ -81,6 +84,12 @@ class Bird(eventnet.driver.Handler):
         speed -- Left is negative, right is positive.
         """
         self.move((speed, 0))
+
+    def run(self, speed):
+        pass
+
+    def jump(self):
+        pass
 
     # Okay, here are the events we'll want to handle.
     def EVT_HEALTH_FAT_CHANGED(self, event):
