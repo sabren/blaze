@@ -73,7 +73,7 @@ class BlockSprite(pygame.sprite.Sprite):
 
         else:
             self.old_position = map(round, self.block.getPosition()[:2])
-            self.rect.center = map(round, self.block.getPosition()[:2])
+            self.rect.center = world2pixel( map(round, self.block.getPosition()[:2]) )
         #self.rect.center = map(round, self.block.getPosition()[:2])
 
 

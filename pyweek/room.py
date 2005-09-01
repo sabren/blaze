@@ -11,6 +11,8 @@ as a guide because it uses pygame to display the simulation.
 import ode
 import unittest
 
+from ode_to_pixel import *
+
 #########################################################
 ##
 ## This is our actual model of the room: a simple
@@ -70,10 +72,10 @@ class Room(object):
     def addGeom(self, (cx, cy), lx, ly):
         #ref: http://ode.org/ode-latest-userguide.html#sec_12_4_0
         #     "how can an immovable body be created?"
-        geom = ode.GeomBox(self.space, [lx, ly, THICKNESS])
+        geom = ode.GeomBox(self.space, [lx, ly, px2w(THICKNESS)])
         geom.setPosition((cx, cy, 0))
         geom.shape = "box"
-        geom.boxsize = [lx, ly, THICKNESS]
+        geom.boxsize = [lx, ly, px2w(THICKNESS)]
         self.blocks.append(geom)
         return geom
     
