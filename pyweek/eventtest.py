@@ -64,6 +64,7 @@ class EventHandler(eventnet.driver.Handler):
         self.count += 1
 
 
+
 class HowToUseEventHandlerClasses(unittest.TestCase):
     def test(self):
         h = EventHandler()
@@ -97,6 +98,49 @@ class MultipleHandlersTest(unittest.TestCase):
         assert a.count == 1
         assert b.count == 0
         assert c.count == 2
+
+
+
+
+# now we want to make sure you can post something
+# without having listeners...
+
+class AnotherHandler(eventnet.driver.Handler):
+
+    def __init__(self):
+        super(EventHandler, self).__init__()
+        self.gotAnotherEvent = False
+
+    def EVT_ANOTHER_EVENT(self, event):
+        self.gotAnotherEvent = True
+
+
+class MultipleHandlersTest(unittest.TestCase):
+
+    def test(self):
+        
+        a = EventHandler()
+        b = EventHandler()
+        c = EventHandler()
+        
+        a.capture()
+        # b will not capture
+        c.capture()
+        
+        eventnet.driver.post(AN_EVENT)
+        assert a.gotIt
+        assert not b.gotIt
+        assert a.gotIt
+
+        ## now tell one to stop listening:
+        a.release()
+        eventnet.driver.post(AN_EVENT)
+        assert a.count == 1
+        assert b.count == 0
+        assert c.count == 2
+
+
+
     
 
 

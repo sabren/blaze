@@ -1,3 +1,4 @@
+-*-outline-*-
 
 PyWeek Project Outline for Team Trailblazer
 
@@ -38,19 +39,23 @@ per level...
 *** high score list
 *** credits
 
+
+** display sprites
+*** get sprite module working with display.py
+http://kai.vm.bytemark.co.uk/~piman/writing/sprite-tutorial.shtml
+http://www.pygame.org/docs/tut/SpriteIntro.html
+*** bind sprites to the corresponding blocks
+
+
 ** on screen display
 show the score
-show calorie bar
+show fat bar
+show carb bar
 show time bar
 
 ** event system
 observe pyODE, fire events
 take keyboard events from pygame
-
-** sprite system
-get sprite module working for the pygame display
-http://kai.vm.bytemark.co.uk/~piman/writing/sprite-tutorial.shtml
-http://www.pygame.org/docs/tut/SpriteIntro.html
 
 
 ** metabolism
@@ -189,6 +194,7 @@ can chickens actually climb? they can fly :o ya don't say oh, i do >_>
 
 
 
+http://www.chemistry.co.nz/kiwibird.htm
 
 #############################
 credits: ACSpike on #inkscape

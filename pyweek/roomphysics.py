@@ -2,11 +2,12 @@ import ode
 
 
 class RoomPhysics:
-    def __init__(self, world, space, drag):
-        self.world = world
-        self.space = space
+    def __init__(self, room, hero, drag=1):
+        self.world = room.world
+        self.space = room.space
         self.coefficient = drag
         self.friction = 5000
+        self.hero = hero
         
     def atmosphere(self, chars):
             """This simulates a frictional force caused by the atmosphere
@@ -38,7 +39,7 @@ creates contact joints if they do.
         contactgroup = ode.JointGroup()
         for i in range(2):
             # Apply the atmosphere
-            self.atmosphere()
+            self.atmosphere([self.hero])
             
             # Detect collisions and create contact joints
             self.space.collide(contactgroup, self.onNearCollision)

@@ -17,8 +17,9 @@ eventnet.driver.post(events.MODULE_EVENTNAME)
 
 This should make refactoring easier.
 """
-import pygame, eventnet.driver, sys, os
-from pygame.locals import *
+#import pygame
+#from pygame.locals import *
+import eventnet
 
 # Health-related events
 HEALTH_BLOOD_CHANGED = "HEALTH_BLOOD_CHANGED"
@@ -26,34 +27,25 @@ HEALTH_FAT_CHANGED = "HEALTH_FAT_CHANGED"
 HEALTH_SUGAR_CRASH = "HEALTH_SUGAR_CRASH"
 HEALTH_HIGH_BLOOD = "HEALTH_HIGH_BLOOD"
 
-import unittest
+
+# INPUT EVENTS
+# we're modelling a simple gamepad here,
+# but really the events could be triggered
+# by the keyboard, mouse, etc...
+
+class INPUT:
+    UP = "INPUT_UP"
+    DOWN = "INPUT_DOWN"
+    RIGHT = "INPUT_RIGHT"
+    LEFT = "INPUT_LEFT"
+    JUMP = "INPUT_JUMP"
+    QUIT = "INPUT_QUIT"
+    YES  = "INPUT_YES"
+    NO   = "INPUT_NO"
+    PAUSE = "INPUT_PAUSE"
 
 
-#modified this to be a single class that's imported by main script
-#Micah
-#
-#I don't think we actually need this.  Each object that needs to handle
-#events will be its own handler. 
-#--David
-class event_handler(eventnet.driver.Handler):
-    """
-    this class is imported by the main script and will handle ALL
-    events, all handlers should call functions from the physics system
-    when that is ready
+class MENU:
+    PLAY="MENU_PLAY"
 
-    How to use this:
-    http://lgt.berlios.de/#eventnet
-    """
-    #post events in this manner
-    def EVT_KEYDOWN(self, event):
-        sys.exit(0)
-
-    # Metabolism-related events
-    def EVT_HEALTH_BLOOD_CHANGED(self, event): pass
-
-    def EVT_HEALTH_FAT_CHANGED(self, event): pass
-
-    def EVT_HEALTH_SUGAR_CRASH(self, event): pass
-    
-    def EVT_HEALTH_HIGH_BLOOD(self, event): pass
 

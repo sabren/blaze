@@ -10,6 +10,6 @@ from health import *
 from odetest import *
 from room import *
 from eventtest import *
-
+from game import *
 unittest.main()
 

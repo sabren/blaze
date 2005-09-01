@@ -8,7 +8,7 @@ class BirdTest(unittest.TestCase):
         #import events
         #self.handler = events.event_handler()
         #self.handler.capture()
-        self.bird = Bird(ode.World(), ode.Space(), room.Room(), (0,0))
+        self.bird = Bird(room.Room(), (0,0))
         config = health.HealthModelConfig()
         self.bird.makeHero(1.2, 0.35, config)
         self.bird.capture()
@@ -36,11 +36,11 @@ import eventnet
 class Bird(eventnet.driver.Handler):
     """A plump little kiwi bird who likes physics, eggs, and running around.
     """
-    def __init__(self, world, space, room, position):
+    def __init__(self, room, position):
         super(Bird, self).__init__()
-        self.world = world
-        self.space = space
         self.room = room
+        self.space = room.space
+        self.world = room.world
         self.position = position
         
     def makeHero(self, radius, height, healthconfig):
@@ -57,9 +57,9 @@ class Bird(eventnet.driver.Handler):
         self.updateMass()
         
         # Creates a box for collision detection.
-        # Does this do anything?
-        geom = self.room.addGeom(self.position, 2*self.radius, self.height)
-        geom.setBody(self.bird)
+        self.geom = self.room.addGeom(self.position,
+                                      2*self.radius, self.height)
+        self.geom.setBody(self.bird)
     
     def updateMass(self):
         """Updates the mass of the hero by adjusting his density.
@@ -83,15 +83,11 @@ class Bird(eventnet.driver.Handler):
         """
         self.updateMass()
         
-    def move(self, force):
-        """Pass in the 2d vector that you want the hero to travel in.
-        """
-        x, y = force
-        self.bird.setForce((x,y,0))
-        
-            
-    
-        
+
+    def move(self, (dx, dy)):
+        """Pass in the 2d vector that you want the hero to
+        travel in."""
+        self.bird.setForce((dx,dy,0))
         
 if __name__ == "__main__":
     unittest.main()
