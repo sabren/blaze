@@ -8,9 +8,11 @@ Micah
 import pygame, unittest
 import cPickle, os, sys, string, loader, eventnet.driver, eventnet._pygame, events, string
 from pygame.locals import *
-from states import *
+from menu import Menu
+from game import Game
+from states import Ticker, EXIT
 from display import Display, ImageManager, MockDisplay
-from events import MENU, INPUT
+from events import MENU, GAME
 
 
 #function to load all 3 level elements
@@ -36,7 +38,9 @@ class ConsoleTest(unittest.TestCase):
         con = Console(MockDisplay())
         
         # on start, we go to the menu state
-        assert isinstance(con.state, MenuState)
+        assert isinstance(con.state, Menu)
+        assert not con.done
+        assert not con.state.done
         
         # so now we're sitting here looking at
         # the console and it's showing us a menu
@@ -47,10 +51,29 @@ class ConsoleTest(unittest.TestCase):
         # so.. let's say we pick "play!"
         eventnet.driver.post(MENU.PLAY)
         con.tick()
+
+
+        #@TODO: test pause here..
         
         # now we should be in the game mode
-        assert isinstance(con.state, GameState),\
+        assert isinstance(con.state, Game),\
                "the game should start when we pick play"
+
+
+        # but let's quit back to the menu:
+        eventnet.driver.post(GAME.QUIT)
+        eventnet.driver.post(GAME.YES)
+        con.tick()
+
+        assert isinstance(con.state, Menu),\
+               "quit should take you back to the menu..."
+
+        
+
+        eventnet.driver.post(MENU.EXIT)
+        con.tick()
+        assert con.done
+
       
 
 # The game Console (our master object)
@@ -59,48 +82,24 @@ from states import Ticker
 class Console(Ticker):
     def __init__(self, display):
         super(Console, self).__init__(display)
-        self.state = MenuState(self.display)
+        self.loadDefaultState()
         self.state.kick()
 
+    def loadDefaultState(self):
+        self.state = Menu(self.display)
 
     def tick(self):
-        #if self.state
         self.state.tick()
         if self.state.done:
             next = self.state.next
-            if next:
-                self.state = next
-            else:
+            if next is EXIT:
                 self.done = True
+            elif next is None:
+                self.loadDefaultState()
+            else:
+                self.state = self.state.next
+                self.state.kick()
                 
-
-    def startState(state, img):
-        imanager = ImageManager (self.display.buffer)
-        imanager.load (img)
-        imanager.blit (img)
-        self.display.flip()
-        self.state = state
-        self.state.kick()
-
-    def EVT_MENU(self, event):
-        self.startState(MenuState(), 'menu.png')
-
-    def EVT_SCORE(self, event):
-        # high_scores.png is supposed to come on screen
-        print 'SCORE'
-        self.startState(HighScoresState(), 'high_scores.png')
-
-    def EVT_CREDITS(self, event):
-        pass
-
-    def EVT_Quit(self, event):
-        pygame.quit()
-        
-    def EVT_KeyDown(self, event):
-        if event.key == K_ESCAPE:
-            eventnet.driver.post('Quit')
-
-
 
 
 """
@@ -136,14 +135,6 @@ There's probably a confirmation screen
 
 
 
-class QuitGameTest(unittest.TestCase):
-    def test(self):
-        con = Console(MockDisplay())
-        assert isinstance(con.state,MenuState)
-        assert not con.state.done
-        eventnet.driver.post(INPUT.QUIT)
-        eventnet.driver.post(INPUT.YES)
-        assert con.state.done
 
 
 
@@ -188,3 +179,4 @@ if __name__=="__main__":
         pygame_events()
         con.tick()
         
+    pygame.quit()        
