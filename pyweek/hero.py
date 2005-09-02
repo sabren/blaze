@@ -146,7 +146,7 @@ class Bird(eventnet.driver.Handler):
         totalfatmass = self.hlthcfg.fatmass * self.metabolism.getFat()
         # density = mass * volume... sorta.  Okay, so we're fudging it.
         # The units are all arbitrary anyway. :)
-        density = float(totalfatmass * self.hlthcfg.fatspace)
+        density = float(totalfatmass / self.hlthcfg.fatspace)
         #density = float(density)
         mass = ode.Mass()
         mass.setSphere(density, self.radius)
