@@ -249,7 +249,8 @@ class WithForeground(pygame.sprite.RenderUpdates):
 background = pygame.image.load("gravdemo-back.png")
 
 ## FOREGROUND
-foreground = pygame.image.load("gravdemo-fore.png")
+#foreground = pygame.image.load("gravdemo-fore.png")
+foreground = pygame.surface.Surface((1, 1))
 
 fgSprite = pygame.sprite.Sprite()
 fgSprite.image = foreground
@@ -260,7 +261,7 @@ group = WithForeground(fgSprite)
 
 if DIMENSIONS==2:
     screen.blit(background, (0,0))
-    screen.blit(foreground, (0,0))
+    #screen.blit(foreground, (0,0))
                          
 
 
@@ -277,7 +278,7 @@ okay, the next problem is that the floor is now
 going to fall along with everything else. So we
 need to fix it in place. That's what addGeom is for:
 """
-floor = rm.addGeom(pixel2world(WIDTH/2, HEIGHT-25), px2w(WIDTH), px2w(50))
+#floor = rm.addGeom(pixel2world(WIDTH/2, HEIGHT-25), px2w(WIDTH), px2w(50))
 
 
 class myBlockSprite(render.BlockSprite):
@@ -287,23 +288,24 @@ class myBlockSprite(render.BlockSprite):
 
         if self.old_position:
             #self.old_position = self.block.getPosition()[:2]
-            new_pos = map(round, self.block.getPosition()[:2])
-            x = new_pos[0] - self.old_position[0]
-            y = new_pos[1] - self.old_position[1]
+            new_pos = self.block.getPosition()[:2]
+            x = (new_pos[0] - self.old_position[0])
+            y = (new_pos[1] - self.old_position[1])
 
 
             self.rect.move_ip(world2pixel(x,y))
             self.old_position = new_pos
-
         else:
             self.old_position = map(round, self.block.getPosition()[:2])
             self.rect.center = world2pixel( *map(round, self.block.getPosition()[:2]) )
 
+	
 
-if DIMENSIONS==2:
+
+#if DIMENSIONS==2:
     # here's a little drawing of the floor:
-    floorImg = pygame.surface.Surface((WIDTH, 50))
-    group.add(myBlockSprite(floor, floorImg))
+    #floorImg = pygame.surface.Surface((WIDTH, 50))
+    #group.add(myBlockSprite(floor, floorImg))
 
 
 
