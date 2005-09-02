@@ -524,8 +524,8 @@ class HealthModel(eventnet.driver.Handler):
         except NotEnoughCalories, e:
             # If we're short on blood sugar, burn fat.
             self.fat.burnCalories(e.calories_short)
-            eventnet.driver.post(HEALTH.FAT_CHANGED)
-        eventnet.driver.post(HEALTH.BLOOD_CHANGED)
+            self.postFatChanged()
+        self.postBloodChanged()
 
     def eat(self, food):
         """Eat food.  Keep your strength up.
@@ -551,8 +551,8 @@ class HealthModel(eventnet.driver.Handler):
                 calories2fat = self.getBlood() - self.config.bloodlimit
                 self.blood.burnCalories(calories2fat)
                 self.fat.addCalories(calories2fat)
-        eventnet.driver.post(HEALTH.FAT_CHANGED)
-        eventnet.driver.post(HEALTH.BLOOD_CHANGED)
+        self.postFatChanged()
+        self.postBloodChanged()
         
 
     def step(self):
@@ -578,11 +578,20 @@ class HealthModel(eventnet.driver.Handler):
                 eventnet.driver.post(HEALTH.SUGAR_CRASH)
             insulin2fat = int(insulin*self.config.insulin2fatratio)
             self.fat.addCalories(insulin2fat)
-        eventnet.driver.post(HEALTH.FAT_CHANGED)
-        eventnet.driver.post(HEALTH.BLOOD_CHANGED)
+        self.postFatChanged()
+        self.postBloodChanged()
 
-    def EVT_EVENT(self, event):
-        pass
+    def postBloodChanged(self):
+        newblood = self.getBlood()
+        limit = self.config.bloodlimit
+        eventnet.driver.post(HEALTH.BLOOD_CHANGED, blood=newblood, ceiling=limit)
+
+    def postFatChanged(self):
+        newfat = self.getFat()
+        limit = 4*self.config.startfat
+        eventnet.driver.post(HEALTH.FAT_CHANGED, fat=newfat, ceiling=limit)
+                         
+
 
 
         

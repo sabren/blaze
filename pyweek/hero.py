@@ -59,7 +59,7 @@ class BirdTest(unittest.TestCase):
         self.assertNotEqual(initialmass, newmass)
 
 
-import eventnet
+import eventnet.driver
 class Bird(eventnet.driver.Handler):
     """A plump little kiwi bird who likes physics, eggs, and running around.
     
@@ -118,6 +118,11 @@ class Bird(eventnet.driver.Handler):
 
     def run(self):
         pass
+
+    def step(self):
+        """Do the step thing.
+        """
+        self.metabolism.step()
 
     # Okay, here are the events we'll want to handle.
     def EVT_HEALTH_FAT_CHANGED(self, event):
