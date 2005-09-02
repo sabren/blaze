@@ -216,7 +216,7 @@ rm = room.Room()
 rm = loader.roomFromFile(open(FILENAME))
 
 #import pdb; pdb.set_trace()
-rm.world.setGravity((0,9.81,0)) # in our world y++ is down. :)
+#rm.world.setGravity((0,9.81,0)) # in our world y++ is down. :)
 rm.world.setERP(0.8) # ??
 rm.world.setCFM(10E-5) # ??
 
@@ -360,8 +360,8 @@ blocks = blockGenerator()
 doneMakingBlocks = True
 
 # Let's put our bird in and see if he can fly. Er, walk.
-import hero
-bird = hero.Bird(rm, pixel2world(WIDTH/2, 50), px2w(32))
+import hero, health
+bird = hero.Bird(rm, pixel2world(400, 10), px2w(32))
 
 
 ### collision stuff ######################
@@ -456,7 +456,13 @@ while going:
         except StopIteration:
             doneMakingBlocks = True
 
-
+    # Walk the bird.
+    try: bird.walk(1)
+    except health.NotEnoughCalories:
+        # Got to keep our strength up...
+        food = health.Food(1000, 5000)
+        bird.metabolism.eat(food)
+    
     # this is a hack for if they fall off the floor
     # if I don't do this, then they just keep acellerating
     # forever due to gravity
