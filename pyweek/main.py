@@ -12,9 +12,9 @@ from states import *
 from display import Display, ImageManager
 
 disp = Display(t='Kiwi Run')
-imanager = ImageManager (disp.buffer)
+imanager = ImageManager (pygame.display.get_surface())
 imanager.load ("menu.png")
-bg = 'menu.jpg'
+imanager.blit ('menu.png')
 # load all levels and parse into list
 lvl_list = []
 for lvl in os.listdir('rooms'):
@@ -22,8 +22,6 @@ for lvl in os.listdir('rooms'):
     # adds name of level to list
     if string.find(lvl, '-') == -1:
         lvl_list += [os.path.splitext(lvl)[0]]
-
-MENU_PLAY="MENU_PLAY"
 
 #function to load all 3 level elements
 def load(file):
@@ -152,7 +150,6 @@ class ConsoleTest(unittest.TestCase):
 
 #loop to keep checking for mode changes
 while True:
-    imanager.blit (bg)
     for event in pygame.event.get():
         eventnet.driver.post(pygame.event.event_name(event.type), **event.dict)
         
