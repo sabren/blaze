@@ -9,10 +9,12 @@ import pygame, unittest
 import cPickle, os, sys, string, loader, eventnet.driver, eventnet._pygame, events, string
 from pygame.locals import *
 from states import *
-from display import Display
+from display import Display, ImageManager
 
 disp = Display(t='Kiwi Run')
-
+imanager = ImageManager (disp.buffer)
+imanager.load ("menu.png")
+bg = 'menu.jpg'
 # load all levels and parse into list
 lvl_list = []
 for lvl in os.listdir('rooms'):
@@ -53,8 +55,6 @@ class Console(eventnet.driver.Handler):
         startState(GameState())
 
     def EVT_MENU(self, event):
-        bg = pygame.image.load('menu.png')
-        display.screen.blit(bg)
         startState(MenuState())
 
     def EVT_SCORE(self, event):
@@ -152,6 +152,7 @@ class ConsoleTest(unittest.TestCase):
 
 #loop to keep checking for mode changes
 while True:
+    imanager.blit (bg)
     for event in pygame.event.get():
         eventnet.driver.post(pygame.event.event_name(event.type), **event.dict)
         
