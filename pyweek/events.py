@@ -25,6 +25,8 @@ class HEALTH:
     SUGAR_CRASH = "HEALTH_SUGAR_CRASH"
     HIGH_BLOOD = "HEALTH_HIGH_BLOOD"
 
+class SCREEN:
+    STATUS_CHANGED = "SCREEN_STATUS_CHANGED"
 
 # INPUT EVENTS
 # we're modelling a simple gamepad here,

@@ -1,4 +1,4 @@
-import pygame
+import pygame, events
 import eventnet.driver
 import unittest
 
@@ -25,7 +25,15 @@ class Bar(pygame.sprite.Sprite):
         self.image.fill(color)
         self.rect = self.image.get_rect()
         self.rect.topleft = position # origin is top left
-        
+
+    def updateSize(self, newsize):
+        """Update my size.
+        """
+        surface = self.image
+        surface = pygame.transform.scale(surface, newsize)
+        self.image = surface
+        eventnet.driver.post(events.SCREEN.STATUS_CHANGED)
+                
 class StatusBoxTest(unittest.TestCase):
     """
     """
@@ -56,6 +64,7 @@ class StatusBoxTest(unittest.TestCase):
         """
         from pygame.locals import *
         from pygame import display
+        import health
         
         pygame.init()
         screen = pygame.display.set_mode([640, 480])
@@ -65,6 +74,12 @@ class StatusBoxTest(unittest.TestCase):
             screen.blit(bar.image, bar.rect)
         pygame.display.update()
         while pygame.event.poll().type != KEYDOWN:
+            self.bird.step()
+            food = health.Food(100,100)
+            self.bird.metabolism.eat(food)
+            for key in sb.bars.keys():
+                bar = sb.bars[key]
+                screen.blit(bar.image, bar.rect)
             pygame.time.delay(10)
 
 
@@ -73,12 +88,10 @@ class StatusBoxTest(unittest.TestCase):
         """
         oldheight = self.sb.bars["bloodbar_black"].image.get_height()
         self.bird.step()
-        print "First step."
         import health
         candy = health.Food(100, 0)
         self.bird.metabolism.eat(candy)
         self.bird.step()
-        print "Second step."
         newheight = self.sb.bars["bloodbar_black"].image.get_height()
         self.assertNotEqual(oldheight, newheight)
         
@@ -90,7 +103,7 @@ class StatusBox(eventnet.driver.Handler):
         bloodcolor = (255, 0, 0)
         fatcolor = (0, 255, 0)
         timecolor = (0, 0, 255)
-        self.black = (0,0,0)
+        self.black = (100,100,100)
         self.barheight = 160
         self.barwidth = 24
         blackheight = 1
@@ -107,35 +120,34 @@ class StatusBox(eventnet.driver.Handler):
         self.bars["timebar_black"] = Bar(self.black, (self.timeloc, 0), self.barwidth, blackheight)
 
     def EVT_HEALTH_BLOOD_CHANGED(self, event):
+        """Updates the blood bar display.
+        """
         assert event.blood
         assert event.ceiling
-        self.updateBloodBar(event.blood, event.ceiling)
+        newsize = self.figureNewBarBlackSize(event.blood, event.ceiling)
+        self.bars["bloodbar_black"].updateSize(newsize)
 
-    def updateBloodBar(self, blood, ceiling):
-        # We want to figure out the decimal percentage of the bar to
-        # cover w/ black
-        percentblack = 1-blood/ceiling
-        # The new height for bloodbar_black
-        newheight = int(self.barheight*percentblack)
-        newsize = (self.barwidth, newheight)
-        # Now we're going to transform bloodbar_black's surface
-        oldsurface = self.bars["bloodbar_black"].image
-        newsurface = pygame.transform.scale(oldsurface, newsize)
-        self.bars["bloodbar_black"].image = newsurface
-
-        # Scratch that.  We're just going to replace it for now.  At
-        # least until we figure out why pygame.transform.scale is
-        # giving segmentation faults.
-        
-        #newbar = Bar(self.black, (self.bloodloc, 0), self.barwidth, newheight)
-        #self.bars["bloodbar_black"] = newbar
-        
-        
-        
     def EVT_HEALTH_FAT_CHANGED(self, event):
         assert event.fat
         assert event.ceiling
-        newpercent = event.fat/event.ceiling
+        newsize = self.figureNewBarBlackSize(event.fat, event.ceiling)
+        self.bars["fatbar_black"].updateSize(newsize)
+
+    def figureNewBarBlackSize(self, value, ceiling):
+        """Figure the new size of the black bar.
+        """
+        value = float(value)
+        ceiling = float(ceiling)
+        # We want to figure out the decimal percentage of the bar to
+        # cover w/ black
+        percentblack = 1-value/ceiling
+        # If percentblack goes negative, bad stuff happens.
+        # Let's make sure that doesn't occur.
+        if percentblack < 0.0:
+            percentblack = 0.0
+        newheight = int(self.barheight*percentblack)
+        newsize = (self.barwidth, newheight)
+        return newsize
         
 if __name__ == "__main__":
     unittest.main()

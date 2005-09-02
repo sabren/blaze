@@ -39,7 +39,7 @@ class ExampleTest(unittest.TestCase):
         hc.bloodlimit = 1000 # Max blood sugar before fat uptake
         hc.exertionratio = 50 # Calories to burn per exertion level
         hc.lowbloodlevel = 100 # Min blood sugar before recovering from fat
-        hc.recoveryrate = 5 # Blood sugar recovery rate, in calories/step()
+        hc.bloodrecoveryrate = 5 # Blood sugar recovery rate, in calories/step()
         hc.baseinsulinrate = 2 # Insulin lowers blood sugar, in calories/step()
         hc.insulinratio = 10 # Insulin penalty ratio for high blood sugar.
         hc.suppressinsulin = False # If we suppress insulin, new rules take effect.
@@ -280,8 +280,8 @@ class HealthModelConfigTest(unittest.TestCase):
     def testConfigRecoveryRate(self):
         """We need a rate to restore low blood sugar.
         """
-        self.c.recoveryrate = 5
-        self.assertEqual(self.c.recoveryrate, 5)
+        self.c.bloodrecoveryrate = 5
+        self.assertEqual(self.c.bloodrecoveryrate, 5)
 
     def testConfigBaseInsulinRate(self):
         """We need a base rate at which to burn blood sugar.
@@ -400,7 +400,7 @@ class HealthModelTest(unittest.TestCase):
         self.c.bloodlimit = 1000
         self.c.setexertionratio = 50
         self.c.lowbloodlevel = 100
-        self.c.recoveryrate = 5
+        self.c.bloodrecoveryrate = 5
         self.c.baseinsulinrate = 2
         self.c.insulinratio = 10
         self.c.insulin2fatratio = 0.5
@@ -564,8 +564,8 @@ class HealthModel(eventnet.driver.Handler):
         * If blood sugar is high, trigger an increased insulin response.
         """
         if self.getBlood() < self.config.lowbloodlevel:
-            self.fat.burnCalories(self.config.recoveryrate)
-            self.blood.addCalories(self.config.recoveryrate)
+            self.fat.burnCalories(self.config.bloodrecoveryrate)
+            self.blood.addCalories(self.config.bloodrecoveryrate)
         if not self.config.suppressinsulin:
             insulinpenalty = 0
             if self.getBlood() > self.config.bloodlimit:
@@ -583,7 +583,7 @@ class HealthModel(eventnet.driver.Handler):
 
     def postBloodChanged(self):
         newblood = self.getBlood()
-        limit = self.config.bloodlimit
+        limit = 4*self.config.bloodlimit
         eventnet.driver.post(HEALTH.BLOOD_CHANGED, blood=newblood, ceiling=limit)
 
     def postFatChanged(self):
