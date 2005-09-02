@@ -42,8 +42,8 @@ class RoomTest(unittest.TestCase):
         world = Room()
         block = world.addBlock((40, 42), lx=5, ly=10)
         assert len(world.blocks) == 1
-        assert block.getLengths() == (5, 10, THICKNESS)
-        assert block.getPosition()[:2] == (40,42)
+        self.assertEquals((5, 10), block.getLengths()[:2])
+        self.assertEquals((40,42), block.getPosition()[:2])
         assert block.getBody()
 
     def testAddGeom(self):
