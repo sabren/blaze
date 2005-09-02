@@ -357,8 +357,11 @@ def blockGenerator():
                                            randomlyColoredSquare()))
 
 blocks = blockGenerator()
-doneMakingBlocks = False
+doneMakingBlocks = True
 
+# Let's put our bird in and see if he can fly. Er, walk.
+import hero
+bird = hero.Bird(rm, pixel2world(WIDTH/2, 50), px2w(32))
 
 
 ### collision stuff ######################

@@ -1,4 +1,5 @@
 import ode, room, health
+from constants import LEFT, RIGHT
 import unittest
 
 class BirdTest(unittest.TestCase):
@@ -9,7 +10,20 @@ class BirdTest(unittest.TestCase):
         self.r = room.Room()
         self.bird = Bird(self.r, (50, 50), 1.0)
         self.bird.capture()
+        self.bird.SPEED = 10
         self.rp = RoomPhysics(self.r, self.bird.geom.getBody())
+        self.steps = 100 # steps to take
+
+    def testBirdSit(self):
+        """Sit bird, don't go anywhere.
+        """
+        oldposition = self.bird.getPosition()[0]
+        print "Was at: %s" % oldposition
+        for x in range(self.steps):
+            self.rp.step()
+            newposition = self.bird.getPosition()[0]
+            print "Now at: %s" % newposition
+        self.assertEqual(newposition, oldposition)
     
     def testBirdMoveRight(self):
         """Can the bird move right?
@@ -36,20 +50,21 @@ class BirdTest(unittest.TestCase):
         """Take a step to the right.
         """
         oldposition = self.bird.getPosition()[0]
-        self.bird.walk(30)
-        for x in range(30):
-            self.rp.step(self.bird.bird)
-        newposition = self.bird.getPosition()[0]
-        print "Was at: %s, now at: %s" % (oldposition, newposition)
+        print "Was at: %s" % oldposition
+        self.bird.walk(1)
+        for x in range(self.steps):
+            self.rp.step()
+            newposition = self.bird.getPosition()[0]
+            print "Now at: %s" % newposition
         assert newposition > oldposition
 
     def testBirdWalkLeft(self):
         """Take a step to the left.
         """
         oldposition = self.bird.getPosition()[0]
-        self.bird.walk(-30)
-        for x in range(30):
-            self.rp.step(self.bird.bird)
+        self.bird.walk(-1)
+        for x in range(self.steps):
+            self.rp.step()
         newposition = self.bird.getPosition()[0]
         print "Was at: %s, now at: %s" % (oldposition, newposition)
         assert newposition < oldposition
@@ -58,11 +73,11 @@ class BirdTest(unittest.TestCase):
         """Run, kiwi, run!
         """
         oldposition = self.bird.getPosition()
-        self.bird.run((30))
+        self.bird.run(1)
         self.rp.step(self.bird.bird)
         newposition = self.bird.getPosition()
         self.assertNotEqual(oldposition, newposition)
-        self.bird.run((-30))
+        self.bird.run((-1))
         self.rp.step(self.bird.bird)
         newerposition = self.bird.getPosition()
         self.assertNotEqual(newposition, newerposition)
@@ -143,30 +158,26 @@ class Bird(eventnet.driver.Handler):
         Pass in the 2d vector that you want the hero to travel in
         and the force you want to apply.
         """
-        self.bird.setForce((x, y, 0))
+        self.bird.addForce((x, y, 0))
 
-    def walk(self, value):
+    def walk(self, direction):
         """Do the bird walk.
 
         if value is positive, walk right.
         if value is negative, walk left.
         """
-        direction = 1
-        if value < 0:
-            direction = -1
-        force = self.SPEED * 2 * direction
+        assert direction in (LEFT, RIGHT)
+        force = self.SPEED * direction
         self.move((force, 0))
         self.metabolism.exert(force)
 
-    def run(self, value):
+    def run(self, direction):
         """Run, kiwi, run!
 
         if the value is positive, walk right.
         if the value is negative, walk right.
         """
-        direction = 1
-        if value < 0:
-            direction = -1
+        assert direction in (LEFT, RIGHT)
         force = self.SPEED * 2 * direction
         self.move((force, 0))
         self.metabolism.exert(force)
