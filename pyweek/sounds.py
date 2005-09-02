@@ -40,6 +40,12 @@ def get_sound_list(path = SOUND_PATH, extensions = EXTENSIONS):
 
 SOUND_LIST = get_sound_list()
 
+def init(path = SOUND_PATH):
+    """
+    """
+    global SOUND_LIST, SOUND_PATH
+    SOUND_PATH = path
+    SOUND_LIST = get_sound_list(path)
 
 
 
@@ -85,12 +91,13 @@ class SoundManager:
     def _debug(self, x, debug_level = 0):
         """
 	"""
+        print x
 	if self._debug_level > debug_level:
 	    print x
 
 
 
-    def Load(self, sound_list = [], sound_path = "."):
+    def Load(self, sound_list = []):
 	"""Loads sounds."""
         sounds = self.sounds
 
@@ -100,8 +107,9 @@ class SoundManager:
 	    return
 	for name in sound_list:
 	    if not sounds.has_key(name):
+                sound = None
                 for ext in self.extensions:
-                    fullname = os.path.join(sound_path, name+ext)
+                    fullname = os.path.join(self.sound_path, name+ext)
                     if(os.path.exists(fullname)):
                         try: 
                             sound = pygame.mixer.Sound(fullname)
@@ -109,6 +117,8 @@ class SoundManager:
                             sound = None
                             self._debug("Error loading sound", fullname)
                         break
+                if not sound:
+                    self._debug("could not find sound:%s: at path :%s:" % (name, self.sound_path))
 		sounds[name] = sound
 
 

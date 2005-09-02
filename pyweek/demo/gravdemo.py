@@ -16,8 +16,10 @@ s - down
 
 ESC - quit.
 
+space - down space to bip, up space bar to climb.
+
 """
-import sys
+import sys,os
 sys.path.append("..")
 
 import room, ode, pygame, render, random, loader
@@ -29,6 +31,9 @@ from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
 from ode_to_pixel import *
+
+import sounds
+
 
 ###########################################################33
 
@@ -219,7 +224,19 @@ rm.world.setCFM(10E-5) # ??
 
 ### pygame : sprite layers ##############################
 
+# fixes some patchy sound on some systems.
+pygame.mixer.pre_init(44100,-16,2, 1024 * 3)
 pygame.init()
+
+
+sound_path = os.path.join("..", "data", "sounds")
+sounds.SOUND_LIST = sounds.get_sound_list(sound_path)
+sm = sounds.SoundManager(sound_path = sound_path)
+# don't load all the sounds to make speeding up the demo load quicker.
+#sm.Load()
+sm.Load(["bip", "climb"])
+
+
 
 if DIMENSIONS==3:
     screen = pygame.display.set_mode((WIDTH,HEIGHT), OPENGL | DOUBLEBUF)
@@ -398,8 +415,15 @@ while going:
             if event.key in [K_1, K_2, K_3, K_4]:
                 rot_keys[event.key] = not rot_keys[event.key]
 
+            if event.key == K_SPACE:
+                sm.Play("bip")
+
             if event.key == K_ESCAPE:
                 going = False
+
+        if event.type == KEYUP:
+            if event.key == K_SPACE:
+                sm.Play("climb")
 
     #print camx, camy, camz
 
@@ -450,4 +474,5 @@ while going:
             draw_body(b)
         pygame.display.flip()
         
+    sm.Update(speed)
     clock.tick(fps)
