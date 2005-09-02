@@ -432,7 +432,7 @@ while going:
     speed = 1.0 / fps
     n = 2.0
 
-    for i in range(n):
+    for i in range(int(n)):
         rm.space.collide ((rm.world, contactgroup), onNearCollision)
 
         rm.world.step (speed / n)
