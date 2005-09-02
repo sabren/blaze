@@ -38,14 +38,6 @@ class State(eventnet.driver.Handler):
         """
         raise NotImplementedError("you need to override tick()")
     
-    def run(self):
-        """
-        here's the thing that makes it run.
-
-        """
-        while not self.done:
-            yield self.tick()
-
 
 ## concrete states #########################################
 
@@ -55,8 +47,6 @@ class State(eventnet.driver.Handler):
 # move these to separate files if they get big...
 
 class MenuState(State):
-    def run(self):
-        pass
 
     def EVT_KeyDown(self, event):
         if not self.done:
@@ -78,27 +68,21 @@ class MenuState(State):
         self.done = True
 
 class GameState(State):
-    def run(self):
-        pass
+    pass
 
 class HighScoreState(State):
-    def run(self):
-        pass
+
     def EVT_KeyDown(self, event):
         if not self.done:
             eventnet.driver.post('Quit')
             self.done = True
 
 class CreditsState(State):
-    def run(self):
-        pass
+    pass
     
 class ExitState(State):
-    def run(self):
-        pass
+    pass
 
 class StateManager(object):
     pass
-
-
 
