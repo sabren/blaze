@@ -1,6 +1,6 @@
 import ode, room, health
-
 import unittest
+
 class BirdTest(unittest.TestCase):
     """We're going to flip the Bird, er I mean, test it.
     """
@@ -113,11 +113,11 @@ class Bird(eventnet.driver.Handler):
         """
         self.bird.setForce((x,y,0))
 
-    def walk(self):
-        pass
+    def walk(self, dist):
+        self.move((dist*self.SPEED, 0))
 
-    def run(self):
-        pass
+    def run(self, dist):
+        self.move((dist*self.SPEED * 2, 0))
 
     def step(self):
         """Do the step thing.

@@ -10,32 +10,19 @@ import cPickle, os, sys, string, loader, eventnet.driver, eventnet._pygame, even
 from pygame.locals import *
 from states import *
 from display import Display, ImageManager
+from events import MENU, INPUT
 
-disp = Display(t='Kiwi Run')
-imanager = ImageManager (disp.buffer)
-imanager.load ("menu.png")
-imanager.blit ("menu.png")
-disp.flip()
-
-# load all levels and parse into list
-lvl_list = []
-for lvl in os.listdir('rooms'):
-
-    # adds name of level to list
-    if string.find(lvl, '-') == -1:
-        lvl_list += [os.path.splitext(lvl)[0]]
 
 #function to load all 3 level elements
-def load(file):
+def load(name):    
     suffixes = ['back.png', 'geom.svg', 'fore.png']
-    return ["-".join([base, suf]) for suf in suffixes]
+    return ["-".join([name, suf]) for suf in suffixes]
 
-class TestAllThreeFilenames(unittest.TestCase):
+class TestLoad(unittest.TestCase):
 
     def test(self):
         goal = ["xyz-back.png","xyz-geom.svg","xyz-fore.png"]
         self.assertEquals(goal, load("xyz"))
-        self.assertEquals(goal, allThreeFilenames("xyz"))
 
 # The game Console (our master object)
 class Console(eventnet.driver.Handler):
@@ -64,9 +51,14 @@ class Console(eventnet.driver.Handler):
         startState(CreditsState())
 
     def EVT_Quit(self, event):
-        sys.exit(0)
+        pygame.quit()
 
-con = Console()
+    # this proves that the event dictionary is there and functional
+    def EVT_KeyDown(self, event):
+        if event.key == K_x:
+            pygame.quit()
+        else:
+            print event.key
 
 
 
@@ -106,11 +98,12 @@ There's probably a confirmation screen
 
 class QuitGameTest(unittest.TestCase):
     def test(self):
-        con = console()
-        assert not game.done
+        con = Console()
+        assert isinstance(con.state,MenuState)
+        assert not con.state.done
         eventnet.driver.post(INPUT.QUIT)
         eventnet.driver.post(INPUT.YES)
-        assert game.done
+        assert con.state.done
 
 
 
@@ -144,14 +137,34 @@ class ConsoleTest(unittest.TestCase):
         # so... we're firing off an event.
         
         # so.. let's say we pick "play!"
-        eventnet.driver.post(MENU_PLAY)
+        eventnet.driver.post(MENU.PLAY)
         
         # now we should be in the game mode
         assert isinstance(con.state, GameState),\
                "the game should start when we pick play"
 
-#loop to keep checking for mode changes
-while True:
-    for event in pygame.event.get():
-        eventnet.driver.post(pygame.event.event_name(event.type), **event.dict)
+
+if __name__=="__main__":
+
+    con = Console()
+
+    disp = Display(t='Kiwi Run')
+    imanager = ImageManager (disp.buffer)
+    imanager.load ("menu.png")
+    imanager.blit ("menu.png")
+    disp.flip()
+
+    # load all levels and parse into list
+    lvl_list = []
+    for lvl in os.listdir('rooms'):
+
+        # adds name of level to list
+        if string.find(lvl, '-') == -1:
+            lvl_list += [os.path.splitext(lvl)[0]]
+
+    #loop to keep checking for mode changes
+    while True:
+        for event in pygame.event.get():
+            eventnet.driver.post(pygame.event.event_name(event.type),
+                                 **event.dict)
         

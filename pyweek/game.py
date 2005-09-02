@@ -103,10 +103,10 @@ class Game(State):
         when the player tells us to go right, we
         should move the hero to the right in our world.
         """
-        self.hero.walk((self.HERO_SPEED))
+        self.hero.walk(1)
 
     def EVT_INPUT_LEFT(self, event):
-        self.hero.walk((-self.HERO_SPEED))
+        self.hero.walk(-1)
 
     
 

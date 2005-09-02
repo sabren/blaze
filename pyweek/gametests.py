@@ -11,5 +11,7 @@ from odetest import *
 from room import *
 from eventtest import *
 from game import *
+from hero import *
+from main import *
 unittest.main()
 
