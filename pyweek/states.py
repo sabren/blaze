@@ -11,7 +11,6 @@ MenuState = 'MENU'
 HighScoreState = 'SCORE'
 CreditsState = 'CREDITS'
 HelpState = 'HELP'
-imgManage = display.ImageManager(pygame.display.get_surface())
 # this is the base state. it's the superclass.
 
 class State(eventnet.driver.Handler):
