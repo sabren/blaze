@@ -83,10 +83,10 @@ class Console(Ticker):
     def __init__(self, display):
         super(Console, self).__init__(display)
         self.loadDefaultState()
-        self.state.kick()
 
     def loadDefaultState(self):
         self.state = Menu(self.display)
+        self.state.kick()
 
     def tick(self):
         self.state.tick()
@@ -95,9 +95,11 @@ class Console(Ticker):
             if next is EXIT:
                 self.done = True
             elif next is None:
+                print "no new state..."
                 self.loadDefaultState()
             else:
                 self.state = self.state.next
+                print "new state: %s" % self.state
                 self.state.kick()
                 
 

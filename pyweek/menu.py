@@ -3,10 +3,14 @@ from events import MENU
 from states import State, EXIT
 from game import Game
 import images
+import eventnet.driver
+from pygame.locals import *
 
 class Menu(State):
 
     def kick(self):
+        print "kick the menu!"
+        super(Menu, self).kick()
         self.display.showImage(0,0, images.MENU)
 
     def EVT_KeyDown(self, event):

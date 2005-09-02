@@ -125,10 +125,10 @@ class Display:
 
 
     def showImage(self, x,y, filename):
-        imanager = ImageManager (self.display.buffer)
+        imanager = ImageManager (self.buffer)
         imanager.load (filename)
         imanager.blit (filename)
-        self.display.flip()
+        self.flip()
 
 
 """

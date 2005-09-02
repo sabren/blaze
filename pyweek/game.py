@@ -3,10 +3,11 @@ Game : this is the main control
 loop for actually playing the game.
 """
 import unittest
+import images
 from states import State
 from events import GAME
+import pygame.locals as pg
 import eventnet.driver
-
 
 """
 Okay. So the Game object is the main routine for the
@@ -25,7 +26,6 @@ class GameTest(unittest.TestCase):
     the GAME_RIGHT event should move the hero
     to the right.
     """
-
     def test_GAME_RIGHT(self):
         g = Game(MockDisplay())
         
@@ -45,22 +45,18 @@ class GameTest(unittest.TestCase):
         
     def test_GAME_LEFT(self):
         g = Game(MockDisplay())
-
         lastx, lasty = g.heroPosition()
-
         eventnet.driver.post(GAME.LEFT)
-
         g.tick()
-
+        
         newx, newy = g.heroPosition()
-
         assert newx < lastx, "hero should move left"
 
 
     def test_GAME_QUIT(self):
         self.done = True
 
-## goal: GAME_left event to move left 
+
 # goal: GAME_down to go down ladder
 # goal: GAME_jump to jump/flap
 # goal: tie keyboard keys to events
@@ -85,6 +81,7 @@ def makeTestRoom():
     rm = Room()
     return rm
 
+#############################################################
 
 from display import MockDisplay
 
@@ -115,20 +112,37 @@ class Game(State):
     def EVT_GAME_LEFT(self, event):
         self.hero.walk(-1)
 
-
     def EVT_GAME_QUIT(self, event):
         self.done = True
-    
-
+        
     def heroPosition(self):
-        """Get the position of our intrepid kiwi.
+        """
+        Get the position of our intrepid kiwi.
         """
         return self.hero.getPosition()
 
-
     def tick(self):
         self.physics.step()
+        #self.screen.update()
+
+
+    def EVT_KeyDown(self, event):
+        if event.key == pg.K_x:
+            self.done = True
+
+    def kick(self):
+        super(Game, self).kick()
+        self.display.showImage(0,0,images.GAME)
+
 
 
 if __name__=="__main__":
-    unittest.main()
+    import sys
+    if "test" in sys.argv:
+        sys.argv.remove("test")
+        unittest.main()
+    elif "run" in sys.argv:
+        run()
+    else:
+        print "run main.py"
+        
