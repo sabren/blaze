@@ -11,6 +11,8 @@ from pygame.locals import *
 from states import *
 from display import Display
 
+disp = Display(t='Kiwi Run')
+
 # load all levels and parse into list
 lvl_list = []
 for lvl in os.listdir('rooms'):
@@ -47,16 +49,22 @@ class Console(eventnet.driver.Handler):
         self.state.kick()
         self.state.run()
 
-    def EVT_MENU_PLAY(self, event):
+    def EVT_PLAY(self, event):
         startState(GameState())
+
+    def EVT_MENU(self, event):
+        bg = pygame.image.load('menu.png')
+        display.screen.blit(bg)
+        startState(MenuState())
+
+    def EVT_SCORE(self, event):
+        startState(HighScoresState())
+
+    def EVT_CREDITS(self, event):
+        startState(CreditsState())
 
     def EVT_Quit(self, event):
         sys.exit(0)
-
-    # this proves that the event dictionary is there and functional
-    def EVT_KeyDown(self, event):
-        if event.key == K_x:
-            sys.exit(0)
 
 con = Console()
 
@@ -141,8 +149,6 @@ class ConsoleTest(unittest.TestCase):
         # now we should be in the game mode
         assert isinstance(con.state, GameState),\
                "the game should start when we pick play"
-
-disp = Display(t='Kiwi Run')
 
 #loop to keep checking for mode changes
 while True:
