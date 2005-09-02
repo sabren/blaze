@@ -3,12 +3,11 @@
 here we define some states for our console.
 """
 import eventnet.driver
-import images
 import pygame, display, sys
 from pygame.locals import *
 
-# this is the base state. it's the superclass.
-
+# Menu moved to menu.py
+# Game moved to game.py
 
 class Ticker(eventnet.driver.Handler):
     def __init__(self, display):
@@ -25,6 +24,7 @@ class Ticker(eventnet.driver.Handler):
         pass
 
 
+# other states should do this:
 class State(Ticker):
 
     def __init__(self, display):
@@ -41,67 +41,21 @@ class State(Ticker):
         up or whatever)
         """
         self.done = False
-    
-    
-
-## concrete states #########################################
-
-#from game import Game
 
 
-# move these to separate files if they get big...
-
-from events import MENU
-
-class MenuState(State):
-
+class Exit(State):
+    """
+    this state represents quitting the system.
+    we should check for it explicitly.
+    """
+    def __init__(self):
+        pass
     def kick(self):
-        self.display.showImage(0,0, images.MENU)
-
-    def EVT_KeyDown(self, event):
-        if not self.done:
-            
-            # picking anything ends the state
-            self.done = True
-            
-            if event.key == K_p:
-                eventnet.driver.post(MENU.PLAY)
-            elif event.key == K_h:
-                eventnet.driver.post('SCORE')
-            elif event.key == K_e:
-                eventnet.driver.post('HELP')
-            elif event.key == K_c:
-                eventnet.driver.post('CREDITS')
-            elif event.key == K_x:
-                sys.exit(0)
-            else:
-                self.done = False
-
-    def EVT_MENU_PLAY(self, event):
-        self.next = GameState(self.display)
-
-    def quit(self, modes):
-        self.done = True
+        raise TypeError("never kick EXIT!")
+    def tick(self):
+        raise TypeError("never tick EXIT!")
 
 
-
-class GameState(State):
-    pass
-
-
-class HighScoreState(State):
-
-    def EVT_KeyDown(self, event):
-        if not self.done:
-            eventnet.driver.post('Quit')
-            self.done = True
-
-class CreditsState(State):
-    pass
-    
-class ExitState(State):
-    pass
-
-class StateManager(object):
-    pass
-
+# and only use the constant. It's a singleton:
+EXIT = Exit()
+del Exit
