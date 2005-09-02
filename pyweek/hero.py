@@ -155,7 +155,7 @@ class Bird(eventnet.driver.Handler):
         if value < 0:
             direction = -1
         force = self.SPEED * 2 * direction
-        self.move((self.SPEED * direction, 0))
+        self.move((force, 0))
         self.metabolism.exert(force)
 
     def run(self, value):
@@ -168,7 +168,7 @@ class Bird(eventnet.driver.Handler):
         if value < 0:
             direction = -1
         force = self.SPEED * 2 * direction
-        self.move((self.SPEED * 2 * direction, 0))
+        self.move((force, 0))
         self.metabolism.exert(force)
         
     def jump(self, force):
