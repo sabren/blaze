@@ -114,7 +114,7 @@ class Bird(eventnet.driver.Handler):
         """This function sets us up the bird.
         """
         super(Bird, self).__init__()
-        self.SPEED = 5
+        self.SPEED = 10
         self.room = room
         self.space = room.space
         self.world = room.world

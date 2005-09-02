@@ -216,7 +216,7 @@ rm = room.Room()
 rm = loader.roomFromFile(open(FILENAME))
 
 #import pdb; pdb.set_trace()
-#rm.world.setGravity((0,9.81,0)) # in our world y++ is down. :)
+rm.world.setGravity((0,9.81,0)) # in our world y++ is down. :)
 rm.world.setERP(0.8) # ??
 rm.world.setCFM(10E-5) # ??
 
@@ -457,7 +457,7 @@ while going:
             doneMakingBlocks = True
 
     # Walk the bird.
-    try: bird.walk(1)
+    try: bird.walk(-1)
     except health.NotEnoughCalories:
         # Got to keep our strength up...
         food = health.Food(1000, 5000)
