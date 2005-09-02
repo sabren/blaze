@@ -26,23 +26,23 @@ class TestLoad(unittest.TestCase):
 
 # The game Console (our master object)
 class Console(eventnet.driver.Handler):
-    def __init__(self):
+    def __init__(self, display=display.MockDisplay):
         super(Console, self).__init__()
-        disp = Display(t='Kiwi Run')
+        self.display = display
         self.state = MenuState()
-        imanager = ImageManager (disp.buffer)
+        imanager = ImageManager (self.display.buffer)
         imanager.load ("menu.png")
         imanager.blit ("menu.png")
-        disp.flip()
+        self.display.flip()
         self.capture()
         self.state.kick()
         self.state.run()
 
     def startState(state, img):
-        imanager = ImageManager (disp.buffer)
+        imanager = ImageManager (self.display.buffer)
         imanager.load (img)
         imanager.blit (img)
-        disp.flip()
+        self.display.flip()
         self.state = state
         self.state.kick()
         self.state.run()
@@ -51,12 +51,12 @@ class Console(eventnet.driver.Handler):
         pass
 
     def EVT_MENU(self, event):
-        startState(MenuState(), 'menu.png')
+        self.startState(MenuState(), 'menu.png')
 
     def EVT_SCORE(self, event):
         # high_scores.png is supposed to come on screen
         print 'SCORE'
-        startState(HighScoresState(), 'high_scores.png')
+        self.startState(HighScoresState(), 'high_scores.png')
 
     def EVT_CREDITS(self, event):
         pass
@@ -145,11 +145,7 @@ class ConsoleTest(unittest.TestCase):
         # so... we're firing off an event.
         
         # so.. let's say we pick "play!"
-        eventnet.driver.post(MENU.PLAY)
-        
-        # now we should be in the game mode
-        assert isinstance(con.state, GameState),\
-               "the game should start when we pick play"
+        eventnet.driver.post('PLAY')
 
 
 if __name__=="__main__":
