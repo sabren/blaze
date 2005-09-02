@@ -61,8 +61,7 @@ class Display:
         self.alive = True
         self.size = s
         
-        assert pygame.init() # yes! I used an assert!
-
+        pygame.init()
         self.screen = pygame.display.set_mode (s)
         self.setTitle (t)
 
@@ -78,7 +77,8 @@ class Display:
         """
         self.fonts[str(size)] = pygame.font.Font (None, int(size))
 
-    def text(self, words, size, pos=[0, 0], color=(255, 0, 0, 255), justify=None):
+    def text(self, words, size, pos=[0, 0], color=(255, 0, 0, 255),
+             justify=None):
         """
         Blit some text. I like text!
         """
@@ -117,39 +117,38 @@ class Display:
 """
 Can we successfully create a window? Yadda yadda yadda.
 """
-class DisplayTest(unittest.TestCase):
-    def setUp(self):
-        pass
 
-    def test(self):
-        display = Display ((640, 480), "T-Rex and the Waffle House")
+def test(self):
+    display = Display ((640, 480), "T-Rex and the Waffle House")
 
-        display.addFont (30)
+    display.addFont (30)
 
-        imanager = ImageManager (display.buffer)
+    imanager = ImageManager (display.buffer)
 
-        imanager.load ("background.png")
-        imanager.load ("player.png")
-        #imanager.load ("foreground.png")
+    imanager.load ("background.png")
+    imanager.load ("player.png")
+    #imanager.load ("foreground.png")
 
-        blah = True
-        while blah:
-            for e in pygame.event.get():
-                if e.type == pygame.KEYDOWN:
-                    blah = False
+    blah = True
+    while blah:
+        for e in pygame.event.get():
+            if e.type == pygame.KEYDOWN:
+                blah = False
 
-            display.clear()
+        display.clear()
 
-            imanager.blit ("background.png")
-            imanager.blit ("player.png", (55, 275))
-            #imanager.blit ("foreground.png")
+        imanager.blit ("background.png")
+        imanager.blit ("player.png", (55, 275))
+        #imanager.blit ("foreground.png")
 
-            display.text ("T-Rex sure does love his waffles!", 30, [320, 80], (0, 0, 0, 255), Display.LEFT)
-            display.text ("T-Rex sure does love his waffles!", 30, [320, 100], (0, 0, 0, 255), Display.CENTER)
-            display.text ("T-Rex sure does love his waffles!", 30, [320, 120], (0, 0, 0, 255), Display.RIGHT)
-            
-            display.flip()
-            
+        display.text ("T-Rex sure does love his waffles!", 30, [320, 80], (0, 0, 0, 255), Display.LEFT)
+        display.text ("T-Rex sure does love his waffles!", 30, [320, 100], (0, 0, 0, 255), Display.CENTER)
+        display.text ("T-Rex sure does love his waffles!", 30, [320, 120], (0, 0, 0, 255), Display.RIGHT)
 
-if __name__ == "__main__":
-    unittest.main()
+        display.flip()
+
+
+
+
+if __name__=="__main__":
+    test()
