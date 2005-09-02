@@ -12,9 +12,11 @@ from states import *
 from display import Display, ImageManager
 
 disp = Display(t='Kiwi Run')
-imanager = ImageManager (pygame.display.get_surface())
+imanager = ImageManager (disp.buffer)
 imanager.load ("menu.png")
-imanager.blit ('menu.png')
+imanager.blit ("menu.png")
+disp.flip()
+
 # load all levels and parse into list
 lvl_list = []
 for lvl in os.listdir('rooms'):
