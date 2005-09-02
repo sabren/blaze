@@ -28,6 +28,7 @@ class TestLoad(unittest.TestCase):
 class Console(eventnet.driver.Handler):
     def __init__(self):
         super(Console, self).__init__()
+        disp = Display(t='Kiwi Run')
         self.state = MenuState()
         imanager = ImageManager (disp.buffer)
         imanager.load ("menu.png")
@@ -154,12 +155,6 @@ class ConsoleTest(unittest.TestCase):
 if __name__=="__main__":
 
     con = Console()
-
-    disp = Display(t='Kiwi Run')
-    imanager = ImageManager (disp.buffer)
-    imanager.load ("menu.png")
-    imanager.blit ("menu.png")
-    disp.flip()
 
     # load all levels and parse into list
     lvl_list = []
