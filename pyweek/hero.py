@@ -44,6 +44,15 @@ class BirdTest(unittest.TestCase):
         self.rp.step(self.bird.bird)
         newerposition = self.bird.getPosition()
         self.assertNotEqual(newposition, newerposition)
+        
+    def testBirdJump(self):
+        """JUMP!!!!
+        """
+        oldposition = self.bird.getPosition()
+        self.bird.jump((30))
+        self.rp.step(self.bird.bird)
+        newposition = self.bird.getPosition()
+        self.assertNotEqual(oldposition, newposition)
 
 
     def testBirdMass(self):
@@ -109,15 +118,19 @@ class Bird(eventnet.driver.Handler):
     def move(self, (x, y)):
         """Generic move method to move the hero.
 
-        Pass in the 2d vector that you want the hero to travel in.
+        Pass in the 2d vector that you want the hero to travel in
+        and the force you want to apply.
         """
-        self.bird.setForce((x,y,0))
+        self.bird.setForce((x, y, 0))
 
-    def walk(self, dist):
-        self.move((dist*self.SPEED, 0))
+    def walk(self, force):
+        self.move((force, 0))
 
-    def run(self, dist):
-        self.move((dist*self.SPEED * 2, 0))
+    def run(self, force):
+        self.move((force * 2, 0))
+        
+    def jump(self, force):
+        self.move((0, force))
 
     def step(self):
         """Do the step thing.
