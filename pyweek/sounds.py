@@ -23,14 +23,17 @@ from pygame.locals import *
 SOUND_PATH = os.path.join("data", "sounds")
 
 
+EXTENSIONS = [".wav", ".ogg"]
 
-def get_sound_list(path = SOUND_PATH):
+def get_sound_list(path = SOUND_PATH, extensions = EXTENSIONS):
     """ gets a list of sound names without thier path, or extension.
     """
     # load a list of sounds without path at the beginning and .ogg at the end.
-    sound_list = map(lambda x:x[len(path)+1:-4], 
-		     glob.glob(os.path.join(path,"*.ogg")) 
-		    )
+    sound_list = []
+    for ext in extensions:
+        sound_list.extend( map(lambda x:x[len(path)+1:-4], 
+                               glob.glob(os.path.join(path,"*" + ext)) 
+                           ))
 
     return sound_list
        
@@ -61,7 +64,7 @@ class SoundManager:
     """
 
 
-    def __init__(self, sound_list = SOUND_LIST, sound_path = SOUND_PATH):
+    def __init__(self, sound_list = SOUND_LIST, sound_path = SOUND_PATH, extensions = EXTENSIONS):
         """
 	"""
 	self.mixer = None
@@ -73,6 +76,7 @@ class SoundManager:
 
         self.sound_list = sound_list
         self.sound_path = sound_path
+        self.extensions = extensions
 
 
         # sounds which are queued to play.
@@ -96,12 +100,15 @@ class SoundManager:
 	    return
 	for name in sound_list:
 	    if not sounds.has_key(name):
-		fullname = os.path.join(sound_path, name+'.ogg')
-		try: 
-		    sound = pygame.mixer.Sound(fullname)
-		except: 
-		    sound = None
-		    self._debug("Error loading sound", fullname)
+                for ext in self.extensions:
+                    fullname = os.path.join(sound_path, name+ext)
+                    if(os.path.exists(fullname)):
+                        try: 
+                            sound = pygame.mixer.Sound(fullname)
+                        except: 
+                            sound = None
+                            self._debug("Error loading sound", fullname)
+                        break
 		sounds[name] = sound
 
 
