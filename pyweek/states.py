@@ -10,6 +10,7 @@ GameState = 'PLAY'
 MenuState = 'MENU'
 HighScoreState = 'SCORE'
 CreditsState = 'CREDITS'
+HelpState = 'HELP'
 imgManage = display.ImageManager(pygame.display.get_surface())
 # this is the base state. it's the superclass.
 
@@ -55,28 +56,27 @@ class State(eventnet.driver.Handler):
 # move these to separate files if they get big...
 
 class MenuState(State):
-
     def run(self):
-        self.live = 1
+        pass
 
     def EVT_KeyDown(self, event):
-        if self.live:
-            self.live = 0
+        if not self.done:
+            self.done = True
             if event.key == K_p:
-                eventnet.driver.post(GameState)
+                eventnet.driver.post('PLAY')
             elif event.key == K_h:
-                eventnet.driver.post(HighScoreState)
+                eventnet.driver.post('SCORE')
             elif event.key == K_e:
-                pass
+                eventnet.driver.post('HELP')
             elif event.key == K_c:
-                eventnet.driver.post(CreditsState)
+                eventnet.driver.post('CREDITS')
             elif event.key == K_x:
                 sys.exit(0)
             else:
-                self.live = 1
+                self.done = False
         
     def quit(self, modes):
-        self.live = 0
+        self.done = True
 
 class GameState(State):
     def run(self):
@@ -84,11 +84,11 @@ class GameState(State):
 
 class HighScoreState(State):
     def run(self):
-        #showScoresOnScreen()
-        while True:        
-            if escape:
-                break
-            # maybe blit some background animation or whatever..
+        pass
+    def EVT_KeyDown(self, event):
+        if not self.done:
+            eventnet.driver.post('Quit')
+            self.done = True
 
 class CreditsState(State):
     def run(self):
