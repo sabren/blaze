@@ -47,3 +47,5 @@ class INPUT:
 
 class MENU:
     PLAY="MENU_PLAY"
+    SCORE="MENU_SCORE"
+    # add more here...

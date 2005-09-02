@@ -81,10 +81,12 @@ def makeTestRoom():
     return rm
 
 
+from display import MockDisplay
+
 class Game(State):
 
     def __init__(self, roomName=TEST_ROOM):
-        super(Game, self).__init__()
+        super(Game, self).__init__(MockDisplay) #@TODO: fix me!
         if roomName == TEST_ROOM:
             self.room = makeTestRoom()
         else:

@@ -9,7 +9,7 @@ import pygame, unittest
 import cPickle, os, sys, string, loader, eventnet.driver, eventnet._pygame, events, string
 from pygame.locals import *
 from states import *
-from display import Display, ImageManager
+from display import Display, ImageManager, MockDisplay
 from events import MENU, INPUT
 
 
@@ -24,19 +24,55 @@ class TestLoad(unittest.TestCase):
         goal = ["xyz-back.png","xyz-geom.svg","xyz-fore.png"]
         self.assertEquals(goal, load("xyz"))
 
+
+
+"""
+The Console is the main state machine for our game
+system.
+"""
+
+class ConsoleTest(unittest.TestCase):
+    def test(self):
+        con = Console(MockDisplay())
+        
+        # on start, we go to the menu state
+        assert isinstance(con.state, MenuState)
+        
+        # so now we're sitting here looking at
+        # the console and it's showing us a menu
+        
+        # really we're going to hit some buttons
+        # so... we're firing off an event.
+        
+        # so.. let's say we pick "play!"
+        eventnet.driver.post(MENU.PLAY)
+        con.tick()
+        
+        # now we should be in the game mode
+        assert isinstance(con.state, GameState),\
+               "the game should start when we pick play"
+      
+
 # The game Console (our master object)
-class Console(eventnet.driver.Handler):
-    def __init__(self, display=display.MockDisplay):
-        super(Console, self).__init__()
-        self.display = display
-        self.state = MenuState()
-        imanager = ImageManager (self.display.buffer)
-        imanager.load ("menu.png")
-        imanager.blit ("menu.png")
-        self.display.flip()
-        self.capture()
+from states import Ticker
+
+class Console(Ticker):
+    def __init__(self, display):
+        super(Console, self).__init__(display)
+        self.state = MenuState(self.display)
         self.state.kick()
-        self.state.run()
+
+
+    def tick(self):
+        #if self.state
+        self.state.tick()
+        if self.state.done:
+            next = self.state.next
+            if next:
+                self.state = next
+            else:
+                self.done = True
+                
 
     def startState(state, img):
         imanager = ImageManager (self.display.buffer)
@@ -45,10 +81,6 @@ class Console(eventnet.driver.Handler):
         self.display.flip()
         self.state = state
         self.state.kick()
-        self.state.run()
-
-    def EVT_PLAY(self, event):
-        pass
 
     def EVT_MENU(self, event):
         self.startState(MenuState(), 'menu.png')
@@ -106,7 +138,7 @@ There's probably a confirmation screen
 
 class QuitGameTest(unittest.TestCase):
     def test(self):
-        con = Console()
+        con = Console(MockDisplay())
         assert isinstance(con.state,MenuState)
         assert not con.state.done
         eventnet.driver.post(INPUT.QUIT)
@@ -127,30 +159,21 @@ HOW TO BEAT THE ROOM
 --------------------
 
 
+
+
 """
 
-     
         
-class ConsoleTest(unittest.TestCase):
-    def test(self):
-        con = Console()
-        
-        # on start, we go to the menu state
-        assert isinstance(con.state, MenuState)
-        
-        # so now we're sitting here looking at
-        # the console and it's showing us a menu
-        
-        # really we're going to hit some buttons
-        # so... we're firing off an event.
-        
-        # so.. let's say we pick "play!"
-        eventnet.driver.post('PLAY')
+def pygame_events():
+    for event in pygame.event.get():
+        eventnet.driver.post(pygame.event.event_name(event.type),
+                             **event.dict)
 
 
 if __name__=="__main__":
 
-    con = Console()
+    disp = Display(t='Kiwi Run')
+    con = Console(disp)
 
     # load all levels and parse into list
     lvl_list = []
@@ -161,8 +184,7 @@ if __name__=="__main__":
             lvl_list += [os.path.splitext(lvl)[0]]
 
     #loop to keep checking for mode changes
-    while True:
-        for event in pygame.event.get():
-            eventnet.driver.post(pygame.event.event_name(event.type),
-                                 **event.dict)
+    while not con.done:
+        pygame_events()
+        con.tick()
         

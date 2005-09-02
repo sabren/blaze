@@ -52,6 +52,7 @@ class MockDisplay(object):
     fake display for testing.
     """
     def flip(self): pass
+    def showImage(self, x,y, filename): pass
 
 
 
@@ -121,6 +122,13 @@ class Display:
         Fill the buffer with.. color!
         """
         self.buffer.fill (color)
+
+
+    def showImage(self, x,y, filename):
+        imanager = ImageManager (self.display.buffer)
+        imanager.load (filename)
+        imanager.blit (filename)
+        self.display.flip()
 
 
 """
