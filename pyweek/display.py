@@ -46,6 +46,15 @@ class ImageManager:
             return self.images[filename][1]
             
 
+
+class MockDisplay(object):
+    """
+    fake display for testing.
+    """
+    def flip(self): pass
+
+
+
 """
 This's our display. Um. Yeah.
 """
