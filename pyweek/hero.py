@@ -23,14 +23,28 @@ class BirdTest(unittest.TestCase):
         """Walk or waddle, he should.
         """
         oldposition = self.bird.getPosition()
-        self.bird.move((30,0))
+        self.bird.walk((30))
         self.rp.step(self.bird.bird)
         newposition = self.bird.getPosition()
         self.assertNotEqual(oldposition, newposition)
-        self.bird.move((-30,0))
+        self.bird.walk((-30))
         self.rp.step(self.bird.bird)
         newerposition = self.bird.getPosition()
         self.assertNotEqual(newposition, newerposition)
+
+    def testBirdRun(self):
+        """Run, kiwi, run!
+        """
+        oldposition = self.bird.getPosition()
+        self.bird.run((30))
+        self.rp.step(self.bird.bird)
+        newposition = self.bird.getPosition()
+        self.assertNotEqual(oldposition, newposition)
+        self.bird.run((-30))
+        self.rp.step(self.bird.bird)
+        newerposition = self.bird.getPosition()
+        self.assertNotEqual(newposition, newerposition)
+
 
     def testBirdMass(self):
         """Bird should gain mass when it eats.
@@ -54,6 +68,7 @@ class Bird(eventnet.driver.Handler):
         """This function sets us up the bird.
         """
         super(Bird, self).__init__()
+        self.SPEED = 5
         self.room = room
         self.space = room.space
         self.world = room.world
@@ -97,6 +112,12 @@ class Bird(eventnet.driver.Handler):
         Pass in the 2d vector that you want the hero to travel in.
         """
         self.bird.setForce((x,y,0))
+
+    def walk(self):
+        pass
+
+    def run(self):
+        pass
 
     # Okay, here are the events we'll want to handle.
     def EVT_HEALTH_FAT_CHANGED(self, event):

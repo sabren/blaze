@@ -83,8 +83,6 @@ def makeTestRoom():
 
 class Game(State):
 
-    HERO_SPEED = 5
-
     def __init__(self, roomName=TEST_ROOM):
         super(Game, self).__init__()
         if roomName == TEST_ROOM:
