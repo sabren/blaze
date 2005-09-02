@@ -28,24 +28,25 @@ class HEALTH:
 class SCREEN:
     STATUS_CHANGED = "SCREEN_STATUS_CHANGED"
 
-# INPUT EVENTS
+# GAME EVENTS
 # we're modelling a simple gamepad here,
 # but really the events could be triggered
 # by the keyboard, mouse, etc...
 
-class INPUT:
-    UP = "INPUT_UP"
-    DOWN = "INPUT_DOWN"
-    RIGHT = "INPUT_RIGHT"
-    LEFT = "INPUT_LEFT"
-    JUMP = "INPUT_JUMP"
-    QUIT = "INPUT_QUIT"
-    YES  = "INPUT_YES"
-    NO   = "INPUT_NO"
-    PAUSE = "INPUT_PAUSE"
+class GAME:
+    UP = "GAME_UP"
+    DOWN = "GAME_DOWN"
+    RIGHT = "GAME_RIGHT"
+    LEFT = "GAME_LEFT"
+    JUMP = "GAME_JUMP"
+    QUIT = "GAME_QUIT"
+    YES  = "GAME_YES"
+    NO   = "GAME_NO"
+    PAUSE = "GAME_PAUSE"
 
 
 class MENU:
     PLAY="MENU_PLAY"
-    SCORE="MENU_SCORE"
+    EXIT="MENU_EXIT"
+    SCORES="MENU_SCORES"
     # add more here...
