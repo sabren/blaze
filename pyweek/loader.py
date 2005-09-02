@@ -129,17 +129,23 @@ class Rect:
     """
     A simple data class for representing rectangles.
     """
-    def __init__(self, x=0, y=0, width=0, height=0, transform=None):
+    def __init__(self, x=0, y=0, width=0, height=0, transform=None, id=None):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
         self.transform = transform
+        self.id = id
 
     # we will need this later:
     def getCenter(self):
         return ((self.width / 2.0 + self.x),
                 (self.height / 2.0 + self.y))
+
+    def __str__(self):
+        my =self
+        return "Rect(x=%s,y=%s,w=%s,h=%s,t=%s,id='%s')" \
+              % (my.x,my.y,my.width,my.height,my.transform, my.id)
 
 
 # now we just loop through the tags in the SVG file
@@ -169,6 +175,8 @@ class SvgHandler(xml.sax.ContentHandler):
                     setattr(r, attr, float(value))
                 elif attr == "y":
                     r.y = float(value) #@TODO: HEIGHT
+                elif attr == "id":
+                    r.id = value
                 elif attr == "transform":
                     r.transform = parseMatrix(value)
 
@@ -364,13 +372,18 @@ def roomFromRects(rects):
         
         if r.transform:
             a, b, c, d, e, f = r.transform
-
-            
-            ode_matrix = (-a,b,0,c,d,0,e,f,1)
-            
+           
             # rotate the "original" center back to new position
             # (see rotate.py for why we need this):
             cx, cy = rotate((cx,cy),(a,b,c,d,e,f))
+
+            # some blocks still wind up in the wrong quadrant. :/
+            # i thought this might fix it but it didn't...
+            #if cx < 0: cx = -cx
+            #if cy < 0: cy = -cy 
+                       
+            ode_matrix = (a,b,0,c,d,0,e,f,1)
+            print r #"cx, cy = (%s,%s)" % (cx, cy)
         else:
             ode_matrix = None
     
