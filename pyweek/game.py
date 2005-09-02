@@ -1,10 +1,10 @@
 """
-GameState : this is the main control
+Game : this is the main control
 loop for actually playing the game.
 """
 import unittest
 from states import State
-from events import INPUT
+from events import GAME
 import eventnet.driver
 
 
@@ -16,24 +16,24 @@ actual game. There should be a room and a hero:
 class GameTest(unittest.TestCase):
 
     def testPieces(self):
-        g = Game()
+        g = Game(MockDisplay())
         assert g.hero, "we should have a hero"
         assert g.room, "we should have a room"
 
 
     """
-    the INPUT_RIGHT event should move the hero
+    the GAME_RIGHT event should move the hero
     to the right.
     """
 
-    def test_INPUT_RIGHT(self):
-        g = Game()
+    def test_GAME_RIGHT(self):
+        g = Game(MockDisplay())
         
         oldx, oldy = g.heroPosition()
         
         # two things need to happen:
         # first, we need to post the input:
-        eventnet.driver.post(INPUT.RIGHT)
+        eventnet.driver.post(GAME.RIGHT)
         
         # then we need to give the physics
         # simulation a chance to run:
@@ -43,12 +43,12 @@ class GameTest(unittest.TestCase):
         newx, newy = g.heroPosition()
         assert newx > oldx, "hero should move to the right"
         
-    def test_INPUT_LEFT(self):
-        g = Game()
+    def test_GAME_LEFT(self):
+        g = Game(MockDisplay())
 
         lastx, lasty = g.heroPosition()
 
-        eventnet.driver.post(INPUT.LEFT)
+        eventnet.driver.post(GAME.LEFT)
 
         g.tick()
 
@@ -56,9 +56,13 @@ class GameTest(unittest.TestCase):
 
         assert newx < lastx, "hero should move left"
 
-## goal: INPUT_left event to move left 
-# goal: INPUT_down to go down ladder
-# goal: INPUT_jump to jump/flap
+
+    def test_GAME_QUIT(self):
+        self.done = True
+
+## goal: GAME_left event to move left 
+# goal: GAME_down to go down ladder
+# goal: GAME_jump to jump/flap
 # goal: tie keyboard keys to events
 
 # goal: on collide with egg, increase score
@@ -73,6 +77,7 @@ TEST_ROOM = "**this is a special flag to load the test room"
 
 from room import Room
 from hero import Bird
+from display import MockDisplay
 from roomphysics import RoomPhysics
 
 
@@ -85,12 +90,12 @@ from display import MockDisplay
 
 class Game(State):
 
-    def __init__(self, roomName=TEST_ROOM):
-        super(Game, self).__init__(MockDisplay) #@TODO: fix me!
+    def __init__(self, display, roomName=TEST_ROOM):
+        super(Game, self).__init__(display) #@TODO: fix me!
         if roomName == TEST_ROOM:
             self.room = makeTestRoom()
         else:
-            self.room = room
+            self.room = loader.roomFromFile(open(roomName))
 
         ## @TODO: load hero position from level definition
         ## @TODO: clean this up. :)
@@ -100,16 +105,19 @@ class Game(State):
 
         self.physics = RoomPhysics(self.room, self.hero.geom.getBody())
 
-    def EVT_INPUT_RIGHT(self, event):
+    def EVT_GAME_RIGHT(self, event):
         """
         when the player tells us to go right, we
         should move the hero to the right in our world.
         """
         self.hero.walk(1)
 
-    def EVT_INPUT_LEFT(self, event):
+    def EVT_GAME_LEFT(self, event):
         self.hero.walk(-1)
 
+
+    def EVT_GAME_QUIT(self, event):
+        self.done = True
     
 
     def heroPosition(self):
