@@ -29,36 +29,43 @@ class Console(eventnet.driver.Handler):
     def __init__(self):
         super(Console, self).__init__()
         self.state = MenuState()
+        imanager = ImageManager (disp.buffer)
+        imanager.load ("menu.png")
+        imanager.blit ("menu.png")
+        disp.flip()
         self.capture()
         self.state.kick()
         self.state.run()
 
-    def startState(state):
+    def startState(state, img):
+        imanager = ImageManager (disp.buffer)
+        imanager.load (img)
+        imanager.blit (img)
+        disp.flip()
         self.state = state
         self.state.kick()
         self.state.run()
 
     def EVT_PLAY(self, event):
-        startState(GameState())
+        pass
 
     def EVT_MENU(self, event):
-        startState(MenuState())
+        startState(MenuState(), 'menu.png')
 
     def EVT_SCORE(self, event):
-        startState(HighScoresState())
+        # high_scores.png is supposed to come on screen
+        print 'SCORE'
+        startState(HighScoresState(), 'high_scores.png')
 
     def EVT_CREDITS(self, event):
-        startState(CreditsState())
+        pass
 
     def EVT_Quit(self, event):
         pygame.quit()
-
-    # this proves that the event dictionary is there and functional
+        
     def EVT_KeyDown(self, event):
-        if event.key == K_x:
-            pygame.quit()
-        else:
-            print event.key
+        if event.key == K_ESCAPE:
+            eventnet.driver.post('Quit')
 
 
 
