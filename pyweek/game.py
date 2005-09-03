@@ -100,6 +100,7 @@ def makeTestRoom():
 from display import MockDisplay
 from controls import Controller
 from render import BlockSprite, randomlyColoredSquare
+import pygame
 
 class Game(State):
 
@@ -107,6 +108,7 @@ class Game(State):
         super(Game, self).__init__(display) #@TODO: fix me!
         self.controls = Controller()
         self.sprites = SpriteGear(self.display)
+        
 
         if roomName == TEST_ROOM:
             self.room = makeTestRoom()
@@ -114,7 +116,7 @@ class Game(State):
             self.sprites.sprites.add(
                 BlockSprite(
                 self.room.addBlock((SCREEN.WIDTH/2+150,SCREEN.HEIGHT-100), 32, 32),
-                randomlyColoredSquare()))
+                pygame.image.load(IMAGE.SOCCER)))
         
         else:
             self.room = loader.roomFromFile(open(roomName))

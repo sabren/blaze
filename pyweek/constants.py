@@ -19,7 +19,7 @@ class PHYSICS:
     
 class HERO:
     RADIUS = 16 # 32x32
-    JUMPFORCE= -10 # negative because y-- is up
+    JUMPFORCE= -8 # negative because y-- is up
 
 class ROOM:
     THICKNESS = 32 # arbitrary depth for all our blocks
@@ -33,7 +33,7 @@ class CALORIES:
     
 
 class REPEAT:
-    TICKS = 10
+    TICKS = 10 # number of ticks before a key repeats
 
 
 class IMAGE:    
@@ -43,6 +43,7 @@ class IMAGE:
     HELP='help.png'
     GAME="data/game.png" # main room for the game
 
+    SOCCER = "data/soccer.png"
     class KIWI:
         RIGHT="data/kiwi/right.png"
 
