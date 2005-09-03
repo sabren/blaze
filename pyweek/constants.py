@@ -44,6 +44,13 @@ class IMAGE:
     GAME="data/game.png" # main room for the game
 
     SOCCER = "data/soccer.png"
+    class STATUS:
+        BAR="data/statusbar.png"
+        TXT="data/statustxt.png"        
+        CARB_POS=(549,99)
+        FATS_POS=(596,99)
+        TEXT_POS=(552,253)
+        
     class KIWI:
         RIGHT="data/kiwi/right.png"
         LEFT="data/kiwi/left.png"

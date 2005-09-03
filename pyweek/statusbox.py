@@ -1,6 +1,7 @@
 import pygame, events
 import eventnet.driver
 import unittest
+from constants import IMAGE
 
 """
 [19:56]sabren: david: look at the drawing routines in pygame for the bars..
@@ -32,7 +33,10 @@ class Bar(pygame.sprite.Sprite):
         surface = self.image
         surface = pygame.transform.scale(surface, newsize)
         self.image = surface
-        eventnet.driver.post(events.SCREEN.STATUS_CHANGED)
+
+        # turns out the sprite engine always blits us, so
+        # no need to post an event
+        #eventnet.driver.post(events.SCREEN.STATUS_CHANGED)
                 
 class StatusBoxTest(unittest.TestCase):
     """
@@ -52,12 +56,12 @@ class StatusBoxTest(unittest.TestCase):
         """Is there a complete score box?
         """
         assert self.sb
-        assert self.sb.bars["fatbar"]
+        #assert self.sb.bars["fatbar"]
         assert self.sb.bars["fatbar_black"]
-        assert self.sb.bars["bloodbar"]
+        #assert self.sb.bars["bloodbar"]
         assert self.sb.bars["bloodbar_black"]
-        assert self.sb.bars["timebar"]
-        assert self.sb.bars["timebar_black"]
+        #assert self.sb.bars["timebar"]
+        #assert self.sb.bars["timebar_black"]
 
     def testStatusBoxAction(self):
         """Ready, set, action!
@@ -104,33 +108,39 @@ class StatusBox(eventnet.driver.Handler):
         bloodcolor = (255, 0, 0)
         fatcolor = (0, 255, 0)
         timecolor = (0, 0, 255)
-        self.black = (100,100,100)
-        self.barheight = 160
-        self.barwidth = 24
+        self.bg = (255,255,255)   # white
+        self.barheight = 376
+        self.barwidth = 38
         blackheight = 1
         right = 640
-        self.bloodloc = right-(32*3)+4
-        self.fatloc = right-(32*2)+4
-        self.timeloc = right-(32)+4
+        S = IMAGE.STATUS
         self.bars = {}
-        self.bars["fatbar"] = Bar(fatcolor, (self.fatloc, 0), self.barwidth, self.barheight)
-        self.bars["fatbar_black"] = Bar(self.black, (self.fatloc, 0), self.barwidth, blackheight)
-        self.bars["bloodbar"] = Bar(bloodcolor, (self.bloodloc, 0), self.barwidth, self.barheight)
-        self.bars["bloodbar_black"] = Bar(self.black, (self.bloodloc, 0), self.barwidth, blackheight)
-        self.bars["timebar"] = Bar(timecolor, (self.timeloc, 0), self.barwidth, self.barheight)
-        self.bars["timebar_black"] = Bar(self.black, (self.timeloc, 0), self.barwidth, blackheight)
+        #self.bars["fatbar"] = Bar(fatcolor, S.FATS_POS, self.barwidth, self.barheight)
+        self.bars["fatbar_black"] = Bar(self.bg, S.FATS_POS, self.barwidth, blackheight)
+        #self.bars["bloodbar"] = Bar(bloodcolor, S.CARB_POS, self.barwidth, self.barheight)
+        self.bars["bloodbar_black"] = Bar(self.bg, S.CARB_POS, self.barwidth, blackheight)
+
+        #Not really a bar, this is an ugly hack to make a pretty effect:
+        overlay = pygame.sprite.Sprite()
+        overlay.image = pygame.image.load(S.TXT)
+        overlay.rect = overlay.image.get_rect()
+        overlay.rect.topleft = S.TEXT_POS
+        self.bars["overlay_sprite"] = overlay
+        
+        #self.bars["timebar"] = Bar(timecolor, (self.timeloc, 0), self.barwidth, self.barheight)
+        #self.bars["timebar_black"] = Bar(self.bg, (self.timeloc, 0), self.barwidth, blackheight)
 
     def EVT_HEALTH_BLOOD_CHANGED(self, event):
         """Updates the blood bar display.
         """
-        assert event.blood
-        assert event.ceiling
+        #assert event.blood
+        #assert event.ceiling
         newsize = self.figureNewBarBlackSize(event.blood, event.ceiling)
         self.bars["bloodbar_black"].updateSize(newsize)
 
     def EVT_HEALTH_FAT_CHANGED(self, event):
-        assert event.fat
-        assert event.ceiling
+        #assert event.fat
+        #assert event.ceiling
         newsize = self.figureNewBarBlackSize(event.fat, event.ceiling)
         self.bars["fatbar_black"].updateSize(newsize)
 

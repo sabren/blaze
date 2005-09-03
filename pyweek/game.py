@@ -13,7 +13,7 @@ from constants import *
 from health import Food
 import sounds
 from render import SpriteGear
-
+from statusbox import StatusBox
 
 
 """
@@ -107,8 +107,17 @@ class Game(State):
     def __init__(self, display, roomName=TEST_ROOM):
         super(Game, self).__init__(display) #@TODO: fix me!
         self.controls = Controller()
+        self.status = StatusBox()
+        self.status.capture()
+
+        # add the status bar sprites. the status
+        # box is an event handler so they'll just
+        # change on their own, but we have to add
+        # them to the sprite group so they show up
+        # on screen...        
         self.sprites = SpriteGear(self.display)
-        
+        for bar in self.status.bars.values():
+            self.sprites.sprites.add(bar)
 
         if roomName == TEST_ROOM:
             self.room = makeTestRoom()
