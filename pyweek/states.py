@@ -50,6 +50,16 @@ class Scores(State):
         if not self.done:
             self.done = True
 
+class Credits(State):
+
+    def kick(self):
+        super(Credits, self).kick()
+        self.display.showImage(0,0, images.CREDITS)
+
+    def EVT_KeyDown(self, event):
+        if not self.done:
+            self.done = True
+
 class Exit(State):
     """
     this state represents quitting the system.

@@ -1,5 +1,5 @@
 from events import MENU
-from states import State, EXIT, Scores
+from states import State, EXIT, Scores, Credits
 from game import Game
 import images
 import eventnet.driver
@@ -39,5 +39,6 @@ class Menu(State):
         self.next = Scores(self.display)
 
     def EVT_CREDITS(self, event):
-        pass
+        self.done = True
+        self.next = Credits(self.display)
 
