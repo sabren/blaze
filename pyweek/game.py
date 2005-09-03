@@ -5,10 +5,14 @@ loop for actually playing the game.
 import unittest
 import images
 from states import State
+import states
 from events import GAME
 import eventnet.driver
 from constants import *
 from health import Food
+import sounds
+
+
 
 """
 Okay. So the Game object is the main routine for the
@@ -138,6 +142,17 @@ class Game(State):
         super(Game, self).kick()
         self.display.showImage(0,0,images.GAME)
 
+class SoundEvents(states.Ticker):
+
+
+    def EVT_COLLIDE_FOOD(self, event):
+        print "HI!!!"
+    def EVT_COLLIDE_EGG(self, event):
+        print "HI!!!"
+    def EVT_COLLIDE_WALL(self, event):
+        print "HI!!!"
+    def EVT_COLLIDE_PIT(self, event):
+        print "HI!!!"
 
 
 if __name__=="__main__":
@@ -147,6 +162,7 @@ if __name__=="__main__":
     import pygame
     from constants import SCREEN
     from render    import WithForeground, BlockSprite, randomlyColoredSquare
+    import time
     
     if "test" in sys.argv:
         sys.argv.remove("test")
@@ -164,8 +180,15 @@ if __name__=="__main__":
         ## sprite group
         group = WithForeground(fgSprite)
         
+        sound_manager = sounds.SoundManager()
+        sound_manager.Load()
+
         disp = Display(t='Kiwi Run')
         game = Game(disp)
+        sound_events = SoundEvents(None)
+        sound_events.sound_manager = sound_manager
+
+
         con = Console(disp)
         con.state.done= True
         con.state.next = game
@@ -190,7 +213,14 @@ if __name__=="__main__":
         screen.blit(background, (0,0))
         game.manual = False
         ctrl = Controller()
+
+        last_time = time.time()
+
         while not con.done:
+            now_time = time.time()
+            elapsed_time = last_time - now_time
+            sound_manager.Update(elapsed_time)
+
             pygame_events()
             ctrl.tick()
             group.update()
@@ -199,6 +229,7 @@ if __name__=="__main__":
             group.clear(screen, background)
             if not game.manual:
                 con.tick()
+            last_time = time.time()
         pygame.quit()   
 
 
