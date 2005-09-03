@@ -5,15 +5,14 @@ loop for actually playing the game.
 import unittest
 import os
 
-
-import images
-from states import State
 import states
+from states import State
 from events import GAME
 import eventnet.driver
 from constants import *
 from health import Food
 import sounds
+from render import SpriteGear
 
 
 
@@ -93,24 +92,38 @@ def makeTestRoom():
     heroPos = (100,100)
     rm.hero = Bird(rm, heroPos)
     rm.physics = RoomPhysics(rm, drag=-1)
+    rm.hero.setPosition((150,ROOM.HEIGHT-100))
     return rm
 
 #############################################################
 
 from display import MockDisplay
 from controls import Controller
+from render import BlockSprite, randomlyColoredSquare
 
 class Game(State):
 
     def __init__(self, display, roomName=TEST_ROOM):
         super(Game, self).__init__(display) #@TODO: fix me!
+        self.controls = Controller()
+        self.sprites = SpriteGear(self.display)
+
         if roomName == TEST_ROOM:
             self.room = makeTestRoom()
+            # a block to play with:
+            self.sprites.sprites.add(
+                BlockSprite(
+                self.room.addBlock((SCREEN.WIDTH/2+150,SCREEN.HEIGHT-100), 32, 32),
+                randomlyColoredSquare()))
+        
         else:
             self.room = loader.roomFromFile(open(roomName))
+
             
+        self.sprites.fromRoom(self.room)
+        # finally, note the hero:
         self.hero = self.room.hero
-        self.manual = False # manual stepping with s key (toggle with `)
+        
 
 
     def EVT_GAME_RIGHT(self, event):
@@ -138,120 +151,16 @@ class Game(State):
     def tick(self):
         self.room.physics.step()
         self.room.hero.step()
-        self.room.hero.metabolism.eat(Food(5,5))
-        #print self.room.hero.geom.getPosition()
+        self.room.hero.metabolism.eat(Food(5,5)) # hack to lower metabolism
+        self.controls.tick()
+        self.sprites.tick()
         
     def kick(self):
         super(Game, self).kick()
-        self.display.showImage(0,0,images.GAME)
-
-class SoundEvents(states.Ticker):
-
-
-    def EVT_COLLIDE_FOOD(self, event):
-        print "HI!!!"
-    def EVT_COLLIDE_EGG(self, event):
-        print "HI!!!"
-    def EVT_COLLIDE_WALL(self, event):
-        print "HI!!!"
-    def EVT_COLLIDE_PIT(self, event):
-        print "HI!!!"
-    def EVT_GAME_JUMP(self, event):
-        self.sound_manager.Play("bip")
+        self.display.showImage(0,0,IMAGE.GAME)
         
 
 if __name__=="__main__":
-    import sys
-    from display import Display
-    from main import Console, pygame_events
-    import pygame
-    import pygame.mixer_music
-    from constants import SCREEN
-    from render    import WithForeground, BlockSprite, randomlyColoredSquare
-    import time
+    import main
+    main.main()
     
-    if "test" in sys.argv:
-        sys.argv.remove("test")
-        unittest.main()
-    else:
-
-        background = pygame.image.load("demo/gravdemo-back.png")       
-
-        # FOREGROUND
-        foreground = pygame.image.load("demo/gravdemo-fore.png")
-        foreground = pygame.surface.Surface((1, 1))
-        fgSprite = pygame.sprite.Sprite()
-        fgSprite.image = foreground
-        fgSprite.rect = foreground.get_rect()
-        ## sprite group
-        group = WithForeground(fgSprite)
-        
-
-        #leave enough of a buffer for some machines.
-        if os.name == 'posix' or 1:
-            try:
-                pygame.mixer.pre_init(44100,-16,2, 1024 * 3)
-            except:
-                pygame.mixer.pre_init()
-        else:
-            pygame.mixer.pre_init()
-
-
-        pygame.mixer.init()
-
-        sound_manager = sounds.SoundManager()
-        sound_manager.PlayMusic("1takeimprov.ogg")
-        sound_manager.Load()
-
-
-        disp = Display(t='Kiwi Run')
-        game = Game(disp)
-        sound_events = SoundEvents(None)
-        sound_events.sound_manager = sound_manager
-
-
-        con = Console(disp)
-        con.state.done= True
-        con.state.next = game
-
-        rm = game.room
-
-        #add the hero
-        group.add(BlockSprite(rm.hero, pygame.image.load(images.KIWI.RIGHT)))
-        rm.hero.setPosition((150,SCREEN.HEIGHT-100))
-        # and a floor:
-        group.add(BlockSprite(
-            rm.addGeom((ROOM.WIDTH/2,SCREEN.HEIGHT-50/2),ROOM.WIDTH,50),
-            pygame.Surface((ROOM.WIDTH,50))))
-        
-        # and some block:
-        group.add(
-            BlockSprite(
-            rm.addBlock((SCREEN.WIDTH/2+150,SCREEN.HEIGHT-100), 32, 32),
-            randomlyColoredSquare()))
-
-        screen = disp.screen
-        screen.blit(background, (0,0))
-        game.manual = False
-        ctrl = Controller()
-
-        last_time = time.time()
-
-        while not con.done:
-            now_time = time.time()
-            elapsed_time = last_time - now_time
-            sound_manager.Update(elapsed_time)
-
-            pygame_events()
-            ctrl.tick()
-            group.update()
-            rects = group.draw(screen)    
-            pygame.display.update(rects)
-            group.clear(screen, background)
-            if not game.manual:
-                con.tick()
-            last_time = time.time()
-        pygame.quit()   
-
-
-        screen.blit(background, (0,0))        

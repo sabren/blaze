@@ -1,15 +1,16 @@
 """
 here we define some states for our console.
 """
-import pygame, display, sys, eventnet.driver, images
+import pygame, display, sys, eventnet.driver
+from constants import IMAGE
 from pygame.locals import *
 
 # Menu moved to menu.py
 # Game moved to game.py
 
-class Ticker(eventnet.driver.Handler):
+class Gear(eventnet.driver.Handler):
     def __init__(self, display):
-        super(Ticker, self).__init__()
+        super(Gear, self).__init__()
         self.display = display
         self.done = False
         self.capture() # listen for events
@@ -23,7 +24,7 @@ class Ticker(eventnet.driver.Handler):
 
 
 # other states should do this:
-class State(Ticker):
+class State(Gear):
 
     def __init__(self, display):
         super(State, self).__init__(display)
@@ -44,7 +45,7 @@ class Scores(State):
 
     def kick(self):
         super(Scores, self).kick()
-        self.display.showImage(0,0, images.SCORES)
+        self.display.showImage(0,0, IMAGE.SCORES)
 
     def EVT_KeyDown(self, event):
         if not self.done:
@@ -54,7 +55,7 @@ class Credits(State):
 
     def kick(self):
         super(Credits, self).kick()
-        self.display.showImage(0,0, images.CREDITS)
+        self.display.showImage(0,0, IMAGE.CREDITS)
 
     def EVT_KeyDown(self, event):
         if not self.done:
@@ -64,7 +65,7 @@ class Help(State):
 
     def kick(self):
         super(Help, self).kick()
-        self.display.showImage(0,0, images.HELP)
+        self.display.showImage(0,0, IMAGE.HELP)
 
     def EVT_KeyDown(self, event):
         if not self.done:

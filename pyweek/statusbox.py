@@ -43,7 +43,7 @@ class StatusBoxTest(unittest.TestCase):
         self.sb.capture()
         from roomphysics import RoomPhysics
         self.r = room.Room()
-        self.bird = hero.Bird(self.r, (0,0), 1.0)
+        self.bird = hero.Bird(self.r, (0,0))
         self.bird.capture()
         self.rp = RoomPhysics(self.r, self.bird.geom.getBody())
 
@@ -69,6 +69,7 @@ class StatusBoxTest(unittest.TestCase):
         pygame.init()
         screen = pygame.display.set_mode([640, 480])
         sb = StatusBox()
+        screen.clear()
         for key in sb.bars.keys():
             bar = sb.bars[key]
             screen.blit(bar.image, bar.rect)

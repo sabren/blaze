@@ -10,10 +10,10 @@ import cPickle, os, sys, string, loader, eventnet.driver, eventnet._pygame, even
 from pygame.locals import *
 from menu import Menu
 from game import Game
-from states import Ticker, EXIT
+from states import Gear, EXIT
 from display import Display, ImageManager, MockDisplay
 from events import MENU, GAME
-
+from soundtrack import Soundtrack
 
 #function to load all 3 level elements
 def load(name):    
@@ -77,9 +77,8 @@ class ConsoleTest(unittest.TestCase):
       
 
 # The game Console (our master object)
-from states import Ticker
 
-class Console(Ticker):
+class Console(Gear):
     def __init__(self, display):
         super(Console, self).__init__(display)
         self.loadDefaultState()
@@ -162,11 +161,10 @@ def pygame_events():
         eventnet.driver.post(pygame.event.event_name(event.type),
                              **event.dict)
 
-
-if __name__=="__main__":
-
+def main():
     disp = Display(t='Kiwi Run')
     con = Console(disp)
+    sound = Soundtrack()
 
     # load all levels and parse into list
     lvl_list = []
@@ -176,9 +174,16 @@ if __name__=="__main__":
         if string.find(lvl, '-') == -1:
             lvl_list += [os.path.splitext(lvl)[0]]
 
-    #loop to keep checking for mode changes
+    #loop to keep checking for mode changes            
     while not con.done:
         pygame_events()
         con.tick()
+        sound.tick()
+
         
     pygame.quit()   
+
+
+if __name__=="__main__":
+    main()
+    

@@ -1,7 +1,7 @@
 from events import MENU
 from states import State, EXIT, Scores, Credits, Help
 from game import Game
-import images
+from constants import IMAGE
 import eventnet.driver
 from pygame.locals import *
 
@@ -9,7 +9,7 @@ class Menu(State):
 
     def kick(self):
         super(Menu, self).kick()
-        self.display.showImage(0,0, images.MENU)
+        self.display.showImage(0,0, IMAGE.MENU)
 
     def EVT_KeyDown(self, event):
         if not self.done:

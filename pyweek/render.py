@@ -3,7 +3,8 @@ sprite rendering engine
 """
 import unittest
 import pygame.sprite
-from constants import SPRITE_SIZE
+from states import Gear
+from constants import SPRITE_SIZE, IMAGE
 import random
 from ode_to_pixel import *
 
@@ -79,6 +80,31 @@ class WithForeground(pygame.sprite.RenderUpdates):
         all.remove(self.fg)
         all.append(self.fg)
         return all
+
+
+class SpriteGear(Gear):
+    def __init__(self, display):
+        super(SpriteGear, self).__init__(display)
+        self.background = pygame.image.load("demo/gravdemo-back.png")        
+        self.foreground = pygame.image.load("demo/gravdemo-fore.png")
+        self.foreground = pygame.surface.Surface((1, 1))
+        fgSprite = pygame.sprite.Sprite()
+        fgSprite.image = self.foreground
+        fgSprite.rect = self.foreground.get_rect()
+        self.sprites = WithForeground(fgSprite)
+        self.screen = self.display.screen
+        
+    def tick(self):
+        self.sprites.update()
+        rects = self.sprites.draw(self.screen)    
+        pygame.display.update(rects)
+        self.sprites.clear(self.screen, self.background)
+
+    def fromRoom(self, rm):  
+        # make sprites based on the content of the level
+        self.sprites.add(
+            BlockSprite(rm.hero,
+                        pygame.image.load(IMAGE.KIWI.RIGHT)))
 
 
 # this is just a handy sprite maker: a randomly colored square

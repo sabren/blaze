@@ -1,11 +1,11 @@
 
 from constants import REPEAT
-from states import Ticker
+from states import Gear
 import pygame.locals as pg
 from events import GAME
 import eventnet.driver
 
-class Controller(Ticker):
+class Controller(Gear):
     """
     like a gamepad with repeating events...
     """
