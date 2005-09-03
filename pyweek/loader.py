@@ -32,6 +32,7 @@ import ode
 import unittest
 import physics
 import xml.sax
+from constants import *
 
 from ode_to_pixel import *
 
@@ -230,7 +231,17 @@ class ArcPath:
         self.id = id
 
     def toGeom(self, room):
-        room.addGeom(pixel2world(self.cx, self.cy), px2w(self.rx), px2w(self.ry))
+        if self.fill in (COLORS.HERO, COLORS.EGG, COLORS.BALL, COLORS.FOOD):
+            self.geom = room.addGeom(pixel2world(self.cx, self.cy), px2w(self.rx), px2w(self.ry))
+            if self.fill == COLORS.HERO:
+                self.geom.code = CODE.HERO
+            elif self.fill == COLORS.BALL:
+                self.geom.code = CODE.BALL
+            elif self.fill == COLORS.EGG:
+                self.geom.code = CODE.EGG
+            elif self.fill == COLORS.FOOD:
+                self.geom.code = CODE.FOOD
+            
 
 
 # now we just loop through the tags in the SVG file
@@ -466,6 +477,16 @@ class RoomFromRectsTest(unittest.TestCase):
         rm = roomFromShapes(self.svgh)
         self.assertEquals(IDENTITY3D, rm.blocks[0].getRotation())
 
+    def testCode(self):
+        """Did we set a code on the geom?
+
+        Michal's UgLy hack.
+        """
+        self.svgh.arcs = [ArcPath(self, fill="#000000")]
+        rm = roomFromShapes(self.svgh)
+        assert rm.blocks[0].code
+        self.assertEquals(CODE.HERO, rm.blocks[0].code)
+
 
     def testRotation(self):
         """Did we get a rotated 3D matrix?
@@ -492,7 +513,6 @@ class RoomFromRectsTest(unittest.TestCase):
         
 
 from rotate import rotate
-
 def roomFromShapes(handler):
     """
     here's where we actually do the work.
