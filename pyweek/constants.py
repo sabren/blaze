@@ -36,6 +36,7 @@ class COLORS:
     GOAL = "#FF0000"
     EGG = "#0000FF"
     BALL = "#0000FF"
+    FOOD = "#FFFF00"
 
 class REPEAT:
     TICKS = 10 # number of ticks before a key repeats
