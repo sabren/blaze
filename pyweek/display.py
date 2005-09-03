@@ -135,7 +135,7 @@ class Display:
 Can we successfully create a window? Yadda yadda yadda.
 """
 
-def test(self):
+def test():
     display = Display ((640, 480), "T-Rex and the Waffle House")
 
     display.addFont (30)
