@@ -6,7 +6,6 @@ import unittest
 import images
 from states import State
 from events import GAME
-import pygame.locals as pg
 import eventnet.driver
 from constants import *
 from health import Food
@@ -86,12 +85,13 @@ def makeTestRoom():
     ## @TODO: clean this up. :)
     heroPos = (100,100)
     rm.hero = Bird(rm, heroPos)
-    rm.physics = RoomPhysics(rm, drag=-0.01)
+    rm.physics = RoomPhysics(rm, drag=-1)
     return rm
 
 #############################################################
 
 from display import MockDisplay
+from controls import Controller
 
 class Game(State):
 
@@ -111,10 +111,13 @@ class Game(State):
         when the player tells us to go right, we
         should move the hero to the right in our world.
         """
-        self.hero.walk(RIGHT)
+        self.hero.run(RIGHT)
 
     def EVT_GAME_LEFT(self, event):
-        self.hero.walk(LEFT)
+        self.hero.run(LEFT)
+
+    def EVT_GAME_JUMP(self, event):
+        self.hero.jump()
 
     def EVT_GAME_QUIT(self, event):
         self.done = True
@@ -131,23 +134,6 @@ class Game(State):
         self.room.hero.metabolism.eat(Food(5,5))
         #print self.room.hero.geom.getPosition()
         
-
-
-    def EVT_KeyDown(self, event):
-        #@TODO: configurable keymap?
-        keymap = {
-            pg.K_x : GAME.QUIT,
-            pg.K_RIGHT : GAME.RIGHT,
-            pg.K_LEFT : GAME.LEFT,
-            pg.K_SPACE : GAME.JUMP,
-        }
-        if event.key in keymap:
-            eventnet.driver.post(keymap[event.key])
-        elif event.key ==pg.K_BACKQUOTE:
-            self.manual = not self.manual 
-        elif event.key ==pg.K_s:
-            self.tick()
-
     def kick(self):
         super(Game, self).kick()
         self.display.showImage(0,0,images.GAME)
@@ -190,23 +176,23 @@ if __name__=="__main__":
         group.add(BlockSprite(rm.hero, pygame.image.load(images.KIWI.PLAIN)))
         rm.hero.setPosition((150,SCREEN.HEIGHT-100))
         # and a floor:
-        w = SCREEN.WIDTH
-        h= 50
         group.add(BlockSprite(
-            rm.addGeom((SCREEN.WIDTH/2,SCREEN.HEIGHT-h/2), w,h),
-            pygame.Surface((w,h))))
+            rm.addGeom((ROOM.WIDTH/2,SCREEN.HEIGHT-50/2),ROOM.WIDTH,50),
+            pygame.Surface((ROOM.WIDTH,50))))
         
         # and some block:
-#        group.add(
-#            BlockSprite(
-#            rm.addBlock((SCREEN.WIDTH/2+150,SCREEN.HEIGHT-100), 32, 32),
-#            randomlyColoredSquare()))
+        group.add(
+            BlockSprite(
+            rm.addBlock((SCREEN.WIDTH/2+150,SCREEN.HEIGHT-100), 32, 32),
+            randomlyColoredSquare()))
 
         screen = disp.screen
         screen.blit(background, (0,0))
         game.manual = False
+        ctrl = Controller()
         while not con.done:
             pygame_events()
+            ctrl.tick()
             group.update()
             rects = group.draw(screen)    
             pygame.display.update(rects)

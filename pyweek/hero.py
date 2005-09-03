@@ -1,5 +1,5 @@
 import ode, room, health
-from constants import LEFT, RIGHT, HERO
+from constants import LEFT, RIGHT, HERO, CALORIES, PHYSICS
 import unittest
 
 class BirdTest(unittest.TestCase):
@@ -86,7 +86,7 @@ class BirdTest(unittest.TestCase):
         """JUMP!!!!
         """
         oldposition = self.bird.getPosition()
-        self.bird.jump((30))
+        self.bird.jump()
         self.rp.step(self.bird.bird)
         newposition = self.bird.getPosition()
         self.assertNotEqual(oldposition, newposition)
@@ -166,12 +166,9 @@ class Bird(eventnet.driver.Handler):
 
         Pass in the 2d vector that you want the hero to travel in
         and the force you want to apply.
-        """
-        assert x != 0
-        #import pdb; pdb.set_trace()
-        self.geom.getBody().addForce((x*5000000, 300, 0))
-        #a,b,c = self.geom.getPosition()
-        #self.geom.setPosition((a+x,b+y,c))
+        """        
+        self.geom.getBody().addForce((x*PHYSICS.SCALEFORCE,
+                                      y*PHYSICS.SCALEFORCE, 0))
 
     def walk(self, direction):
         """Do the bird walk.
@@ -182,7 +179,7 @@ class Bird(eventnet.driver.Handler):
         assert direction in (LEFT, RIGHT)
         force = self.SPEED * direction
         self.move((force, 0))
-        self.metabolism.exert(force)
+        self.metabolism.exert(CALORIES.WALK)
 
     def run(self, direction):
         """Run, kiwi, run!
@@ -193,11 +190,11 @@ class Bird(eventnet.driver.Handler):
         assert direction in (LEFT, RIGHT)
         force = self.SPEED * 2 * direction
         self.move((force, 0))
-        self.metabolism.exert(force)
+        self.metabolism.exert(CALORIES.RUN)
         
-    def jump(self, force):
-        self.move((0, force))
-        self.metabolism.exert(force*2)
+    def jump(self):
+        self.move((0, HERO.JUMPFORCE))
+        self.metabolism.exert(CALORIES.JUMP)
 
     def step(self):
         """

@@ -3,25 +3,26 @@ from constants import PHYSICS
 
 
 class RoomPhysics:
-    def __init__(self, room, drag=1):
+    def __init__(self, room, drag):
+        self.room = room
         self.world = room.world
         self.space = room.space
-        self.coefficient = drag
-        self.friction = 0.05
+        self.drag = PHYSICS.DRAG
+        self.friction = PHYSICS.FRICTION
         self.world.setGravity(PHYSICS.GRAVITY) # in our world y++ is down. :)
         self.world.setERP(PHYSICS.ERP) 
         self.world.setCFM(PHYSICS.CFM) 
         
-    def atmosphere(self, chars=[]):
+    def atmosphere(self):
         """
         This simulates a frictional force caused by the atmosphere
         on the level. It will control how quickly the characters will
         slow down when no force is applied. chars should be a list
         of ode Bodies.
         """
-        for char in chars:
+        for char in [self.room.hero.body]:
             u, v, w = char.getLinearVel()
-            char.addForce((u*self.coefficient,0,0))
+            char.addForce((u*self.drag,0,0))
                 
     # Collision callback
     def onNearCollision(self, contactgroup, geom1, geom2):
