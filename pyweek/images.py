@@ -4,3 +4,4 @@
 MENU="menu.png"
 GAME="data/game.png" # main room for the game
 SCORES='high_scores.png'
+CREDITS='credits.png'
