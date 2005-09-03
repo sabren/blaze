@@ -377,9 +377,11 @@ class Food:
 
     Consume all flesh!
     """
-    def __init__(self, sugar, fat):
+    def __init__(self, sugar, fat, room, position):
         self.nutrition = (sugar, fat)
-        self.geom = ode.GeomSphere(space=None, radius=HERO.RADIUS)
+        self.room = room
+        self.radius = HERO.RADIUS
+        self.geom = self.room.addBlock(position, 2*self.radius, 2*self.radius)
         self.geom.code = CODE.FOOD
 
     def consumed(self):

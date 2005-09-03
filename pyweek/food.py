@@ -22,9 +22,9 @@ class FoodFactory:
     def __init__(self):
         self.menu = MENU
 
-    def order(self, type):
+    def order(self, type, room, position):
         sugar, fat = self.menu[type]
-        return Food(int(sugar*MULTI), int(fat*MULTI)) 
+        return Food(int(sugar*MULTI), int(fat*MULTI), room, position) 
 
 
 if __name__ == "__main__":

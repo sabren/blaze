@@ -218,6 +218,7 @@ class Rect:
               % (my.x,my.y,my.width,my.height,my.transform, my.id)
 
 # We're also going to make an object to hold our path data.
+import egg, ball, hero, food
 class ArcPath:
     """A simple data class for representing paths of sodipodi:type="arc".
     """
@@ -230,17 +231,15 @@ class ArcPath:
         self.fill = fill
         self.id = id
 
-    def toGeom(self, room):
-        if self.fill in (COLORS.HERO, COLORS.EGG, COLORS.BALL, COLORS.FOOD):
-            self.geom = room.addGeom(pixel2world(self.cx, self.cy), px2w(self.rx), px2w(self.ry))
-            if self.fill == COLORS.HERO:
-                self.geom.code = CODE.HERO
-            elif self.fill == COLORS.BALL:
-                self.geom.code = CODE.BALL
-            elif self.fill == COLORS.EGG:
-                self.geom.code = CODE.EGG
-            elif self.fill == COLORS.FOOD:
-                self.geom.code = CODE.FOOD
+    def toGeom(self, room, foodfactory):
+        if self.fill == COLORS.HERO:
+            room.hero = hero.Bird(room, (self.cx, self.cy))
+        elif self.fill == COLORS.BALL:
+            room.ball = ball.Ball(room, (self.cx, self.cy))
+        elif self.fill == COLORS.EGG:
+            room.egg.append(egg.Egg(room, (self.cx, self.cy)))
+        elif self.fill == COLORS.FOOD:
+            room.food.append(foodfactory.order("waffle"))
             
 
 
@@ -513,16 +512,20 @@ class RoomFromRectsTest(unittest.TestCase):
         
 
 from rotate import rotate
+import food
 def roomFromShapes(handler):
     """
     here's where we actually do the work.
     """
     rm = Room()
+    rm.eggs = []
+    rm.food = []
+    ff = food.FoodFactory()
     #print rects
     for r in handler.rects:        
         r.toGeom(rm)
     for a in handler.arcs:
-        a.toGeom(rm)
+        a.toGeom(rm, ff)
     return rm
             
 
