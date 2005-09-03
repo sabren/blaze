@@ -74,11 +74,11 @@ class BirdTest(unittest.TestCase):
         """
         oldposition = self.bird.getPosition()
         self.bird.run(1)
-        self.rp.step(self.bird.bird)
+        self.rp.step(self.bird.body)
         newposition = self.bird.getPosition()
         self.assertNotEqual(oldposition, newposition)
         self.bird.run((-1))
-        self.rp.step(self.bird.bird)
+        self.rp.step(self.bird.body)
         newerposition = self.bird.getPosition()
         #self.assertNotEqual(newposition, newerposition)
         
@@ -87,7 +87,7 @@ class BirdTest(unittest.TestCase):
         """
         oldposition = self.bird.getPosition()
         self.bird.jump()
-        self.rp.step(self.bird.bird)
+        self.rp.step(self.bird.body)
         newposition = self.bird.getPosition()
         self.assertNotEqual(oldposition, newposition)
 
@@ -97,15 +97,16 @@ class BirdTest(unittest.TestCase):
 
         What is the mass of an unladen kiwi?
         """
-        initialmass = self.bird.bird.getMass().mass
+        initialmass = self.bird.body.getMass().mass
         food = health.Food(0,100)
         self.bird.metabolism.eat(food)
         self.bird.updateMass()
-        newmass = self.bird.bird.getMass().mass
+        newmass = self.bird.body.getMass().mass
         self.assertNotEqual(initialmass, newmass)
 
 
 import eventnet.driver
+from constants import CODE # Michal's UgLy hack. :)
 class Bird(eventnet.driver.Handler):
     """A plump little kiwi bird who likes physics, eggs, and running around.
     
@@ -127,6 +128,7 @@ class Bird(eventnet.driver.Handler):
         # Creates a box for collision detection.
         self.geom = self.room.addBlock(position, 2*self.radius, 2*self.radius)
 	self.geom.setPosition ((position[0], position[1], 0))
+        self.geom.code = CODE.HERO
 	self.body = self.geom.getBody()
         self.updateMass()
 
@@ -149,7 +151,7 @@ class Bird(eventnet.driver.Handler):
         You must update your mass.  It is your density.
         """
         totalfatmass = self.hlthcfg.fatmass * self.metabolism.getFat()
-        # density = mass * volume... sorta.  Okay, so we're fudging it.
+        # density = mass / volume... sorta.  Okay, so we're fudging it.
         # The units are all arbitrary anyway. :)
         density = float(totalfatmass / self.hlthcfg.fatspace )
         density = 1

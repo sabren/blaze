@@ -359,11 +359,19 @@ class FoodTest(unittest.TestCase):
     def setUp(self):
         self.f = Food(150, 10) # Sugar, fat
 
+    def testFoodPhysics(self):
+        """Food is a physical object, yes?
+        """
+        assert isinstance(self.f.geom, ode.GeomSphere)
+
     def testFoodCalories(self):
         """Must... eat... food...
         """
         self.assertEqual(self.f.consumed(), (150,10))
 
+import ode, constants
+from constants import HERO
+from constants import CODE # Michal's UgLy hack. :)
 class Food:
     """Food is for the eatin'.  Or sub-classing.
 
@@ -371,6 +379,8 @@ class Food:
     """
     def __init__(self, sugar, fat):
         self.nutrition = (sugar, fat)
+        self.geom = ode.GeomSphere(space=None, radius=HERO.RADIUS)
+        self.geom.code = CODE.FOOD
 
     def consumed(self):
         """You have been eaten by a large kiwi bird.
