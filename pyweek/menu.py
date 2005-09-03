@@ -1,5 +1,5 @@
 from events import MENU
-from states import State, EXIT, Scores, Credits, Help
+from states import State, EXIT, Scores, Credits, Help, TextInput
 from game import Game
 from constants import IMAGE
 import eventnet.driver
@@ -17,13 +17,21 @@ class Menu(State):
             if event.key == K_p:
                 eventnet.driver.post(MENU.PLAY)
             elif event.key == K_h:
-                eventnet.driver.post('SCORE')
+                #eventnet.driver.post('SCORE')
+                pass
             elif event.key == K_e:
                 eventnet.driver.post('HELP')
             elif event.key == K_c:
                 eventnet.driver.post('CREDITS')
+            elif event.key == K_1:
+                #eventnet.driver.post('HIGHSCORE')
+                pass
             elif event.key == K_x:
                 eventnet.driver.post(MENU.EXIT)
+
+    def EVT_HIGHSCORE(self, event):
+        self.done = True
+        self.next = TextInput(self.display)
             
     def EVT_MENU_PLAY(self, event):
         # we need done = true in *here* because
