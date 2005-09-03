@@ -1,7 +1,7 @@
 """
 here we define some states for our console.
 """
-import pygame, display, sys, eventnet.driver, images, cPickle, string
+import pygame, display, sys, eventnet.driver, cPickle, string
 import pygame, display, sys, eventnet.driver
 from constants import IMAGE
 from pygame.locals import *
@@ -66,7 +66,6 @@ class Scores(State):
         for score in scor:
             scr += [string.join([score[0], str(score[1])], ': ')]
         print scr
-        self.display.showImage(0,0, images.SCORES)
         self.display.showImage(0,0, IMAGE.SCORES)
         self.display.addFont(30)
         pos=[640/2, 480/2]
@@ -113,7 +112,7 @@ class TextInput(State):
             list = []
             pass
         self.scores = ScoreList(list)
-        self.display.showImage(0,0, images.SCORE)
+        self.display.showImage(0,0, IMAGE.SCORE)
         self.s = ''
 
     def tick(self):
