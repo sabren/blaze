@@ -35,6 +35,9 @@ class CALORIES:
 class REPEAT:
     TICKS = 10 # number of ticks before a key repeats
 
+class SOUND:
+    MUSIC="data/music/1takeimprov.ogg"
+
 
 class IMAGE:    
     MENU="menu.png"

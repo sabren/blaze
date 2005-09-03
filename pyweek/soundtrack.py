@@ -3,6 +3,7 @@ import sounds
 import pygame
 import os
 import time
+from constants import SOUND
 
 class Soundtrack(states.Gear):
     def __init__(self):
@@ -20,7 +21,7 @@ class Soundtrack(states.Gear):
         pygame.mixer.init()
 
         self.sound_manager = sounds.SoundManager()
-        self.sound_manager.PlayMusic("1takeimprov.ogg")
+        self.sound_manager.PlayMusic(SOUND.MUSIC)
         self.sound_manager.Load()
         self.last_time = time.time()
         
