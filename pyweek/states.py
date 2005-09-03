@@ -1,4 +1,3 @@
-
 """
 here we define some states for our console.
 """
