@@ -88,12 +88,12 @@ class SpriteGear(Gear):
         self.foreground = None
         self.background = pygame.image.load(IMAGE.GAME)        
         fgSprite = pygame.sprite.Sprite()
-        #fgSprite.image = self.foreground
-        fgSprite.image = pygame.surface.Surface((1, 1))
+        fgSprite.image = pygame.image.load(IMAGE.STATUS.TXT)
         fgSprite.rect = fgSprite.image.get_rect()
+        fgSprite.rect.topleft = IMAGE.STATUS.TEXT_POS
         self.sprites = WithForeground(fgSprite)
         self.screen = self.display.screen
-        self.refresh()
+        self.refresh()        
 
         self.heroSprite = None
         self.heroLeft = pygame.image.load(IMAGE.KIWI.LEFT)
