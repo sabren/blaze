@@ -50,3 +50,8 @@ class MENU:
     EXIT="MENU_EXIT"
     SCORES="MENU_SCORES"
     # add more here...
+
+class LEVELLIST:
+    UP = "LEVELLIST_UP"
+    DOWN = "LEVELLIST_DOWN"
+    QUIT = "LEVELLIST_QUIT"

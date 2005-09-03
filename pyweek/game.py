@@ -105,6 +105,8 @@ import pygame
 class Game(State):
 
     def __init__(self, display, roomName=TEST_ROOM):
+	import loader
+
         super(Game, self).__init__(display) #@TODO: fix me!
         self.controls = Controller()
         self.status = StatusBox()

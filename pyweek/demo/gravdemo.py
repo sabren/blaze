@@ -363,8 +363,8 @@ doneMakingBlocks = True
 import hero, health
 bird = hero.Bird(rm, pixel2world(400, 10), px2w(32))
 bird.SPEED = 1
-bird.move((0,-10))
-bird.walk(1)
+#bird.move((0,-10))
+#bird.walk(1)
 
 
 ### collision stuff ######################
@@ -400,6 +400,9 @@ tick = 0
 going = True
 clock = pygame.time.Clock()
 fps = 50
+
+goLeft, goRight = False, False
+
 while going:
 
     event_list = pygame.event.get()
@@ -420,7 +423,10 @@ while going:
                 camy += -0.1
             if event.key in [K_1, K_2, K_3, K_4]:
                 rot_keys[event.key] = not rot_keys[event.key]
-
+            if event.key == K_LEFT:
+		goLeft = True
+            if event.key == K_RIGHT:
+		goRight = True
             if event.key == K_SPACE:
                 sm.Play("bip")
 
@@ -430,6 +436,15 @@ while going:
         if event.type == KEYUP:
             if event.key == K_SPACE:
                 sm.Play("climb")
+            if event.key == K_RIGHT:
+		goRight = False
+            if event.key == K_LEFT:
+		goLeft = False
+
+    if goLeft:
+	bird.walk(-1)
+    if goRight:
+	bird.walk(1)
 
     #print camx, camy, camz
 

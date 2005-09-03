@@ -10,9 +10,10 @@ import cPickle, os, sys, string, loader, eventnet.driver, eventnet._pygame, even
 from pygame.locals import *
 from menu import Menu
 from game import Game
+from levellist import LevelList
 from states import Gear, EXIT
 from display import Display, ImageManager, MockDisplay
-from events import MENU, GAME
+from events import MENU, GAME, LEVELLIST
 from soundtrack import Soundtrack
 
 #function to load all 3 level elements

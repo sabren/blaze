@@ -4,6 +4,7 @@ from game import Game
 from constants import IMAGE
 import eventnet.driver
 from pygame.locals import *
+from levellist import LevelList
 
 class Menu(State):
 
@@ -28,7 +29,8 @@ class Menu(State):
         # we need done = true in *here* because
         # of the tests...
         self.done = True
-        self.next = Game(self.display)
+        #self.next = Game(self.display)
+	self.next = LevelList(self.display)
         
     def EVT_MENU_EXIT(self, event):
         self.done = True
