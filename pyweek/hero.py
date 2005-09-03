@@ -12,7 +12,6 @@ class BirdTest(unittest.TestCase):
         self.bird.capture()
         self.bird.SPEED = 10
         self.rp = RoomPhysics(self.r, self.bird.geom.getBody())
-	#self.rp.world.setGravity ((0, 0, 0))
         self.steps = 100 # steps to take
 
     def testBirdSit(self):
@@ -154,7 +153,7 @@ class Bird(eventnet.driver.Handler):
         density = float(totalfatmass / self.hlthcfg.fatspace)
         #density = float(density)
         mass = ode.Mass()
-        mass.setSphere(density*0.01, self.radius)
+        mass.setSphere(density, self.radius)
         self.bird.setMass(mass)
 	#print "MASS: ", mass
 
