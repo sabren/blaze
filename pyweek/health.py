@@ -335,7 +335,7 @@ class HealthModelConfig:
         # Set our blood sugar limit, before fat uptake kicks in.
         self.bloodlimit = 1000
         # Set our exertion ration.
-        self.exertionratio = 50
+        self.exertionratio = 20
         # Set our low blood sugar level.
         self.lowbloodlevel = 100
         # Set our low blood sugar uptake rate, in calories/step().
@@ -535,7 +535,10 @@ class HealthModel(eventnet.driver.Handler):
             self.blood.burnCalories(level*self.config.exertionratio)
         except NotEnoughCalories, e:
             # If we're short on blood sugar, burn fat.
-            self.fat.burnCalories(e.calories_short)
+            try:
+                self.fat.burnCalories(e.calories_short)
+            except NotEnoughCalories, e:
+                eventnet.driver.post(EVENTS.HEALTH.STARVE)
             self.postFatChanged()
         self.postBloodChanged()
 

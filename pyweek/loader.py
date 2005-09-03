@@ -520,12 +520,16 @@ def roomFromShapes(handler):
     rm = Room()
     rm.eggs = []
     rm.food = []
+    rm.ball = False
     ff = food.FoodFactory()
     #print rects
     for r in handler.rects:        
         r.toGeom(rm)
     for a in handler.arcs:
         a.toGeom(rm, ff)
+    if not rm.ball:
+        rm.ball = ball.Ball(rm)
+
     return rm
             
 
