@@ -86,14 +86,7 @@ from constants import SCREEN, ROOM
 
 
 def makeTestRoom():
-    rm = Room()
-    ## @TODO: load hero position from level definition
-    ## @TODO: clean this up. :)
-    heroPos = (100,100)
-    rm.hero = Bird(rm, heroPos)
-    rm.physics = RoomPhysics(rm, drag=-1)
-    rm.hero.setPosition((150,ROOM.HEIGHT-100))
-    return rm
+    return Room()
 
 #############################################################
 
@@ -130,7 +123,7 @@ class Game(State):
                 pygame.image.load(IMAGE.SOCCER)))
         
         else:
-            self.room = loader.roomFromFile(open(roomName))
+            self.room = loader.roomFromFile(open(ROOM.DIRECTORY+roomName))
 
             
         self.sprites.fromRoom(self.room)

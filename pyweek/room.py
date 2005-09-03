@@ -9,6 +9,8 @@ as a guide because it uses pygame to display the simulation.
 """
 import ode
 import unittest
+from hero import Bird
+from roomphysics import RoomPhysics
 
 from ode_to_pixel import *
 
@@ -70,6 +72,10 @@ class Room(object):
         self.space = ode.Space()
         self.blocks = []
         self._setupGlass()
+        self.physics = RoomPhysics(self, drag=-1)
+        self.hero = Bird(self, (100,100))
+        self.hero.setPosition((150,ROOM.HEIGHT-100))
+        
 
     def _setupGlass(self):
         """
