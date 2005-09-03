@@ -26,10 +26,10 @@ Room
 The idea is to 
 
 """
-
-WIDTH = px2w(640)
-HEIGHT = px2w(480)
-THICKNESS = px2w(32) # arbitrary depth for all our blocks
+from constants import ROOM
+WIDTH = ROOM.WIDTH
+HEIGHT = ROOM.HEIGHT
+THICKNESS = ROOM.THICKNESS
 
 
 class RoomTest(unittest.TestCase):

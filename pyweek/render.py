@@ -3,6 +3,9 @@ sprite rendering engine
 """
 import unittest
 import pygame.sprite
+from constants import SPRITE_SIZE
+import random
+from ode_to_pixel import *
 
 # reference:
 # http://kai.vm.bytemark.co.uk/~piman/writing/sprite-tutorial.shtml
@@ -27,7 +30,7 @@ So, after reading piman's sprite tutorial, it seems
 like we're in good shape. All we really need to do
 is create a Sprite that's linked to a GeomBox:
 """
-SPRITE_SIZE = (32,32)
+
 class BlockSpriteTest(unittest.TestCase):
     def test(self):
         # first we create the physics side:
@@ -60,21 +63,32 @@ class BlockSprite(pygame.sprite.Sprite):
         # course just drops the Z coordinate, which is
         # always 0 for our 2d world. :)
         self.rect.center = map(round, self.block.getPosition()[:2])
-        return
 
-        if self.old_position:
-            #self.old_position = self.block.getPosition()[:2]
-            new_pos = map(round, self.block.getPosition()[:2])
-            x = new_pos[0] - self.old_position[0]
-            y = new_pos[1] - self.old_position[1]
 
-            self.rect.move_ip(x,y)
-            self.old_position = new_pos
+class WithForeground(pygame.sprite.RenderUpdates):
+    """
+    simple sprite ordering: foreground is always on top
+    """
+    def __init__(self, fg, *sprites):
+        pygame.sprite.RenderUpdates.__init__(self, *sprites)
+        self.add(fg)
+        self.fg = fg
+        
+    def sprites(self):
+        all = pygame.sprite.RenderUpdates.sprites(self)
+        all.remove(self.fg)
+        all.append(self.fg)
+        return all
 
-        else:
-            self.old_position = map(round, self.block.getPosition()[:2])
-            self.rect.center = world2pixel( map(round, self.block.getPosition()[:2]) )
-        #self.rect.center = map(round, self.block.getPosition()[:2])
+
+# this is just a handy sprite maker: a randomly colored square
+# (with an alpha channel)
+
+def randomlyColoredSquare():
+    image = pygame.Surface(SPRITE_SIZE)
+    image = image.convert()
+    image.fill(pygame.color.Color("0x%08x" % random.randint(0,256**4)))
+    return image
 
 
 if __name__=="__main__":

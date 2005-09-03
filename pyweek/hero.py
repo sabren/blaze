@@ -1,5 +1,5 @@
 import ode, room, health
-from constants import LEFT, RIGHT
+from constants import LEFT, RIGHT, HERO
 import unittest
 
 class BirdTest(unittest.TestCase):
@@ -8,8 +8,7 @@ class BirdTest(unittest.TestCase):
     def setUp(self):
         from roomphysics import RoomPhysics
         self.r = room.Room()
-        self.bird = Bird(self.r, (50.0, 50.0), 1.0)
-        self.bird.capture()
+        self.bird = Bird(self.r, (50.0, 50.0))
         self.bird.SPEED = 10
         self.rp = RoomPhysics(self.r, self.bird.geom.getBody())
         self.steps = 100 # steps to take
@@ -111,33 +110,35 @@ class Bird(eventnet.driver.Handler):
     """A plump little kiwi bird who likes physics, eggs, and running around.
     
     """
-    def __init__(self, room, position, radius):
+    def __init__(self, room, position):
         """This function sets us up the bird.
         """
         super(Bird, self).__init__()
+        self.capture()
+        
         self.SPEED = 10
         self.room = room
         self.space = room.space
         self.world = room.world
-        self.position = position
-        self.radius = radius
+        self.radius = HERO.RADIUS
         self.hlthcfg = health.HealthModelConfig()
         self.metabolism = health.HealthModel(self.hlthcfg)
-        self.bird = ode.Body(self.world)
-        self.updateMass()
+        
         
         # Creates a box for collision detection.
-        self.geom = self.room.addGeom(self.position,
-                                      2*self.radius, 2*self.radius)
-        self.geom.setBody(self.bird)
-	self.geom.setPosition ((self.position[0], self.position[1], 0))
+        self.geom = self.room.addBlock(position, 2*self.radius, 2*self.radius)
+	self.geom.setPosition ((position[0], position[1], 0))
+	self.body = self.geom.getBody()
+        self.updateMass()
 
-	#self.geom = self.room.addBlock (self.position, self.radius, self.radius)
     
     def getPosition(self):
         """Get the position of our intrepid hero-kiwi.
         """
         return self.geom.getPosition()[:2] # x,y, but not z
+
+    def setPosition(self, (x,y)):
+        self.geom.setPosition((x,y,0))
 
     def updateMass(self):
         """Updates the mass of the hero by adjusting his density.
@@ -155,7 +156,7 @@ class Bird(eventnet.driver.Handler):
         mass = ode.Mass()
         mass.setSphere(density*0.01, self.radius)
 	print "DENSITY:", density * 0.01
-        self.bird.setMass(mass)
+        self.body.setMass(mass)
 	#print "MASS: ", mass
 
     def move(self, (x, y)):
@@ -164,7 +165,9 @@ class Bird(eventnet.driver.Handler):
         Pass in the 2d vector that you want the hero to travel in
         and the force you want to apply.
         """
-        self.bird.addForce((x, y, 0))
+        self.body.addForce((x, y, 0))
+        a,b,c = self.geom.getPosition()
+        self.geom.setPosition((a+x,b+y,c))
 
     def walk(self, direction):
         """Do the bird walk.

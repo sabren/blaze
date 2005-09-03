@@ -8,6 +8,7 @@ from states import State
 from events import GAME
 import pygame.locals as pg
 import eventnet.driver
+from constants import *
 
 """
 Okay. So the Game object is the main routine for the
@@ -75,10 +76,16 @@ from room import Room
 from hero import Bird
 from display import MockDisplay
 from roomphysics import RoomPhysics
+from constants import SCREEN, ROOM
 
 
 def makeTestRoom():
     rm = Room()
+    ## @TODO: load hero position from level definition
+    ## @TODO: clean this up. :)
+    heroPos = (100,100)
+    rm.hero = Bird(rm, heroPos)
+    rm.physics = RoomPhysics(rm, rm.hero.geom.getBody())
     return rm
 
 #############################################################
@@ -93,24 +100,20 @@ class Game(State):
             self.room = makeTestRoom()
         else:
             self.room = loader.roomFromFile(open(roomName))
+            
+        self.hero = self.room.hero
+        self.manual = False # manual stepping with s key (toggle with `)
 
-        ## @TODO: load hero position from level definition
-        ## @TODO: clean this up. :)
-        heroPos = (100,100)
-        heroRadius = 32
-        self.hero = Bird(self.room, heroPos, heroRadius)
-
-        self.physics = RoomPhysics(self.room, self.hero.geom.getBody())
 
     def EVT_GAME_RIGHT(self, event):
         """
         when the player tells us to go right, we
         should move the hero to the right in our world.
         """
-        self.hero.walk(1)
+        self.hero.walk(RIGHT)
 
     def EVT_GAME_LEFT(self, event):
-        self.hero.walk(-1)
+        self.hero.walk(LEFT)
 
     def EVT_GAME_QUIT(self, event):
         self.done = True
@@ -122,13 +125,26 @@ class Game(State):
         return self.hero.getPosition()
 
     def tick(self):
-        self.physics.step()
-        #self.screen.update()
+        self.room.physics.step()
+        self.room.hero.step()
+        #print self.room.hero.geom.getPosition()
+        
 
 
     def EVT_KeyDown(self, event):
-        if event.key == pg.K_x:
-            self.done = True
+        #@TODO: configurable keymap?
+        keymap = {
+            pg.K_x : GAME.QUIT,
+            pg.K_RIGHT : GAME.RIGHT,
+            pg.K_LEFT : GAME.LEFT,
+            pg.K_SPACE : GAME.JUMP,
+        }
+        if event.key in keymap:
+            eventnet.driver.post(keymap[event.key])
+        elif event.key ==pg.K_BACKQUOTE:
+            self.manual = not self.manual 
+        elif event.key ==pg.K_s:
+            self.tick()
 
     def kick(self):
         super(Game, self).kick()
@@ -138,11 +154,64 @@ class Game(State):
 
 if __name__=="__main__":
     import sys
+    from display import Display
+    from main import Console, pygame_events
+    import pygame
+    from constants import SCREEN
+    from render    import WithForeground, BlockSprite, randomlyColoredSquare
+    
     if "test" in sys.argv:
         sys.argv.remove("test")
         unittest.main()
-    elif "run" in sys.argv:
-        run()
     else:
-        print "run main.py"
+
+        background = pygame.image.load("demo/gravdemo-back.png")       
+
+        # FOREGROUND
+        foreground = pygame.image.load("demo/gravdemo-fore.png")
+        foreground = pygame.surface.Surface((1, 1))
+        fgSprite = pygame.sprite.Sprite()
+        fgSprite.image = foreground
+        fgSprite.rect = foreground.get_rect()
+        ## sprite group
+        group = WithForeground(fgSprite)
         
+        disp = Display(t='Kiwi Run')
+        game = Game(disp)
+        con = Console(disp)
+        con.state.done= True
+        con.state.next = game
+
+        rm = game.room
+
+        #add the hero
+        group.add(BlockSprite(rm.hero, pygame.image.load(images.KIWI.PLAIN)))
+        rm.hero.setPosition((150,SCREEN.HEIGHT-100))
+        # and a floor:
+        w = SCREEN.WIDTH
+        h= 50
+        group.add(BlockSprite(
+            rm.addGeom((SCREEN.WIDTH/2,SCREEN.HEIGHT-h/2), w,h),
+            pygame.Surface((w,h))))
+        
+        # and some block:
+#        group.add(
+#            BlockSprite(
+#            rm.addBlock((SCREEN.WIDTH/2+150,SCREEN.HEIGHT-100), 32, 32),
+#            randomlyColoredSquare()))
+
+        screen = disp.screen
+        screen.blit(background, (0,0))
+        game.manual = True
+        while not con.done:
+            pygame_events()
+            group.update()
+            rects = group.draw(screen)    
+            pygame.display.update(rects)
+            group.clear(screen, background)
+            if not game.manual:
+                con.tick()
+        pygame.quit()   
+
+
+        screen.blit(background, (0,0))        

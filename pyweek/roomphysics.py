@@ -1,4 +1,5 @@
 import ode
+from constants import PHYSICS
 
 
 class RoomPhysics:
@@ -7,22 +8,29 @@ class RoomPhysics:
         self.space = room.space
         self.coefficient = drag
         self.friction = 5000
+        self.world.setGravity(PHYSICS.GRAVITY) # in our world y++ is down. :)
+        self.world.setERP(PHYSICS.ERP) 
+        self.world.setCFM(PHYSICS.CFM) 
         
     def atmosphere(self, chars=[]):
-        """This simulates a frictional force caused by the atmosphere
-on the level. It will control how quickly the characters will
-slow down when no force is applied. chars should be a list of ode Bodies."""
+        """
+        This simulates a frictional force caused by the atmosphere
+        on the level. It will control how quickly the characters will
+        slow down when no force is applied. chars should be a list
+        of ode Bodies.
+        """
         for char in chars:
             u, v, w = char.getLinearVel()
             char.addForce((u*self.coefficient,0,0))
                 
     # Collision callback
     def onNearCollision(self, contactgroup, geom1, geom2):
-        """Callback function for the collide() method.
-    
-This function checks if the given geoms do collide and
-creates contact joints if they do.
-"""
+        """
+        Callback function for the collide() method.
+        
+        This function checks if the given geoms do collide and
+        creates contact joints if they do.
+        """
     
         # Check if the objects do collide
         contacts = ode.collide(geom1, geom2)
