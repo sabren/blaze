@@ -95,6 +95,10 @@ class SpriteGear(Gear):
         self.screen = self.display.screen
         self.refresh()
 
+        self.heroSprite = None
+        self.heroLeft = pygame.image.load(IMAGE.KIWI.LEFT)
+        self.heroRight = pygame.image.load(IMAGE.KIWI.RIGHT)
+
     def refresh(self):
         """
         refresh the screen completely. you
@@ -115,9 +119,15 @@ class SpriteGear(Gear):
 
     def fromRoom(self, rm):  
         # make sprites based on the content of the level
-        self.sprites.add(
-            BlockSprite(rm.hero,
-                        pygame.image.load(IMAGE.KIWI.RIGHT)))
+        self.heroSprite =BlockSprite(rm.hero, self.heroRight)
+        self.sprites.add(self.heroSprite)
+
+    def EVT_GAME_LEFT(self, event):
+        self.heroSprite.image = self.heroLeft
+
+    def EVT_GAME_RIGHT(self, event):
+        self.heroSprite.image = self.heroRight
+            
 
 
 # this is just a handy sprite maker: a randomly colored square
