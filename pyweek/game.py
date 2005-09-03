@@ -3,6 +3,9 @@ Game : this is the main control
 loop for actually playing the game.
 """
 import unittest
+import os
+
+
 import images
 from states import State
 import states
@@ -162,6 +165,7 @@ if __name__=="__main__":
     from display import Display
     from main import Console, pygame_events
     import pygame
+    import pygame.mixer_music
     from constants import SCREEN
     from render    import WithForeground, BlockSprite, randomlyColoredSquare
     import time
@@ -182,8 +186,23 @@ if __name__=="__main__":
         ## sprite group
         group = WithForeground(fgSprite)
         
+
+        #leave enough of a buffer for some machines.
+        if os.name == 'posix' or 1:
+            try:
+                pygame.mixer.pre_init(44100,-16,2, 1024 * 3)
+            except:
+                pygame.mixer.pre_init()
+        else:
+            pygame.mixer.pre_init()
+
+
+        pygame.mixer.init()
+
         sound_manager = sounds.SoundManager()
+        sound_manager.PlayMusic("1takeimprov.ogg")
         sound_manager.Load()
+
 
         disp = Display(t='Kiwi Run')
         game = Game(disp)

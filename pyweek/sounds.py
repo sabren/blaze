@@ -230,14 +230,18 @@ class SoundManager:
 	"""
 
 
-	music = self.music
+        try:
+            music = pygame.mixer.music
+        except:
+            music = None
 
 	if not music: return
 	if music.get_busy():
 	    #we really should fade out nicely and
 	    #wait for the end music event, for now, CUT 
 	    music.stop()
-	fullname = os.path.join('sounds', musicname)
+	#fullname = os.path.join('sounds', musicname)
+	fullname = musicname
 	music.load(fullname)
 	music.play(-1)
 	music.set_volume(1.0)
