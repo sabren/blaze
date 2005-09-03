@@ -25,6 +25,7 @@ class ROOM:
     THICKNESS = 32 # arbitrary depth for all our blocks
     WIDTH = 540
     HEIGHT = 480
+    DIRECTORY = "./rooms/"
     
 class CALORIES:
     WALK = 1
