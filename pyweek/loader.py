@@ -187,7 +187,29 @@ class Rect:
                 (self.height / 2.0 + self.y))
 
     def toGeom(self, room):
-        pass
+        self.cx = self.x + (self.width / 2.0)
+        self.cy = self.y + (self.height / 2.0)
+        
+        if self.transform:
+            a, b, c, d, e, f = self.transform
+           
+            # rotate the "original" center back to new position
+            # (see rotate.py for why we need this):
+            self.cx, self.cy = rotate((self.cx,self.cy),(a,b,c,d,e,f))
+
+            # some blocks still wind up in the wrong quadrant. :/
+            # i thought this might fix it but it didn't...
+            #if cx < 0: cx = -cx
+            #if cy < 0: cy = -cy 
+                       
+            self.ode_matrix = (a,b,0,c,d,0,e,f,1)
+            #print r #"cx, cy = (%s,%s)" % (cx, cy)
+        else:
+            self.ode_matrix = None
+    
+        room.addGeom(pixel2world(self.cx, self.cy), px2w(self.width), px2w(self.height),
+                   transform=self.ode_matrix)
+
 
     def __str__(self):
         my =self
@@ -207,6 +229,8 @@ class ArcPath:
         self.fill = fill
         self.id = id
 
+    def toGeom(self, room):
+        room.addGeom(pixel2world(self.cx, self.cy), px2w(self.rx), px2w(self.ry))
 
 
 # now we just loop through the tags in the SVG file
@@ -416,6 +440,10 @@ IDENTITY2D = [1.0, 0.0,       # a b
 
 class RoomFromRectsTest(unittest.TestCase):
 
+    def setUp(self):
+        self.svgh = SvgHandler() 
+        xml.sax.parseString(SCENE, self.svgh)
+
     def testPlain(self):
         """Did we get a plain identity matrix?
         
@@ -423,7 +451,8 @@ class RoomFromRectsTest(unittest.TestCase):
         should just get back the identity matrix
         (it's of course the default for ode.Geom)
         """
-        rm = roomFromRects([Rect(0, 0, width=100, height=10,)])
+        self.svgh.rects = [Rect(0, 0, width=100, height=10)]
+        rm = roomFromShapes(self.svgh)
         self.assertEquals(IDENTITY3D, rm.blocks[0].getRotation())
 
     def testIdentity(self):
@@ -433,8 +462,8 @@ class RoomFromRectsTest(unittest.TestCase):
         identity matrix then we should
         still get the 3D one back
         """
-        rm = roomFromRects([Rect(0, 0, width=100, height=10,
-                                 transform=IDENTITY2D)])
+        self.svgh.rects = [Rect(0, 0, width=100, height=10, transform=IDENTITY2D)]
+        rm = roomFromShapes(self.svgh)
         self.assertEquals(IDENTITY3D, rm.blocks[0].getRotation())
 
 
@@ -451,8 +480,9 @@ class RoomFromRectsTest(unittest.TestCase):
         d =  math.cos(math.pi)
         e =  0
         f =  0
-        rm = roomFromRects([Rect(0, 0, width=100, height=10,
-                                 transform=[a,b,c,d,e,f])])
+
+        self.svgh.rects = [Rect(0, 0, width=100, height=10, transform=[a,b,c,d,e,f])]
+        rm = roomFromShapes(self.svgh)
         self.assertEquals(
             [a, b, 0,
              c, d, 0,
@@ -463,35 +493,16 @@ class RoomFromRectsTest(unittest.TestCase):
 
 from rotate import rotate
 
-def roomFromRects(rects):
+def roomFromShapes(handler):
     """
     here's where we actually do the work.
     """
     rm = Room()
     #print rects
-    for r in rects:        
-        cx = r.x + (r.width / 2.0)
-        cy = r.y + (r.height / 2.0)
-        
-        if r.transform:
-            a, b, c, d, e, f = r.transform
-           
-            # rotate the "original" center back to new position
-            # (see rotate.py for why we need this):
-            cx, cy = rotate((cx,cy),(a,b,c,d,e,f))
-
-            # some blocks still wind up in the wrong quadrant. :/
-            # i thought this might fix it but it didn't...
-            #if cx < 0: cx = -cx
-            #if cy < 0: cy = -cy 
-                       
-            ode_matrix = (a,b,0,c,d,0,e,f,1)
-            #print r #"cx, cy = (%s,%s)" % (cx, cy)
-        else:
-            ode_matrix = None
-    
-        rm.addGeom(pixel2world(cx, cy), px2w(r.width), px2w(r.height),
-                   transform=ode_matrix)
+    for r in handler.rects:        
+        r.toGeom(rm)
+    for a in handler.arcs:
+        a.toGeom(rm)
     return rm
             
 
@@ -513,25 +524,19 @@ def roomFromRects(rects):
 
 # helper routines:
 
-def rectsFromFile(f):
+def shapesFromFile(f):
     """Get Rect objects from a given svg file.
     """
     svg = SvgHandler()
     xml.sax.parse(f, svg)
-    return svg.rects
+    return svg
 
-def arcsFromFile(f):
-    """Get ArcPath objects from a given svg file.
-    """
-    svg = SvgHandler()
-    xml.sax.parse(f, svg)
-    return svg.arcs
 
 def roomFromFile(f):
     """
     most likely, this is the one you want to call.
     """
-    return roomFromRects(rectsFromFile(f))
+    return roomFromShapes(shapesFromFile(f))
 
 
  
