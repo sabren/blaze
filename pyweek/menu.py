@@ -1,10 +1,9 @@
 from events import MENU
-from states import State, EXIT
+from states import State, EXIT, Scores
 from game import Game
 import images
 import eventnet.driver
 from pygame.locals import *
-from scores import Scores
 
 class Menu(State):
 

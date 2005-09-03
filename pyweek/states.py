@@ -1,8 +1,7 @@
 """
 here we define some states for our console.
 """
-import eventnet.driver
-import pygame, display, sys
+import pygame, display, sys, eventnet.driver, images
 from pygame.locals import *
 
 # Menu moved to menu.py
@@ -41,6 +40,15 @@ class State(Ticker):
         """
         self.done = False
 
+class Scores(State):
+
+    def kick(self):
+        super(Scores, self).kick()
+        self.display.showImage(0,0, images.SCORES)
+
+    def EVT_KeyDown(self, event):
+        if not self.done:
+            self.done = True
 
 class Exit(State):
     """
