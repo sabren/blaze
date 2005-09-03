@@ -246,6 +246,26 @@ class SoundManager:
 	music.play(-1)
 	music.set_volume(1.0)
 
+    def PauseMusic(self):
+        self._unp_PauseMusic(1)
+
+    def UnPauseMusic(self):
+        self._unp_PauseMusic(0)
+
+
+    def _unp_PauseMusic(self, p):
+        try:
+            music = pygame.mixer.music
+        except:
+            music = None
+
+        if music:
+            if p:
+                music.pause()
+            else:
+                music.unpause()
+        
+
 
 
 
