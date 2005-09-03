@@ -87,7 +87,7 @@ class Display:
         """
         self.fonts[str(size)] = pygame.font.Font (None, int(size))
 
-    def text(self, words, size, pos=[0, 0], color=(255, 0, 0, 255),
+    def text(self, words, size, pos=[0, 0], color=(0, 0, 0),
              justify=None):
         """
         Blit some text. I like text!
@@ -158,9 +158,9 @@ def test(self):
         imanager.blit ("player.png", (55, 275))
         #imanager.blit ("foreground.png")
 
-        display.text ("T-Rex sure does love his waffles!", 30, [320, 80], (0, 0, 0, 255), Display.LEFT)
-        display.text ("T-Rex sure does love his waffles!", 30, [320, 100], (0, 0, 0, 255), Display.CENTER)
-        display.text ("T-Rex sure does love his waffles!", 30, [320, 120], (0, 0, 0, 255), Display.RIGHT)
+        display.text ("T-Rex sure does love his waffles!", 30, [320, 80], (0, 255, 0), Display.LEFT)
+        display.text ("T-Rex sure does love his waffles!", 30, [320, 100], (0, 255, 0), Display.CENTER)
+        display.text ("T-Rex sure does love his waffles!", 30, [320, 120], (0, 255, 0), Display.RIGHT)
 
         display.flip()
 
