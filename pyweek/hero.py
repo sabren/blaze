@@ -153,7 +153,8 @@ class Bird(eventnet.driver.Handler):
         density = float(totalfatmass / self.hlthcfg.fatspace)
         #density = float(density)
         mass = ode.Mass()
-        mass.setSphere(density, self.radius)
+        mass.setSphere(density*0.01, self.radius)
+	print "DENSITY:", density * 0.01
         self.bird.setMass(mass)
 	#print "MASS: ", mass
 
