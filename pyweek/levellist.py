@@ -7,18 +7,20 @@ import os
 
 import states
 from states import State
-from events import GAME
+from events import GAME, LEVELLIST
 import eventnet.driver
 from constants import *
 from health import Food
 import sounds
 from render import SpriteGear
 from statusbox import StatusBox
+from pygame import locals as pg
 
 from display import MockDisplay
 from display import Display
 from controls import Controller
 from render import BlockSprite, randomlyColoredSquare
+from game import Game
 import pygame
 
 class LevelList(State):
@@ -33,7 +35,7 @@ class LevelList(State):
         self.status.capture()
 	self.display = display
 
-	roomList = os.listdir ("./rooms/")
+	roomList = os.listdir (ROOM.DIRECTORY)
 
 	display.addFont (self.FONTSIZE)
 
@@ -59,18 +61,31 @@ class LevelList(State):
 	print "DOWN"
 	self.selected += 1
 
-	if self.selected > len(self.roomList):
-		self.selected = len(self.roomList)
+	if self.selected >= len(self.roomList):
+		self.selected = len(self.roomList)-1
 
     def EVT_LEVELLIST_UP(self, event):
         #self.hero.run(LEFT)
-	self.seleced-=1
+	self.selected-=1
 
 	if self.selected < 0:
 		self.selected = 0
 
-    def EVT_LEVELLIST_QUIT(self, event):
+    def EVT_LEVELLIST_ENTER(self, event):
         self.done = True
+        print "SELECTED %s" % self.roomList[self.selected]        
+        self.next = Game(self.display,
+                         roomName=self.roomList[self.selected])
+        
+    def EVT_KeyDown(self, event):
+        if not self.done:
+            if event.key == pg.K_UP:
+                eventnet.driver.post(LEVELLIST.UP)
+            elif event.key == pg.K_DOWN:
+                eventnet.driver.post(LEVELLIST.DOWN)
+            elif event.key == pg.K_RETURN:
+                eventnet.driver.post(LEVELLIST.ENTER)
+            
 
     def tick(self):
 	self.display.clear()
@@ -90,6 +105,8 @@ class LevelList(State):
         
     def kick(self):
         super(LevelList, self).kick()
+        self.selected = 0
+        self.tick()
         
 
 if __name__=="__main__":
