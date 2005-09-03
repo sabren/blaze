@@ -7,7 +7,7 @@ class RoomPhysics:
         self.world = room.world
         self.space = room.space
         self.coefficient = drag
-        self.friction = 5000
+        self.friction = 0.05
         self.world.setGravity(PHYSICS.GRAVITY) # in our world y++ is down. :)
         self.world.setERP(PHYSICS.ERP) 
         self.world.setCFM(PHYSICS.CFM) 

@@ -9,7 +9,7 @@ class BirdTest(unittest.TestCase):
         from roomphysics import RoomPhysics
         self.r = room.Room()
         self.bird = Bird(self.r, (50.0, 50.0))
-        self.bird.SPEED = 10
+        self.bird.SPEED = 1000
         self.rp = RoomPhysics(self.r, self.bird.geom.getBody())
         self.steps = 100 # steps to take
 
@@ -133,7 +133,8 @@ class Bird(eventnet.driver.Handler):
 
     
     def getPosition(self):
-        """Get the position of our intrepid hero-kiwi.
+        """
+        Get the position of our intrepid hero-kiwi.
         """
         return self.geom.getPosition()[:2] # x,y, but not z
 
@@ -152,10 +153,11 @@ class Bird(eventnet.driver.Handler):
         # density = mass * volume... sorta.  Okay, so we're fudging it.
         # The units are all arbitrary anyway. :)
         density = float(totalfatmass / self.hlthcfg.fatspace)
+        density = 1
         #density = float(density)
         mass = ode.Mass()
-        mass.setSphere(density*0.01, self.radius)
-	print "DENSITY:", density * 0.01
+        mass.setSphere(density, self.radius)
+	print "DENSITY:", density
         self.body.setMass(mass)
 	#print "MASS: ", mass
 
@@ -165,9 +167,11 @@ class Bird(eventnet.driver.Handler):
         Pass in the 2d vector that you want the hero to travel in
         and the force you want to apply.
         """
-        self.body.addForce((x, y, 0))
-        a,b,c = self.geom.getPosition()
-        self.geom.setPosition((a+x,b+y,c))
+        assert x != 0
+        #import pdb; pdb.set_trace()
+        self.geom.getBody().addForce((x*5000000, 300, 0))
+        #a,b,c = self.geom.getPosition()
+        #self.geom.setPosition((a+x,b+y,c))
 
     def walk(self, direction):
         """Do the bird walk.
@@ -196,13 +200,15 @@ class Bird(eventnet.driver.Handler):
         self.metabolism.exert(force*2)
 
     def step(self):
-        """Do the step thing.
+        """
+        Do the step thing.
         """
         self.metabolism.step()
 
     # Okay, here are the events we'll want to handle.
     def EVT_HEALTH_FAT_CHANGED(self, event):
-        """When our fat changes, update our mass.
+        """
+        When our fat changes, update our mass.
         """
         self.updateMass()
 

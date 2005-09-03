@@ -9,6 +9,7 @@ from events import GAME
 import pygame.locals as pg
 import eventnet.driver
 from constants import *
+from health import Food
 
 """
 Okay. So the Game object is the main routine for the
@@ -85,7 +86,7 @@ def makeTestRoom():
     ## @TODO: clean this up. :)
     heroPos = (100,100)
     rm.hero = Bird(rm, heroPos)
-    rm.physics = RoomPhysics(rm, rm.hero.geom.getBody())
+    rm.physics = RoomPhysics(rm, drag=-0.01)
     return rm
 
 #############################################################
@@ -127,6 +128,7 @@ class Game(State):
     def tick(self):
         self.room.physics.step()
         self.room.hero.step()
+        self.room.hero.metabolism.eat(Food(5,5))
         #print self.room.hero.geom.getPosition()
         
 
@@ -202,7 +204,7 @@ if __name__=="__main__":
 
         screen = disp.screen
         screen.blit(background, (0,0))
-        game.manual = True
+        game.manual = False
         while not con.done:
             pygame_events()
             group.update()
