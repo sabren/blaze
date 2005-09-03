@@ -157,7 +157,7 @@ class Game(State):
     def tick(self):
         self.room.physics.step()
         self.room.hero.step()
-        self.room.hero.metabolism.eat(Food(5,5)) # hack to lower metabolism
+        self.room.hero.metabolism.eat(Food(5,5, self.room, (0,0))) # hack to lower metabolism
         self.controls.tick()
         self.sprites.tick()
         
