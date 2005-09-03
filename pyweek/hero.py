@@ -124,7 +124,6 @@ class Bird(eventnet.driver.Handler):
         self.hlthcfg = health.HealthModelConfig()
         self.metabolism = health.HealthModel(self.hlthcfg)
         
-        
         # Creates a box for collision detection.
         self.geom = self.room.addBlock(position, 2*self.radius, 2*self.radius)
 	self.geom.setPosition ((position[0], position[1], 0))
@@ -152,21 +151,18 @@ class Bird(eventnet.driver.Handler):
         totalfatmass = self.hlthcfg.fatmass * self.metabolism.getFat()
         # density = mass * volume... sorta.  Okay, so we're fudging it.
         # The units are all arbitrary anyway. :)
-        density = float(totalfatmass / self.hlthcfg.fatspace)
+        density = float(totalfatmass / self.hlthcfg.fatspace )
         density = 1
-        #density = float(density)
         mass = ode.Mass()
         mass.setSphere(density, self.radius)
-	print "DENSITY:", density
         self.body.setMass(mass)
-	#print "MASS: ", mass
 
     def move(self, (x, y)):
         """Generic move method to move the hero.
 
         Pass in the 2d vector that you want the hero to travel in
         and the force you want to apply.
-        """        
+        """
         self.geom.getBody().addForce((x*PHYSICS.SCALEFORCE,
                                       y*PHYSICS.SCALEFORCE, 0))
 
