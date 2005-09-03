@@ -124,13 +124,10 @@ class SpriteGear(Gear):
         self.heroSprite =BlockSprite(rm.hero, self.heroRight)
         self.sprites.add(self.heroSprite)
 
-        try:
-            self.foreground = pygame.image.load("rooms/%s-fore.png") % rmName
-            newBack = pygame.image.load("rooms/%s-back.png") % rmName
-            self.background.blit(newBack, (0,0),((0,0),(540,480)))
-            self.refresh()
-        except:
-            pass
+        self.foreground = pygame.image.load("rooms/%s-fore.png" % rmName)
+        newBack = pygame.image.load("rooms/%s-back.png" % rmName)
+        self.background.blit(newBack, (0,0),((0,0),(540,480)))
+        self.refresh()
 
     def EVT_GAME_LEFT(self, event):
         self.heroSprite.image = self.heroLeft
