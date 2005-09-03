@@ -123,10 +123,10 @@ class Game(State):
                 pygame.image.load(IMAGE.SOCCER)))
         
         else:
-            self.room = loader.roomFromFile(open(ROOM.DIRECTORY+roomName))
+            self.room = loader.roomFromFile(open(ROOM.DIRECTORY+roomName+"-geom.svg"))
 
             
-        self.sprites.fromRoom(self.room)
+        self.sprites.fromRoom(self.room, roomName)
         # finally, note the hero:
         self.hero = self.room.hero
         

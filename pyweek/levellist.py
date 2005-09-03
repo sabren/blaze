@@ -47,7 +47,7 @@ class LevelList(State):
 			if x[len(x)-4:] == ".svg":
 				self.roomList.append (x)
 				
-
+        self.roomList = ["outside","joe1"]
 	self.levelCount = len(self.roomList)
 
 
@@ -67,7 +67,6 @@ class LevelList(State):
     def EVT_LEVELLIST_UP(self, event):
         #self.hero.run(LEFT)
 	self.selected-=1
-
 	if self.selected < 0:
 		self.selected = 0
 
@@ -98,7 +97,7 @@ class LevelList(State):
 		else:
 			color = (200,200,200,255)
 
-		self.display.text (x[:len(x)-4], self.FONTSIZE, [320, 240-len(self.roomList)*self.FONTSIZE/1.3+i*self.FONTSIZE/1.3], color, Display.CENTER)
+		self.display.text (x[:len(x)], self.FONTSIZE, [320, 240-len(self.roomList)*self.FONTSIZE/1.3+i*self.FONTSIZE/1.3], color, Display.CENTER)
 		i+=1
 
 	self.display.flip()

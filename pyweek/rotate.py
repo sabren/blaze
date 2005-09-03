@@ -87,9 +87,9 @@ if it were in the main loop, but since it's just for the loader:
 import math
 def rotate((x,y), (a,b,c,d,e,f)):
     # these are some characteristics of a well formed rotation:
-    assert e == f == 0, "can't handle other kinds of matrices"
-    assert a == d, "a should equal d, but %s!=%s" % (a,d)
-    assert b == -c, "b should equal -c, but %s!=%s" % (b, -c)
+    #assert e == f == 0, "can't handle other kinds of matrices"
+    #assert a == d, "a should equal d, but %s!=%s" % (a,d)
+    #assert b == -c, "b should equal -c, but %s!=%s" % (b, -c)
     newx = (x * a) - (y * c)    
     newy = (x * b) + (y * d)
     return (newx, newy)

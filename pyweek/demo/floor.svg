@@ -58,5 +58,14 @@
        height="5.1631207"
        x="1.2907799"
        y="442.56738" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#ff0000;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#000000;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"
+       id="path1860"
+       sodipodi:cx="123.91489"
+       sodipodi:cy="188.92908"
+       sodipodi:rx="7.7446809"
+       sodipodi:ry="7.0992908"
+       d="M 131.65957 188.92908 A 7.7446809 7.0992908 0 1 1  116.17021,188.92908 A 7.7446809 7.0992908 0 1 1  131.65957 188.92908 z" />
   </g>
 </svg>

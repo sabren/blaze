@@ -85,8 +85,8 @@ class WithForeground(pygame.sprite.RenderUpdates):
 class SpriteGear(Gear):
     def __init__(self, display):
         super(SpriteGear, self).__init__(display)
+        self.foreground = None
         self.background = pygame.image.load(IMAGE.GAME)        
-        self.foreground = pygame.image.load("demo/gravdemo-fore.png")        
         fgSprite = pygame.sprite.Sprite()
         #fgSprite.image = self.foreground
         fgSprite.image = pygame.surface.Surface((1, 1))
@@ -105,22 +105,32 @@ class SpriteGear(Gear):
         probably don't need to call this yourself.
         """
         self.screen.blit(self.background, (0,0))
-        self.screen.blit(self.foreground, (0,0))
+        if self.foreground:
+            self.screen.blit(self.foreground, (0,0))
         pygame.display.flip()
 
         
     def tick(self):
         self.sprites.update()
-        rects = self.sprites.draw(self.screen)    
-        for r in rects:
-            self.screen.blit(self.foreground, r,r)
+        rects = self.sprites.draw(self.screen)
+        if self.foreground:
+            for r in rects:
+                self.screen.blit(self.foreground, r,r)
         pygame.display.update(rects)
         self.sprites.clear(self.screen, self.background)
 
-    def fromRoom(self, rm):  
+    def fromRoom(self, rm, rmName):  
         # make sprites based on the content of the level
         self.heroSprite =BlockSprite(rm.hero, self.heroRight)
         self.sprites.add(self.heroSprite)
+
+        try:
+            self.foreground = pygame.image.load("rooms/%s-fore.png") % rmName
+            newBack = pygame.image.load("rooms/%s-back.png") % rmName
+            self.background.blit(newBack, (0,0),((0,0),(540,480)))
+            self.refresh()
+        except:
+            pass
 
     def EVT_GAME_LEFT(self, event):
         self.heroSprite.image = self.heroLeft

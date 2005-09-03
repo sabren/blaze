@@ -41,9 +41,6 @@ if "2d" in sys.argv:
     sys.argv.remove("2d")
     DIMENSIONS=2
 
-    #def pixel2world(a,b): return (a,b)
-    #def px2w(a): return a
-    #def world2pixel(a,b): return (a,b)
     
 else:
     DIMENSIONS=3
@@ -59,6 +56,7 @@ else:
 
 camx, camy, camz = (-0.5, -0.5, 1.)
 camx, camy, camz = -0.5, 0., -1.0
+camx, camy, camz = -50, 0., -10
 
 
 rot_keys = {}
@@ -295,7 +293,7 @@ okay, the next problem is that the floor is now
 going to fall along with everything else. So we
 need to fix it in place. That's what addGeom is for:
 """
-#floor = rm.addGeom(pixel2world(WIDTH/2, HEIGHT-25), px2w(WIDTH), px2w(50))
+floor = rm.addGeom(pixel2world(WIDTH/2, HEIGHT-25), px2w(WIDTH), px2w(50))
 
 
 class myBlockSprite(render.BlockSprite):
@@ -310,11 +308,11 @@ class myBlockSprite(render.BlockSprite):
             y = (new_pos[1] - self.old_position[1])
 
 
-            self.rect.move_ip(world2pixel(x,y))
+            self.rect.move_ip(x,y)
             self.old_position = new_pos
         else:
             self.old_position = map(round, self.block.getPosition()[:2])
-            self.rect.center = world2pixel( *map(round, self.block.getPosition()[:2]) )
+            self.rect.center =  map(round, self.block.getPosition()[:2])
 
 	
 
@@ -361,7 +359,7 @@ doneMakingBlocks = True
 
 # Let's put our bird in and see if he can fly. Er, walk.
 import hero, health
-bird = hero.Bird(rm, pixel2world(400, 10), px2w(32))
+bird = hero.Bird(rm, (400, 10))
 bird.SPEED = 1
 #bird.move((0,-10))
 #bird.walk(1)
