@@ -157,7 +157,7 @@ class Game(State):
         
     def kick(self):
         super(Game, self).kick()
-        self.display.showImage(0,0,IMAGE.GAME)
+        self.sprites.refresh()
         
 
 if __name__=="__main__":

@@ -85,18 +85,31 @@ class WithForeground(pygame.sprite.RenderUpdates):
 class SpriteGear(Gear):
     def __init__(self, display):
         super(SpriteGear, self).__init__(display)
-        self.background = pygame.image.load("demo/gravdemo-back.png")        
-        self.foreground = pygame.image.load("demo/gravdemo-fore.png")
-        self.foreground = pygame.surface.Surface((1, 1))
+        self.background = pygame.image.load(IMAGE.GAME)        
+        self.foreground = pygame.image.load("demo/gravdemo-fore.png")        
         fgSprite = pygame.sprite.Sprite()
-        fgSprite.image = self.foreground
-        fgSprite.rect = self.foreground.get_rect()
+        #fgSprite.image = self.foreground
+        fgSprite.image = pygame.surface.Surface((1, 1))
+        fgSprite.rect = fgSprite.image.get_rect()
         self.sprites = WithForeground(fgSprite)
         self.screen = self.display.screen
+        self.refresh()
+
+    def refresh(self):
+        """
+        refresh the screen completely. you
+        probably don't need to call this yourself.
+        """
+        self.screen.blit(self.background, (0,0))
+        self.screen.blit(self.foreground, (0,0))
+        pygame.display.flip()
+
         
     def tick(self):
         self.sprites.update()
         rects = self.sprites.draw(self.screen)    
+        for r in rects:
+            self.screen.blit(self.foreground, r,r)
         pygame.display.update(rects)
         self.sprites.clear(self.screen, self.background)
 
