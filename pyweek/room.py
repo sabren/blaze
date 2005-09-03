@@ -1,4 +1,3 @@
-
 """
 Our first goal is to create the world, which will hold
 the whole physics simulation. We'll use the the example
@@ -78,16 +77,25 @@ class Room(object):
         """
         # i think z++ is "into" the screen, but it doesn't matter..
         front=ode.GeomBox(self.space, lengths=[WIDTH,HEIGHT,THICKNESS])
-        front.setPosition((WIDTH/2,HEIGHT/2,THICKNESS * -1.5))
+        front.setPosition((WIDTH/2,HEIGHT/2,THICKNESS * (-1.5)))
         
         back=ode.GeomBox(self.space, lengths=[WIDTH,HEIGHT,THICKNESS])
         back.setPosition((WIDTH/2,HEIGHT/2,THICKNESS * 1.5))
 
         left=ode.GeomBox(self.space, lengths=(THICKNESS, HEIGHT, THICKNESS*3))
-        left.setPosition((THICKNESS * -1.5, HEIGHT/2, 0))
+        left.setPosition((-THICKNESS/2, HEIGHT/2, 0))
 
         right=ode.GeomBox(self.space, lengths=(THICKNESS, HEIGHT, THICKNESS*3))
-        right.setPosition((WIDTH+(THICKNESS * -1.5), HEIGHT/2, 0))
+        right.setPosition((WIDTH+(THICKNESS/2), HEIGHT/2, 0))
+
+        top = ode.GeomBox(self.space, lengths=(WIDTH, THICKNESS, THICKNESS*3))
+        top.setPosition((WIDTH/2, -THICKNESS/2, 0))
+
+        # don't touch the floor! it's lava!
+        pit = ode.GeomBox(self.space, lengths=(WIDTH, THICKNESS, THICKNESS*3))
+        pit.setPosition((WIDTH/2, HEIGHT+THICKNESS/2, 0))
+        self.floor = pit
+        
 
     def addGeom(self, (cx, cy), w, h, transform=None):
         #ref: http://ode.org/ode-latest-userguide.html#sec_12_4_0
