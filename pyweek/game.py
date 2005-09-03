@@ -153,7 +153,9 @@ class SoundEvents(states.Ticker):
         print "HI!!!"
     def EVT_COLLIDE_PIT(self, event):
         print "HI!!!"
-
+    def EVT_GAME_JUMP(self, event):
+        self.sound_manager.Play("bip")
+        
 
 if __name__=="__main__":
     import sys
