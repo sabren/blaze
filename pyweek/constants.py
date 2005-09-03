@@ -31,6 +31,11 @@ class CALORIES:
     RUN = 3
     JUMP = 5
     
+class COLORS:
+    HERO = "#000000"
+    GOAL = "#FF0000"
+    EGG = "#0000FF"
+    BALL = "#0000FF"
 
 class REPEAT:
     TICKS = 10 # number of ticks before a key repeats
