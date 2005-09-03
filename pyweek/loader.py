@@ -62,7 +62,11 @@ map to a rotation in pyODE...
 # assuming that we're only dealing with a single
 # layer - the that defines the blocks.
 
+# Okay, we now also care about paths, which are what
+# svg calls circles.
+
 # here is how inkscape saves a rotated rectangle:
+# and a path:
 
 SCENE =\
     '''
@@ -77,6 +81,15 @@ SCENE =\
        x="102.61992"
        y="58.551853"
        transform="matrix(0.854241,0.519878,-0.519878,0.854241,0.000000,0.000000)" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#000000;"
+       id="path1538"
+       sodipodi:cx="210.55852"
+       sodipodi:cy="136.12589"
+       sodipodi:rx="12.101064"
+       sodipodi:ry="12.101064"
+       />
        </g>
     '''
 
@@ -84,40 +97,81 @@ SCENE =\
 # and here's how we want the parsing to work:
 
 class ParserTest(unittest.TestCase):
-    """
-    test that we can get a list
-    of rectangles from the svg file,
-    in this case we want the one rectangle
+    """Does the parser work?
+    
+    test that we can get a list of rectangles and paths from the svg
+    file, in this case we want the one rectangle and one path, as
     defined in the string above.
     """
+    def setUp(self):
+        self.svgh = SvgHandler() 
+        xml.sax.parseString(SCENE, self.svgh)
+        self.r = self.svgh.rects[0]
+        self.p = self.svgh.arcs[0]
 
-    def test(self):
-        svgh = SvgHandler() 
-        xml.sax.parseString(SCENE, svgh)
+    def testRectHandler(self):
+        """Is the handler handling rects?
+        """
+        assert type(self.svgh.rects) is list
+        assert len(self.svgh.rects) == 1
 
-        assert type(svgh.result) is list
-        assert len(svgh.result) == 1
+    def testRect(self):
+        """Are we getting rects as expected?
+        """
+        assert isinstance(self.r, Rect)
 
-        r = svgh.result[0]
-        assert isinstance(r, Rect)
+        self.assertEquals(float(u"102.61992"), self.r.x)
+        self.assertEquals(float(u"198.86618"), self.r.width)
+        self.assertEquals(float(u"21.259426"), self.r.height)
 
-        self.assertEquals(float(u"102.61992"), r.x)
-        self.assertEquals(float(u"198.86618"), r.width)
-        self.assertEquals(float(u"21.259426"), r.height)
-        self.assertEquals(float(u"58.551853"), r.y)
+        self.assertEquals(float(u"58.551853"), self.r.y)
 
         self.assertEquals([0.854241,0.519878,-0.519878,
                            0.854241,0.000000,0.000000],
-                           r.transform)
+                           self.r.transform)
 
+    def testArcPathHandler(self):
+        """Is the handler handling paths?
+        """
+        assert type(self.svgh.arcs) is list
+        assert len(self.svgh.arcs) == 1
 
+    def testArcPaths(self):
+        """Are we getting paths as expected?
+        """
+        assert isinstance(self.p, ArcPath)
+
+    def testArcPathType(self):
+        """Are we getting the path type?
+        """
+        self.assertEquals(u"arc", self.p.type)
+
+    def testArcPathFill(self):
+        """Are we getting the path fill?
+        """
+        self.assertEquals(u"#000000", self.p.fill)
+    def testArcPathCx(self):
+        """Are we getting the path cx?
+        """
+        self.assertEquals(float(u"210.55852"), self.p.cx)
+    def testArcPathCy(self):
+        """Are we getting the path cy?
+        """
+        self.assertEquals(float(u"136.12589"), self.p.cy)
+    def testArcPathRx(self):
+        """Are we getting th path rx?
+        """
+        self.assertEquals(float(u"12.101064"), self.p.rx)
+    def testArcPathRy(self):
+        """Are we getting th path ry?
+        """
+        self.assertEquals(float(u"12.101064"), self.p.ry)
 
 # so... to make that work, we need to define an
 # object to hold our rectangle data:
 
 class Rect:
-    """
-    A simple data class for representing rectangles.
+    """A simple data class for representing rectangles.
     """
     def __init__(self, x=0, y=0, width=0, height=0, transform=None, id=None):
         self.x = x
@@ -132,10 +186,27 @@ class Rect:
         return ((self.width / 2.0 + self.x),
                 (self.height / 2.0 + self.y))
 
+    def toGeom(self, room):
+        pass
+
     def __str__(self):
         my =self
         return "Rect(x=%s,y=%s,w=%s,h=%s,t=%s,id='%s')" \
               % (my.x,my.y,my.width,my.height,my.transform, my.id)
+
+# We're also going to make an object to hold our path data.
+class ArcPath:
+    """A simple data class for representing paths of sodipodi:type="arc".
+    """
+    def __init__(self, type="arc", cx=0.0, cy=0.0, rx=0.0, ry=0.0, fill="#FFFFFF", id=None):
+        self.type = type
+        self.cx = cx
+        self.cy = cy
+        self.rx = rx
+        self.ry = ry
+        self.fill = fill
+        self.id = id
+
 
 
 # now we just loop through the tags in the SVG file
@@ -147,28 +218,65 @@ class Rect:
 # svgh = SvgHandler() 
 # xml.sax.parseString(xml_string, svgh)
 
+class SvgHandlerError(Exception): pass
+class NotAnArcPath(SvgHandlerError): pass
 
 class SvgHandler(xml.sax.ContentHandler):
     """
     parse the SVG file and build a list of rects
     """
     def __init__(self):
-        self.result = []
+        self.rects = []
+        self.arcs = []
 
     def startElement(self, name, attrs):
         if name =="rect":
-            r = Rect()
-            self.result.append(r)
+            self.getRect(attrs)
+        if name == "path":
+            try:
+                self.getArcPath(attrs)
+            except NotAnArcPath:
+                pass
 
-            for attr, value in attrs.items():
-                if attr in ["x","width","height"]:
-                    setattr(r, attr, float(value))
-                elif attr == "y":
-                    r.y = float(value) #@TODO: HEIGHT
-                elif attr == "id":
-                    r.id = value
-                elif attr == "transform":
-                    r.transform = parseMatrix(value)
+    def getRect(self, attrs):
+        """Create a Rect object from the given SVG attributes.
+        """
+        r = Rect()
+
+        for attr, value in attrs.items():
+            if attr in ["x","width","height"]:
+                setattr(r, attr, float(value))
+            elif attr == "y":
+                r.y = float(value) #@TODO: HEIGHT
+            elif attr == "id":
+                r.id = value
+            elif attr == "transform":
+                r.transform = parseMatrix(value)
+        self.rects.append(r)
+
+    def getArcPath(self, attrs):
+        """Create an ArcPath object from the given SVG attributes.
+        """
+        p = ArcPath()
+        for attr, value in attrs.items():
+            if attr == "sodipodi:type":
+                if value == "arc":
+                    self.type = value
+                else:
+                    raise NotAnArcPath, "Path must be of type \"arc\".  Is %s." % value
+            elif attr in ["sodipodi:cx", "sodipodi:cy", "sodipodi:rx", "sodipodi:ry"]:
+                setattr(p, attr[9:], float(value)) # Chop off the sodipodi:
+            elif attr == "id":
+                p.id = value
+            elif attr == "style":
+                for pair in value.split(";"):
+                    k,v = pair.split(":")
+                    if k == "fill":
+                        p.fill = v
+                        break
+                
+        self.arcs.append(p)
+
 
 
 
@@ -222,7 +330,9 @@ We didn't test it yet, though, so:
 """
 
 class RectCenterTest(unittest.TestCase):
-    def test(self):
+    def testRectCenter(self):
+        """Did we calculate the rect center correctly?
+        """
         r = Rect(0, 10, width=100, height=9)
         self.assertEquals((50, 14.5), r.getCenter())
 
@@ -307,7 +417,8 @@ IDENTITY2D = [1.0, 0.0,       # a b
 class RoomFromRectsTest(unittest.TestCase):
 
     def testPlain(self):
-        """
+        """Did we get a plain identity matrix?
+        
         if we don't pass in a transformation, we
         should just get back the identity matrix
         (it's of course the default for ode.Geom)
@@ -316,7 +427,8 @@ class RoomFromRectsTest(unittest.TestCase):
         self.assertEquals(IDENTITY3D, rm.blocks[0].getRotation())
 
     def testIdentity(self):
-        """
+        """Did we get a 3D identity matrix?
+        
         if we pass in a 2D version of the
         identity matrix then we should
         still get the 3D one back
@@ -327,7 +439,8 @@ class RoomFromRectsTest(unittest.TestCase):
 
 
     def testRotation(self):
-        """
+        """Did we get a rotated 3D matrix?
+        
         if we pass in a real matrix, then it
         should give us the 3D matrix.
         """
@@ -373,7 +486,7 @@ def roomFromRects(rects):
             #if cy < 0: cy = -cy 
                        
             ode_matrix = (a,b,0,c,d,0,e,f,1)
-            print r #"cx, cy = (%s,%s)" % (cx, cy)
+            #print r #"cx, cy = (%s,%s)" % (cx, cy)
         else:
             ode_matrix = None
     
@@ -401,9 +514,18 @@ def roomFromRects(rects):
 # helper routines:
 
 def rectsFromFile(f):
+    """Get Rect objects from a given svg file.
+    """
     svg = SvgHandler()
     xml.sax.parse(f, svg)
-    return svg.result
+    return svg.rects
+
+def arcsFromFile(f):
+    """Get ArcPath objects from a given svg file.
+    """
+    svg = SvgHandler()
+    xml.sax.parse(f, svg)
+    return svg.arcs
 
 def roomFromFile(f):
     """

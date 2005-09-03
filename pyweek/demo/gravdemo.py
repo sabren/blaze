@@ -362,6 +362,9 @@ doneMakingBlocks = True
 # Let's put our bird in and see if he can fly. Er, walk.
 import hero, health
 bird = hero.Bird(rm, pixel2world(400, 10), px2w(32))
+bird.SPEED = 1
+bird.move((0,-10))
+bird.walk(1)
 
 
 ### collision stuff ######################
@@ -457,11 +460,11 @@ while going:
             doneMakingBlocks = True
 
     # Walk the bird.
-    try: bird.walk(-1)
-    except health.NotEnoughCalories:
+    #try: bird.walk(1)
+    #except health.NotEnoughCalories:
         # Got to keep our strength up...
-        food = health.Food(1000, 5000)
-        bird.metabolism.eat(food)
+        #food = health.Food(1000, 5000)
+        #bird.metabolism.eat(food)
     
     # this is a hack for if they fall off the floor
     # if I don't do this, then they just keep acellerating
