@@ -18,8 +18,8 @@ class Controller(Gear):
             pg.K_x : GAME.QUIT,
             pg.K_RIGHT : GAME.RIGHT,
             pg.K_LEFT : GAME.LEFT,
-            pg.K_UP : LEVELLIST.UP,
-            pg.K_DOWN : LEVELLIST.DOWN,
+            pg.K_UP : GAME.UP,
+            pg.K_DOWN : GAME.DOWN,
             pg.K_SPACE : GAME.JUMP,
         }
 
