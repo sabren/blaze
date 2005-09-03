@@ -46,5 +46,6 @@ class IMAGE:
     SOCCER = "data/soccer.png"
     class KIWI:
         RIGHT="data/kiwi/right.png"
+        LEFT="data/kiwi/left.png"
 
 
