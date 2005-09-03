@@ -23,14 +23,14 @@ class Controller(Gear):
             pg.K_SPACE : GAME.JUMP,
         }
 
-    """def EVT_KeyDown(self, event):
+    def EVT_KeyDown(self, event):
         if event.key in self.keymap:
             eventnet.driver.post(self.keymap[event.key])
             self.buttonsDown.append(self.keymap[event.key])
 
     def EVT_KeyUp(self, event):
         if event.key in self.keymap:
-            self.buttonsDown.remove(self.keymap[event.key])"""
+            self.buttonsDown.remove(self.keymap[event.key])
 
     def tick(self):
         self.ticks += 1
