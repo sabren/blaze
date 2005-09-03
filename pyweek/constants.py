@@ -39,6 +39,16 @@ class SOUND:
     MUSIC="data/music/1takeimprov.ogg"
 
 
+# geom codes for physics
+class CODE: 
+    BALL = 0  # DO NOT CHANGE THESE TOP TWO! THE SORTING ORDER IS 
+    HERO = 1  # VERY IMPORTANT DUE TO OUR UGLY HACK ROOMPHYSICS.COLLIDE!
+    WALL = 2
+    FOOD = 3
+    GOAL = 4  # the goal for the soccer ball
+    EGG  = 5  
+    PIT  = 6  # the bottomless pit
+
 class IMAGE:    
     MENU="menu.png"
     SCORES='high_scores.png'
