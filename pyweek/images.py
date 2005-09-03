@@ -10,5 +10,5 @@ HELP='help.png'
 GAME="data/game.png" # main room for the game
 
 class KIWI:
-    PLAIN="data/kiwi/plain.png"
+    RIGHT="data/kiwi/right.png"
 

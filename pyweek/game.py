@@ -173,7 +173,7 @@ if __name__=="__main__":
         rm = game.room
 
         #add the hero
-        group.add(BlockSprite(rm.hero, pygame.image.load(images.KIWI.PLAIN)))
+        group.add(BlockSprite(rm.hero, pygame.image.load(images.KIWI.RIGHT)))
         rm.hero.setPosition((150,SCREEN.HEIGHT-100))
         # and a floor:
         group.add(BlockSprite(
