@@ -12,7 +12,7 @@ Install.
 -------------
 
 Requires:
-- python2.4 ( http://www.python.org/ )
+- python2.3 or greater ( http://www.python.org/ )
 - pygame ( http://www.pygame.org )
 - pyode ( http://pyode.sourceforge.net/ )
 
