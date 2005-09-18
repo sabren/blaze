@@ -3,7 +3,8 @@ from constants import LEFT, RIGHT, HERO, CALORIES, PHYSICS
 import unittest
 
 class BirdTest(unittest.TestCase):
-    """We're going to flip the Bird, er I mean, test it.
+    """
+    We're going to flip the Bird, er I mean, test it.
     """
     def setUp(self):
         from roomphysics import RoomPhysics
@@ -14,28 +15,31 @@ class BirdTest(unittest.TestCase):
         self.steps = 100 # steps to take
 
     def testBirdSit(self):
-        """Sit bird, don't go anywhere.
+        """
+        Sit bird, don't go anywhere.
         """
         oldposition = self.bird.getPosition()
         print "SITTING - Was at:", oldposition
         for x in range(self.steps):
             self.rp.step()
             newposition = self.bird.getPosition()
-            print "Now at:", newposition
+            #print "Now at:", newposition
         self.assertEqual(newposition, oldposition)
     
     def testBirdMoveRight(self):
-        """Can the bird move right?
+        """
+        Can the bird move right?
         """
         oldposition = self.bird.getPosition()[0]
         self.bird.move((30,0))
         self.rp.step()
         newposition = self.bird.getPosition()[0]
-        print "Was at: %s, now at: %s" % (oldposition, newposition)
+        #print "Was at: %s, now at: %s" % (oldposition, newposition)
         assert newposition > oldposition
 
     def testBirdMoveLeft(self):
-        """Can the bird move left?
+        """
+        Can the bird move left?
         """
         oldposition = self.bird.getPosition()[0]
         self.bird.move((-30,0))
@@ -46,7 +50,8 @@ class BirdTest(unittest.TestCase):
 
 
     def testBirdWalkRight(self):
-        """Take a step to the right.
+        """
+        Take a step to the right.
         """
         oldposition = self.bird.getPosition()[0]
         print "WALK RIGHT - Was at: %s" % oldposition
@@ -54,11 +59,12 @@ class BirdTest(unittest.TestCase):
         for x in range(self.steps):
             self.rp.step()
             newposition = self.bird.getPosition()[0]
-            print "Now at: %s" % newposition
+            #print "Now at: %s" % newposition
         assert newposition > oldposition
 
     def testBirdWalkLeft(self):
-        """Take a step to the left.
+        """
+        Take a step to the left.
         """
         oldposition = self.bird.getPosition()[0]
         self.bird.walk(-1)
@@ -70,7 +76,8 @@ class BirdTest(unittest.TestCase):
         
     def testBirdRun(self):
 	# This test should be scrapped most likely
-        """Run, kiwi, run!
+        """
+        Run, kiwi, run!
         """
         oldposition = self.bird.getPosition()
         self.bird.run(1)
@@ -83,7 +90,8 @@ class BirdTest(unittest.TestCase):
         #self.assertNotEqual(newposition, newerposition)
         
     def testBirdJump(self):
-        """JUMP!!!!
+        """
+        JUMP!!!!
         """
         oldposition = self.bird.getPosition()
         self.bird.jump()
@@ -93,7 +101,8 @@ class BirdTest(unittest.TestCase):
 
 
     def testBirdMass(self):
-        """Bird should gain mass when it eats.
+        """
+        Bird should gain mass when it eats.
 
         What is the mass of an unladen kiwi?
         """
@@ -108,8 +117,8 @@ class BirdTest(unittest.TestCase):
 import eventnet.driver
 from constants import CODE # Michal's UgLy hack. :)
 class Bird(eventnet.driver.Handler):
-    """A plump little kiwi bird who likes physics, eggs, and running around.
-    
+    """
+    A plump little kiwi bird who likes physics, eggs, and running around.
     """
     def __init__(self, room, position):
         """This function sets us up the bird.
@@ -143,7 +152,8 @@ class Bird(eventnet.driver.Handler):
         self.geom.setPosition((x,y,0))
 
     def updateMass(self):
-        """Updates the mass of the hero by adjusting his density.
+        """
+        Updates the mass of the hero by adjusting his density.
         
         This function can be called when the hero eats or uses
         energy.
@@ -160,7 +170,8 @@ class Bird(eventnet.driver.Handler):
         self.body.setMass(mass)
 
     def move(self, (x, y)):
-        """Generic move method to move the hero.
+        """
+        Generic move method to move the hero.
 
         Pass in the 2d vector that you want the hero to travel in
         and the force you want to apply.
@@ -169,7 +180,8 @@ class Bird(eventnet.driver.Handler):
                                       y*PHYSICS.SCALEFORCE, 0))
 
     def walk(self, direction):
-        """Do the bird walk.
+        """
+        Do the bird walk.
 
         if value is positive, walk right.
         if value is negative, walk left.
@@ -180,7 +192,8 @@ class Bird(eventnet.driver.Handler):
         self.metabolism.exert(CALORIES.WALK)
 
     def run(self, direction):
-        """Run, kiwi, run!
+        """
+        Run, kiwi, run!
 
         if the value is positive, walk right.
         if the value is negative, walk right.
