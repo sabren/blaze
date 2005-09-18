@@ -44,15 +44,23 @@ class ImageManager:
         """
         if filename in self.images:
             return self.images[filename][1]
-            
+
+
 
 
 class MockDisplay(object):
     """
     fake display for testing.
     """
+    def __init__(self):
+        self.screen = self # @TODO: why does render.py need this?
     def flip(self): pass
     def showImage(self, x,y, filename): pass
+    def addFont(self, size): pass
+    def clear(self): pass
+    def text(*args): pass
+    def update(self, *kw): pass
+    def blit(self, *args): pass
 
 
 
@@ -122,6 +130,15 @@ class Display:
         Fill the buffer with.. color!
         """
         self.buffer.fill (color)
+
+    def update(self, rects):
+        """
+        this is just so we can pass in a mock object in test
+        """
+        pygame.display.update(rects)
+
+    def blit(self, *args):
+        self.screen.blit(*args)
 
 
     def showImage(self, x,y, filename):

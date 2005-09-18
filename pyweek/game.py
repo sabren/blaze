@@ -76,7 +76,6 @@ class GameTest(unittest.TestCase):
 # goal: GAME_up to go up (ladder) or through door
 
 
-TEST_ROOM = "**this is a special flag to load the test room"
 
 from room import Room
 from hero import Bird
@@ -97,7 +96,7 @@ import pygame
 
 class Game(State):
 
-    def __init__(self, display, roomName=TEST_ROOM):
+    def __init__(self, display, roomName=ROOM.TEST_ROOM):
 	import loader
 
         super(Game, self).__init__(display) #@TODO: fix me!
@@ -114,7 +113,7 @@ class Game(State):
         for bar in self.status.bars.values():
             self.sprites.sprites.add(bar)
 
-        if roomName == TEST_ROOM:
+        if roomName == ROOM.TEST_ROOM:
             self.room = makeTestRoom()
             # a block to play with:
             self.sprites.sprites.add(

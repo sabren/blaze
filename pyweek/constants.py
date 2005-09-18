@@ -26,6 +26,7 @@ class ROOM:
     WIDTH = 540
     HEIGHT = 480
     DIRECTORY = "./rooms/"
+    TEST_ROOM = "**this is a special flag to load the test room"
     
 class CALORIES:
     WALK = 1

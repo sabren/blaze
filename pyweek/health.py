@@ -1,4 +1,5 @@
-"""health.py -- keep track of our hero's health.
+"""
+health.py -- keep track of our hero's health.
 
 Okay, we're going to need:
 
@@ -15,10 +16,12 @@ HelthModel and HealthModelConfig.
 
 Here, let me show a usage example:
 """
-import unittest
+import unittest, room
+
 class ExampleTest(unittest.TestCase):
     def setUp(self):
-        """Don't worry about this.
+        """
+        Don't worry about this.
 
         This will just keep eventnet from complaining about our
         unhandled events in the test.
@@ -26,7 +29,8 @@ class ExampleTest(unittest.TestCase):
         pass
         
     def testHealthExample(self):
-        """We need a working tutorial.
+        """
+        We need a working tutorial.
 
         And here it is!
         """
@@ -79,13 +83,14 @@ class ExampleTest(unittest.TestCase):
         self.assertEqual(h.getFat(), 4945)
 
         # Sugar recovery is slow, so let's eat something.
-        cake = Food(320, 10) # 320 calories from sugar, 10 from fat
+        rm = room.Room()
+        cake = Food(320, 10, rm, (10,10)) # 320 calories from sugar, 10 from fat
         h.eat(cake)
         self.assertEqual(h.getBlood(), 325)
         self.assertEqual(h.getFat(), 4955)
 
         # Much better.  But we're still hungry.
-        powerbar = Food(700, 0)
+        powerbar = Food(700, 0, rm, (10,10))
         # MMmmm... carbs...
         h.eat(powerbar)
         self.assertEqual(h.getBlood(), 1000)
@@ -113,7 +118,7 @@ class ExampleTest(unittest.TestCase):
         # In this case, it's 0.5 fat for every sugar
 
         # Hey kid, would you like some candy?
-        candy = Food(102, 0)
+        candy = Food(102, 0, rm, (50,50))
         h.eat(candy)
         self.assertEqual(h.getBlood(), 1100)
         # Looks like we've got high blood sugar.
@@ -132,7 +137,7 @@ class ExampleTest(unittest.TestCase):
         hc = HealthModelConfig()         ## set up default model config
         h = HealthModel(hc)              ## initialize a new model
         h.exert(level=5)                 ## exertion burns calories.
-        food = Food(sugar=100, fat=100)  ## food can have different nutritional values
+        food = Food(sugar=100, fat=100, room=rm, position=(50,50))  ## food can have different nutritional values
         h.eat(food)                      ## eating increases blood sugar and body fat
         h.step()                         ## updates the model, handles blood sugar and insulin
 
@@ -142,7 +147,8 @@ It's that simple.  Read on for the rest of the tests and code.
 
 
 class CalorieBankTest(unittest.TestCase):
-    """We would like a Calorie Bank to keep track of deposits and
+    """
+    We would like a Calorie Bank to keep track of deposits and
     withdrawals.
 
     It'll just be a simple calorie accountant, who will complain
@@ -153,32 +159,37 @@ class CalorieBankTest(unittest.TestCase):
 
     # calorie report
     def testReport(self):
-        """We'll need a report of how many calories we have.
+        """
+        We'll need a report of how many calories we have.
         """
         self.assertEqual(100, self.c.getCalories())
 
     # add calories
     def testAdd(self):
-        """We need to be able to add calories.
+        """
+        We need to be able to add calories.
         """
         self.c.addCalories(50)
         self.assertEqual(150, self.c.getCalories())
 
     # use calories
     def testBurn(self):
-        """We need to be able to burn calories.
+        """
+        We need to be able to burn calories.
         """
         self.c.burnCalories(50)
         self.assertEqual(50, self.c.getCalories())
 
 
     def testDontUseTooMany(self):
-        """We need to raise an exception if we burn too many.
+        """
+        We need to raise an exception if we burn too many.
         """
         self.assertRaises(NotEnoughCalories, self.c.burnCalories, 150)
 
     def testGetImbalance(self):
-        """If we use too many calories, we need to know the debt.
+        """
+        If we use too many calories, we need to know the debt.
 
         We're going to pass this as an argument to the exception.
         Whoever is burning the calories will have to deal with it.
@@ -190,7 +201,8 @@ class CalorieBankTest(unittest.TestCase):
 
 class HealthError(Exception): pass
 class NotEnoughCalories(HealthError):
-    """CalorieBank throws this when you burn too many calories.
+    """
+    CalorieBank throws this when you burn too many calories.
 
     The calories left to burn are stored in calories_short
     """
@@ -199,7 +211,8 @@ class NotEnoughCalories(HealthError):
         self.calories_short = args
 
 class CalorieBank:
-    """Calories == Energy.  Eat lots, don't work too hard.
+    """
+    Calories == Energy.  Eat lots, don't work too hard.
 
     This is just a simple class that gets used by the HealthModel.
     """
@@ -207,17 +220,20 @@ class CalorieBank:
         self.__calories = calories
 
     def getCalories(self):
-        """How many calories do I have left?
+        """
+        How many calories do I have left?
         """
         return self.__calories
 
     def addCalories(self, calories):
-        """Yum.  Calories.
+        """
+        Yum.  Calories.
         """
         self.__calories = self.__calories + calories
 
     def burnCalories(self, calories):
-        """Getting more hungry...
+        """
+        Getting more hungry...
 
         If we burn more calories than we have, then we throw a
         NotEnoughCalories exception and pass along the debt.
@@ -244,53 +260,62 @@ Exertion:
 """
 
 class HealthModelConfigTest(unittest.TestCase):
-    """This is how we'll configure our health model.
+    """
+    This is how we'll configure our health model.
     """
     def setUp(self):
         self.c = HealthModelConfig()
         
     def testConfigStartFat(self):
-        """Initial fat calories
+        """
+        Initial fat calories
         """
         self.assertEqual(self.c.startfat, 5000)
 
     def testConfigStartBlood(self):
-        """We need initial blood sugar calories
+        """
+        We need initial blood sugar calories
         """
         self.assertEqual(self.c.startblood, 1000)
 
     def testConfigBloodLimit(self):
-        """We need a blood sugar limit after which we convert to fat.
+        """
+        We need a blood sugar limit after which we convert to fat.
         """
         self.c.bloodlimit = 1000
         self.assertEqual(self.c.bloodlimit, 1000)
 
     def testConfigExertionRatio(self):
-        """We need the number of calories to burn per exertion level.
+        """
+        We need the number of calories to burn per exertion level.
         """
         self.c.exertionratio = 50
         self.assertEqual(self.c.exertionratio, 50)
 
     def testConfigLowBloodLevel(self):
-        """We need a low blood sugar level.
+        """
+        We need a low blood sugar level.
         """
         self.c.lowbloodlevel = 100
         self.assertEqual(self.c.lowbloodlevel, 100)
 
     def testConfigRecoveryRate(self):
-        """We need a rate to restore low blood sugar.
+        """
+        We need a rate to restore low blood sugar.
         """
         self.c.bloodrecoveryrate = 5
         self.assertEqual(self.c.bloodrecoveryrate, 5)
 
     def testConfigBaseInsulinRate(self):
-        """We need a base rate at which to burn blood sugar.
+        """
+        We need a base rate at which to burn blood sugar.
         """
         self.c.baseinsulinrate = 2
         self.assertEqual(self.c.baseinsulinrate, 2)
 
     def testConfigInsulinRatio(self):
-        """We need a ratio to figure the high blood sugar penalty.
+        """
+        We need a ratio to figure the high blood sugar penalty.
 
         For every calorie above the high blood sugar limit, insulin
         will kill this many calories.
@@ -298,7 +323,8 @@ class HealthModelConfigTest(unittest.TestCase):
         self.assertEqual(self.c.insulinratio, 10)
 
     def testConfigInsulin2FatRatio(self):
-        """We need a ratio of the calories converted by insulin to fat.
+        """
+        We need a ratio of the calories converted by insulin to fat.
 
         For every blood sugar calorie converted by insulin, this many
         go to fat.  Ought to be a float between 0 and 1
@@ -306,7 +332,8 @@ class HealthModelConfigTest(unittest.TestCase):
         self.assertEqual(self.c.insulin2fatratio, 0.5)
 
 class HealthModelConfig:
-    """Configuration for our Health Model.
+    """
+    Configuration for our Health Model.
 
     We set up our configurations, then pass this to our health model
     when we initialize.
@@ -348,24 +375,33 @@ class HealthModelConfig:
         self.suppressinsulin = False
         # Set the insulin2fat conversion ratio
         self.insulin2fatratio = 0.5
+
+        #@TODO: these units are whatever ode uses. document!!
         # Set the amount of mass/fat calorie
-        self.fatmass = 1
+        self.fatmass = 0.0001
         # Set the space taken up by a fat calorie
         self.fatspace = 1
 
 class FoodTest(unittest.TestCase):
-    """We'll need food to eat to give us calories.
+    """
+    We'll need food to eat to give us calories.
     """
     def setUp(self):
-        self.f = Food(150, 10) # Sugar, fat
+        rm = room.Room()
+        self.f = Food(150, 10, rm, (50,50)) # Sugar, fat
 
     def testFoodPhysics(self):
-        """Food is a physical object, yes?
         """
-        assert isinstance(self.f.geom, ode.GeomSphere)
+        Food is a physical object, yes?
+        """
+        # this used to be an isinstance() test
+        # but we don't really care about that,
+        # only that it's something like an ode.GeomXXX
+        assert self.f.geom.getPosition()
 
     def testFoodCalories(self):
-        """Must... eat... food...
+        """
+        Must... eat... food...
         """
         self.assertEqual(self.f.consumed(), (150,10))
 
@@ -373,19 +409,23 @@ import ode, constants
 from constants import HERO
 from constants import CODE # Michal's UgLy hack. :)
 class Food:
-    """Food is for the eatin'.  Or sub-classing.
+    """
+    Food is for the eatin'.  Or sub-classing.
 
     Consume all flesh!
     """
     def __init__(self, sugar, fat, room, position):
         self.nutrition = (sugar, fat)
-        self.room = room
+        # @TODO: food should BE a geom, not own one. :(
         self.radius = HERO.RADIUS
-        self.geom = self.room.addBlock(position, 2*self.radius, 2*self.radius)
+        self.room = room    
+        self.geom = self.room.addBlock(position,
+                                       2*self.radius, 2*self.radius)
         self.geom.code = CODE.FOOD
 
     def consumed(self):
-        """You have been eaten by a large kiwi bird.
+        """
+        You have been eaten by a large kiwi bird.
 
         Hope you invested in life insurance.  Have a nice day.
 
@@ -398,19 +438,19 @@ class Food:
     
 
 class HealthModelTest(unittest.TestCase):
-    """This is what a HealthModel is going to do.
+    """
+    This is what a HealthModel is going to do.
     """
     def setUp(self):
         """
         We're going to explicitly declare our defaults, in case the
         coded defaults change.  They're not really important.
         """
-        import events
         self.c = HealthModelConfig()
         self.c.startfat = 5000
         self.c.startblood = 1000
         self.c.bloodlimit = 1000
-        self.c.setexertionratio = 50
+        self.c.exertionratio = 50
         self.c.lowbloodlevel = 100
         self.c.bloodrecoveryrate = 5
         self.c.baseinsulinrate = 2
@@ -418,34 +458,30 @@ class HealthModelTest(unittest.TestCase):
         self.c.insulin2fatratio = 0.5
         self.h = HealthModel(self.c)
         self.h.capture()
-        self.f = Food(100, 100)
+        rm = room.Room()
+        self.f = Food(100, 100, rm, (200,200))
 
-    def testConfig(self):
-        """We'll need to retrieve our configuration.
+    def testReports(self):
         """
-        self.assertEqual(self.h.config, self.c)
-
-    def testFatReport(self):
-        """We'll need a fat calorie report.
-        """
-        self.assertEqual(self.h.getFat(), 5000)
-
-    def testBloodReport(self):
-        """We'll need a blood sugar calorie report.
+        We'll need a fat calorie report.
         """
         self.assertEqual(self.h.getBlood(), 1000)
-
+        self.assertEqual(self.h.getFat(), 5000)
 
     def testExertion(self):
-        """We should be able to exert ourselves.
+        """
+        We should be able to exert ourselves.
 
         This should lower our available blood sugar calories.
         """
+        self.assertEqual(1000, self.h.getBlood())
+        self.assertEqual(50, self.h.config.exertionratio)
         self.h.exert(1)
-        self.assertEqual(self.h.getBlood(), 950)
+        self.assertEqual(950, self.h.getBlood())
 
     def testStrenuousExertion(self):
-        """Let's use more calories than our blood sugar has.
+        """
+        Let's use more calories than our blood sugar has.
 
         The remainder should be burned from fat calories.
         """
@@ -453,7 +489,8 @@ class HealthModelTest(unittest.TestCase):
         self.assertEqual(self.h.getFat(), 4950)
 
     def testEat(self):
-        """Chow down!  Can we?
+        """
+        Chow down!  Can we?
 
         Of course, eating food raises your blood sugar.
         The fat goes straight to your hips.
@@ -465,34 +502,39 @@ class HealthModelTest(unittest.TestCase):
         self.assertEqual(self.h.getBlood(), 1000)
 
     def testInsulin(self):
-        """Blood sugar should burn at a normal rate.
+        """
+        Blood sugar should burn at a normal rate.
         """
         self.h.step()
         self.assertEqual(self.h.getBlood(), 998)
 
     def testEatSweets(self):
-        """Too much sugar should trigger an insulin response.
+        """
+        Too much sugar should trigger an insulin response.
         """
         self.h.eat(self.f)
         self.h.step()
         self.assertEqual(self.h.getBlood(), 98 ) # Insulin kills 2+10*100 calories
 
     def testSugarCrashEvent(self):
-        """Losing too much sugar all at once should trigger a SUGAR_CRASH
+        """
+        Losing too much sugar all at once should trigger a SUGAR_CRASH
         """
         self.h.eat(self.f)
         self.h.step()
         
 
     def testEatSweetsGetFat(self):
-        """An insulin response converts some sugar to fat.
+        """
+        An insulin response converts some sugar to fat.
         """
         self.h.eat(self.f)
         self.h.step()
         self.assertEqual(self.h.getFat(), 5601) # Insulin produces (2+10*100)*0.5 calories of fat
 
     def testLowBloodSugar(self):
-        """Low blood sugar should recover from fat.
+        """
+        Low blood sugar should recover from fat.
         """
         self.h.exert(20) # Burn 1000 calories.
         self.assertEqual(self.h.getBlood(), 0)
@@ -509,7 +551,8 @@ from events import HEALTH
 
 
 class HealthModel(eventnet.driver.Handler):
-    """With this health model, we'll keep track of our hero's health.
+    """
+    With this health model, we'll keep track of our hero's health.
 
     A HealthModel needs a HealthModelConfig and a HealthModelHandler.
     """
@@ -526,7 +569,8 @@ class HealthModel(eventnet.driver.Handler):
         return self.blood.getCalories()
 
     def exert(self, level):
-        """Exertion burns calories.
+        """
+        Exertion burns calories.
 
         Level is multiplied by ExertionRatio to get number of
         calories burned.
@@ -543,7 +587,8 @@ class HealthModel(eventnet.driver.Handler):
         self.postBloodChanged()
 
     def eat(self, food):
-        """Eat food.  Keep your strength up.
+        """
+        Eat food.  Keep your strength up.
 
               BURGER TIME!
               Oh boy!
@@ -571,7 +616,8 @@ class HealthModel(eventnet.driver.Handler):
         
 
     def step(self):
-        """Update the model.
+        """
+        Update the model.
 
         Things this will do:
         * If blood sugar is low, recover from fat.

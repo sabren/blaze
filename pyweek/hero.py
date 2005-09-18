@@ -14,17 +14,16 @@ class BirdTest(unittest.TestCase):
         self.rp = RoomPhysics(self.r, self.bird.geom.getBody())
         self.steps = 100 # steps to take
 
-    def testBirdSit(self):
+    def testBirdGravity(self):
         """
-        Sit bird, don't go anywhere.
+        The kiwi bird in the sky keeps on falling:
         """
-        oldposition = self.bird.getPosition()
-        print "SITTING - Was at:", oldposition
+        oldx, oldy = self.bird.getPosition()
         for x in range(self.steps):
             self.rp.step()
-            newposition = self.bird.getPosition()
-            #print "Now at:", newposition
-        self.assertEqual(newposition, oldposition)
+        newx, newy = self.bird.getPosition()
+        self.assertEqual(oldx, newx)
+        assert newy > oldy # down is ++
     
     def testBirdMoveRight(self):
         """
@@ -107,7 +106,7 @@ class BirdTest(unittest.TestCase):
         What is the mass of an unladen kiwi?
         """
         initialmass = self.bird.body.getMass().mass
-        food = health.Food(0,100)
+        food = health.Food(0,100, self.bird.room, (50,50))
         self.bird.metabolism.eat(food)
         self.bird.updateMass()
         newmass = self.bird.body.getMass().mass
@@ -163,8 +162,7 @@ class Bird(eventnet.driver.Handler):
         totalfatmass = self.hlthcfg.fatmass * self.metabolism.getFat()
         # density = mass / volume... sorta.  Okay, so we're fudging it.
         # The units are all arbitrary anyway. :)
-        density = float(totalfatmass / self.hlthcfg.fatspace )
-        density = 1
+        density = float(totalfatmass / self.hlthcfg.fatspace)
         mass = ode.Mass()
         mass.setSphere(density, self.radius)
         self.body.setMass(mass)

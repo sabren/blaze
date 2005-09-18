@@ -4,7 +4,7 @@ sprite rendering engine
 import unittest
 import pygame.sprite
 from states import Gear
-from constants import SPRITE_SIZE, IMAGE
+from constants import SPRITE_SIZE, IMAGE, ROOM
 import random
 from ode_to_pixel import *
 
@@ -92,7 +92,6 @@ class SpriteGear(Gear):
         fgSprite.rect = fgSprite.image.get_rect()
         fgSprite.rect.topleft = IMAGE.STATUS.TEXT_POS
         self.sprites = WithForeground(fgSprite)
-        self.screen = self.display.screen
         self.refresh()        
 
         self.heroSprite = None
@@ -104,29 +103,29 @@ class SpriteGear(Gear):
         refresh the screen completely. you
         probably don't need to call this yourself.
         """
-        self.screen.blit(self.background, (0,0))
+        self.display.blit(self.background, (0,0))
         if self.foreground:
-            self.screen.blit(self.foreground, (0,0))
-        pygame.display.flip()
+            self.display.blit(self.foreground, (0,0))
+        self.display.flip()
 
         
     def tick(self):
         self.sprites.update()
-        rects = self.sprites.draw(self.screen)
+        rects = self.sprites.draw(self.display.screen)
         if self.foreground:
             for r in rects:
-                self.screen.blit(self.foreground, r,r)
-        pygame.display.update(rects)
-        self.sprites.clear(self.screen, self.background)
+                self.display.blit(self.foreground, r, r)
+        self.display.update(rects)
+        self.sprites.clear(self.display, self.background)
 
     def fromRoom(self, rm, rmName):  
         # make sprites based on the content of the level
         self.heroSprite =BlockSprite(rm.hero, self.heroRight)
         self.sprites.add(self.heroSprite)
-
-        self.foreground = pygame.image.load("rooms/%s-fore.png" % rmName)
-        newBack = pygame.image.load("rooms/%s-back.png" % rmName)
-        self.background.blit(newBack, (0,0),((0,0),(540,480)))
+        if rmName != ROOM.TEST_ROOM:
+            self.foreground = pygame.image.load("rooms/%s-fore.png" % rmName)
+            newBack = pygame.image.load("rooms/%s-back.png" % rmName)
+            self.background.blit(newBack, (0,0),((0,0),(540,480)))
         self.refresh()
 
     def EVT_GAME_LEFT(self, event):

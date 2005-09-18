@@ -57,8 +57,14 @@ class ConsoleTest(unittest.TestCase):
         #@TODO: test pause here..
         
         # now we should be in the game mode
+        assert isinstance(con.state, LevelList),\
+               "clicking play should take us to the level list"
+
+        eventnet.driver.post(LEVELLIST.ENTER)
+        con.tick()
         assert isinstance(con.state, Game),\
-               "the game should start when we pick play"
+               "the game should start when we pick play" \
+               "expected Game state, got %s" % con.state
 
 
         # but let's quit back to the menu:
@@ -95,11 +101,11 @@ class Console(Gear):
             if next is EXIT:
                 self.done = True
             elif next is None:
-                print "no new state..."
+                #print "no new state..."
                 self.loadDefaultState()
             else:
                 self.state = self.state.next
-                print "new state: %s" % self.state
+                #print "new state: %s" % self.state
                 self.state.kick()
                 
 

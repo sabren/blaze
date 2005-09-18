@@ -41,8 +41,9 @@ class RoomTest(unittest.TestCase):
     """
     def testAddBlock(self):
         world = Room()
+        blockCount = len(world.blocks) # default hero, ball, etc...
         block = world.addBlock((40, 42), lx=5, ly=10)
-        assert len(world.blocks) == 1
+        assert len(world.blocks) == blockCount+1
         self.assertEquals((5, 10), block.getLengths()[:2])
         self.assertEquals((40,42), block.getPosition()[:2])
         assert block.getBody()
@@ -68,6 +69,7 @@ class Room(object):
     easier to set up.
     """
     def __init__(self):
+        self.ids = {} # map id to a block
         self.world = ode.World()
         self.space = ode.Space()
         self.blocks = []
@@ -103,7 +105,7 @@ class Room(object):
         self.floor = pit
         
 
-    def addGeom(self, (cx, cy), w, h, transform=None):
+    def addGeom(self, (cx, cy), w, h, transform=None, id=None):
         #ref: http://ode.org/ode-latest-userguide.html#sec_12_4_0
         #     "how can an immovable body be created?"
 
@@ -114,6 +116,7 @@ class Room(object):
         geom.shape = "box"
         geom.boxsize = [w, h, THICKNESS]
         self.blocks.append(geom)
+        self.ids[id]=geom
         return geom
     
     def addBlock(self, (cx, cy), lx, ly):

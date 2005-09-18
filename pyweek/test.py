@@ -4,14 +4,18 @@ this file just collects and runs
 all our tests...
 """
 import unittest
-from physics import *
+from physics import * 
 from loader import *
 from health import *
-from odetest import *
 from room import *
-from eventtest import *
-from game import *
+from game import *    
 from hero import *
 from main import *
+
+# these are more tests of our understanding:
+# (espionage)
+from eventtest import *
+from odetest import *
+
 unittest.main()
 
