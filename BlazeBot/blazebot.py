@@ -12,10 +12,18 @@ from testbot import *
 import string, time, os
 from cgi import escape
 
-# constants
-channel = '#trailblazer'
-nickname = 'BlazeBot'
-server = 'irc.freenode.net'
+class variables:
+
+    # constants
+    channel = '#trailblazer'
+    nickname = 'BlazeBot-test'
+    server = 'irc.freenode.net'
+
+    # other variables
+    admins = ['mcferrill', 'maia', 'nathortheri']
+    logging = True
+    blocklist = []
+    log = ''
 
 def make_log(s, title=time.strftime('%A, %B %d %Y', time.gmtime(time.time()))):
     '''
@@ -62,13 +70,47 @@ href="./@edit/file3" class="edit">Edit this document</a>.</address>
 
     # write finished HTML to file
     open(fn+'.html', 'w').write(html)
-    
+
+    # add entry to log index (IRCIntoLog on the site)
     description = '<p><a href="./%s">%s</a></p>' % (fn, title)
     index = open('IRCIntoLog.html').read()
     index = '\n'.join([index[:index.rfind('</p>')+4], description,
                        index[index.rfind('</p>')+4:]])
     open('IRCIntoLog.html', 'w').write(index)
 
+def stat():
+    return '\n'.join([
+        'Admins: '+', '.join(variables.admins),
+        'Logging: '+str(variables.logging),
+        'Blocked: '+', '.join(variables.blocklist)
+        ])+'\n'
+
+def command(cmd):
+    '''
+    commands function for control via IRC
+    '''
+    cmd = cmd[len('BOT: '):].split()
+    if cmd[0] == 'admin':
+        if not cmd[1] in variables.admins:
+            variables.admins.append(cmd[1])
+    elif cmd[0] == 'start':
+        variables.logging = True
+    elif cmd[0] == 'stop':
+        variables.logging = False
+    elif cmd[0] == 'ban':
+        if cmd[1] in variables.admins:
+            variables.admins.remove(cmd[1])
+    elif cmd[0] == 'block':
+        if cmd[1] not in variables.blocklist:
+            variables.blocklist.append(cmd[1])
+    elif cmd[0] == 'allow':
+        if cmd[1] in variables.blocklist:
+            variables.blocklist.remove(cmd[1])
+    elif cmd[0] == 'post':
+        make_log(variables.log)
+    elif cmd[0] == 'reset':
+        variables.log = ''
+        
 class BlazeBot(TestBot):
     '''
     the bot object for the program
@@ -81,22 +123,38 @@ class BlazeBot(TestBot):
     def on_pubmsg(self, c, e):
         '''
         when message is posted:
-        * check to see if we shoudl stop
+        * check to see if we should stop
         * if stop then post log and quit
         * if continue then add time, username, and message to log
+        --todo--
+        * more controls (see top of page)
+          * --admin--
+            * ban
+            * admin
+            * start
+            * stop
+            * post
+            * disconnect
+            * block
+            * reset
+          * -?-user-?-
         '''
         msg = e.arguments()[0]
         nick = nm_to_n(e.source())
-        if msg == 'STOPBOT' and nick == 'mcferrill':
-            make_log(self.log)
-            os.startfile('IRCIntoLog.html')
+        if msg == 'BOT: disconnect':
+            make_log(variables.log)
             self.die()
-        t = time.gmtime(time.time())
-        self.log += '%s <%s> %s\n' % (time.strftime('[%H:%M]', t), nick, msg)
+        elif msg[:5] == 'BOT: ' and nick in variables.admins:
+            command(msg)
+        else:
+            if variables.logging:
+                if nick not in variables.blocklist:
+                    t = time.gmtime(time.time())
+                    variables.log += '%s <%s> %s\n' % (time.strftime('[%H:%M]', t), nick, msg)
         return
 
 if __name__=='__main__':
-    bot = BlazeBot(channel, nickname, server)
+    bot = BlazeBot(variables.channel, variables.nickname, variables.server)
     bot.start()
 
 
