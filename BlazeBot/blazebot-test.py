@@ -26,6 +26,7 @@ class variables:
     admins = ['mcferrill', 'maia', 'nathortheri']
     logging = True
     blocklist = []
+    log = ''
 
 def make_log(s, title=time.strftime('%A, %B %d %Y', time.gmtime(time.time()))):
     '''
@@ -94,7 +95,6 @@ def command(cmd):
         variables.logging = True
     elif cmd[0] == 'stop':
         variables.logging = False
-        print 'stop'
     elif cmd[0] == 'ban':
         if cmd[1] in variables.admins:
             variables.admins.remove(cmd[1])
