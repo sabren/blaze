@@ -5,7 +5,6 @@ to http://blazeofglory.org/wiki as HTML pages
 will probably be controlled by a CGI script and placed in the /wiki/ directory
 ---todo---
 * add more event handlers
-* set up on the blaze site with controls
 '''
 
 from testbot import *
@@ -16,12 +15,12 @@ class variables:
 
     # constants
     channel = '#trailblazer'
-    nickname = 'BlazeBot-test'
+    nickname = 'BlazeBot'
     server = 'irc.freenode.net'
 
     # other variables
     admins = ['mcferrill', 'maia', 'nathortheri']
-    logging = True
+    logging = False
     blocklist = []
     log = ''
 
@@ -30,7 +29,7 @@ def make_log(s, title=time.strftime('%A, %B %d %Y', time.gmtime(time.time()))):
     function to parse logs into HTML, post them, and modify the log index
     accordingly
     '''
-    
+
     # add HTML header
     html = '''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" >
 
@@ -40,8 +39,8 @@ def make_log(s, title=time.strftime('%A, %B %d %Y', time.gmtime(time.time()))):
 <link rel="stylesheet" type="text/css" href="http://blazeofglory.org/wiki/style.css" />
 </head>
 <body>
-<center><iframe src="http://blazeofglory.org/main/nav.html" width="900" height="100" frameborder="0" scrolling="no"></iframe></center><div class="about">(<a href="./">home</a> | <a 
-href="./@meta/about">about</a> | <a 
+<center><iframe src="http://blazeofglory.org/main/nav.html" width="900" height="100" frameborder="0" scrolling="no"></iframe></center><div cl$
+href="./@meta/about">about</a> | <a
 href="./@info/file3">stats</a>)</div>
 
 <div class="content">
@@ -54,15 +53,15 @@ href="./@info/file3">stats</a>)</div>
     html += '''
 </div>
 
-<address>BlazeOfGlory.org. This is a <a 
-href="http://infomesh.net/pwyky/">pwyky</a> site. <a 
+<address>BlazeOfGlory.org. This is a <a
+href="http://infomesh.net/pwyky/">pwyky</a> site. <a
 href="./@edit/file3" class="edit">Edit this document</a>.</address>
 </body>
 </html>'''
 
     # make sure we're making a new file and not overwriting an old one
     fn = 'file'
-    if os.path.exists(fn):
+    if os.path.exists(fn+'.html'):
         num = 1
         while os.path.exists(fn+'.html'):
             num += 1
@@ -74,9 +73,10 @@ href="./@edit/file3" class="edit">Edit this document</a>.</address>
     # add entry to log index (IRCIntoLog on the site)
     description = '<p><a href="./%s">%s</a></p>' % (fn, title)
     index = open('IRCIntoLog.html').read()
-    index = '\n'.join([index[:index.rfind('</p>')+4], description,
-                       index[index.rfind('</p>')+4:]])
-    open('IRCIntoLog.html', 'w').write(index)
+    if not index.count(description):
+        index = '\n'.join([index[:index.rfind('</p>')+4], description,
+                           index[index.rfind('</p>')+4:]])
+        open('IRCIntoLog.html', 'w').write(index)
 
 def stat():
     return '\n'.join([
@@ -142,7 +142,7 @@ class BlazeBot(TestBot):
         msg = e.arguments()[0]
         nick = nm_to_n(e.source())
         if msg == 'BOT: disconnect':
-            make_log(variables.log)
+            if variables.log <> '': make_log(variables.log)
             self.die()
         elif msg[:5] == 'BOT: ' and nick in variables.admins:
             command(msg)
