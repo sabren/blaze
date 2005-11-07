@@ -3,8 +3,7 @@
 IRC Bot to record conversations in "#trailblazer" on "irc.freenode.net"
 to http://blazeofglory.org/wiki as HTML pages
 will probably be controlled by a CGI script and placed in the /wiki/ directory
----todo---
-* add more event handlers
+see "README.txt" for more information
 '''
 
 from testbot import *
