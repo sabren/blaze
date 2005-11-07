@@ -16,3 +16,13 @@ BOT: allow *nickname* <-- allow messages from *nickname* in log (default)
 BOT: post             <-- post current log to the website
 BOT: reset            <-- reset the log to an empty string
 BOT: disconnect       <-- post current log and terminate program
+
+TODO
+----
+* Add more event handlers
+    * "QUIT"
+    * "AWAY"
+    * "TOPIC"
+    * "NICK"
+    * "ME" ???
+    * etc.
