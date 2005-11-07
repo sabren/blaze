@@ -24,11 +24,12 @@ class variables:
     blocklist = []
     log = ''
 
-def make_log(s, title=time.strftime('%A, %B %d %Y', time.gmtime(time.time()))):
+def make_log(s):
     '''
     function to parse logs into HTML, post them, and modify the log index
     accordingly
     '''
+    title=time.strftime('%A, %B %d %Y', time.gmtime(time.time()))
 
     # add HTML header
     html = '''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" >
@@ -39,12 +40,12 @@ def make_log(s, title=time.strftime('%A, %B %d %Y', time.gmtime(time.time()))):
 <link rel="stylesheet" type="text/css" href="http://blazeofglory.org/wiki/style.css" />
 </head>
 <body>
-<center><iframe src="http://blazeofglory.org/main/nav.html" width="900" height="100" frameborder="0" scrolling="no"></iframe></center><div cl$
-href="./@meta/about">about</a> | <a
-href="./@info/file3">stats</a>)</div>
+<center><iframe src="http://blazeofglory.org/main/nav.html" width="900" height="100" frameborder="0" scrolling="no"></iframe></center><div class="about">(<a href="./">home</a> | <a 
+href="./@meta/about">about</a> | <a 
+href="./@info/%s">stats</a>)</div>
 
-<div class="content">
-<h1>%s</h1>''' % (title, title)
+<h1>%s</h1>
+<div class="content">''' % (title, title, title)
 
     # add all lines of the log as HTML paragraphs (so that we have line breaks)
     html += '\n'.join(['<p>%s</p>' % string.replace(escape(line),'}', '}}') for line in s.split('\n')])
@@ -65,18 +66,23 @@ href="./@edit/file3" class="edit">Edit this document</a>.</address>
         num = 1
         while os.path.exists(fn+'.html'):
             num += 1
+            prev = fn
             fn = 'file'+str(num)
 
-    # write finished HTML to file
-    open(fn+'.html', 'w').write(html)
-
-    # add entry to log index (IRCIntoLog on the site)
+    # see if we have a log entry for this already
     description = '<p><a href="./%s">%s</a></p>' % (fn, title)
     index = open('IRCIntoLog.html').read()
-    if not index.count(description):
+    if index.count(title):
+        fn = prev
+
+    else:
+        # add entry to log index (IRCIntoLog on the site)
         index = '\n'.join([index[:index.rfind('</p>')+4], description,
                            index[index.rfind('</p>')+4:]])
         open('IRCIntoLog.html', 'w').write(index)
+        
+    # write finished HTML to file
+    open(fn+'.html', 'w').write(html)
 
 def stat():
     return '\n'.join([
