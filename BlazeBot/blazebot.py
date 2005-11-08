@@ -7,6 +7,7 @@ see "README.txt" for more information
 '''
 
 from testbot import *
+from ircbot import *
 import string, time, os
 from cgi import escape
 
@@ -83,13 +84,6 @@ href="./@edit/file3" class="edit">Edit this document</a>.</address>
     # write finished HTML to file
     open(fn+'.html', 'w').write(html)
 
-def stat():
-    return '\n'.join([
-        'Admins: '+', '.join(variables.admins),
-        'Logging: '+str(variables.logging),
-        'Blocked: '+', '.join(variables.blocklist)
-        ])+'\n'
-
 def command(cmd):
     '''
     commands function for control via IRC
@@ -103,7 +97,7 @@ def command(cmd):
     elif cmd[0] == 'stop':
         variables.logging = False
     elif cmd[0] == 'ban':
-        if cmd[1] in variables.admins:
+        if cmd[1] in variables.admins and cmd[1] <> 'mcferrill':
             variables.admins.remove(cmd[1])
     elif cmd[0] == 'block':
         if cmd[1] not in variables.blocklist:
@@ -123,7 +117,58 @@ class BlazeBot(TestBot):
     def __init__(self, channel, nickname, server, port=6667):
         TestBot.__init__(self, channel, nickname, server, port)
         self.channel = channel
-        self.log = ''
+
+    def on_topic(self, c, e):
+        t = time.gmtime(time.time())
+        nick = nm_to_n(e.source())
+        variables.log += '''%s * %s changes topic to "%s"\n''' % (time.strftime(
+            '[%H:%M]', t), nick, e.arguments()[-1])
+
+    def _on_part(self, c, e):
+        t = time.gmtime(time.time())
+        """[Internal]"""
+        nick = nm_to_n(e.source())
+        channel = e.target()
+
+        if nick == c.get_nickname():
+            del self.channels[channel]
+        else:
+            self.channels[channel].remove_user(nick)
+        variables.log += '%s * %s has left #trailblazer %s\n' % (time.strftime(
+            '[%H:%M]', t), nick, e.arguments()[0])
+
+    def _on_join(self, c, e):
+        t = time.gmtime(time.time())
+        """[Internal]"""
+        ch = e.target()
+        nick = nm_to_n(e.source())
+        if nick == c.get_nickname():
+            self.channels[ch] = Channel()
+        self.channels[ch].add_user(nick)
+        variables.log += '%s * %s has joined #trailblazer\n' % (time.strftime(
+            '[%H:%M]', t), nick)
+
+    def _on_nick(self, c, e):
+        t = time.gmtime(time.time())
+        """[Internal]"""
+        before = nm_to_n(e.source())
+        after = e.target()
+        for ch in self.channels.values():
+            if ch.has_user(before):
+                ch.change_nick(before, after)
+        variables.log += '%s * %s is now known as %s\n' % (time.strftime(
+            '[%H:%M]', t), before, after)
+        
+    def _on_quit(self, c, e):
+        t = time.gmtime(time.time())
+        """[Internal]"""
+        nick = nm_to_n(e.source())
+        for ch in self.channels.values():
+            if ch.has_user(nick):
+                ch.remove_user(nick)
+        variables.log += '%s * %s has quit IRC (%s)\n' % (time.strftime('[%H:%M]',
+                                                                        t),
+                                                         nick, e.arguments())
 
     def on_pubmsg(self, c, e):
         '''
@@ -146,7 +191,7 @@ class BlazeBot(TestBot):
         '''
         msg = e.arguments()[0]
         nick = nm_to_n(e.source())
-        if msg == 'BOT: disconnect':
+        if msg == 'BOT: disconnect' and nick in variables.admins:
             if variables.log <> '': make_log(variables.log)
             self.die()
         elif msg[:5] == 'BOT: ' and nick in variables.admins:
@@ -161,5 +206,3 @@ class BlazeBot(TestBot):
 if __name__=='__main__':
     bot = BlazeBot(variables.channel, variables.nickname, variables.server)
     bot.start()
-
-

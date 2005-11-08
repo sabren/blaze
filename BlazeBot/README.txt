@@ -20,9 +20,6 @@ BOT: disconnect       <-- post current log and terminate program
 TODO
 ----
 * Add more event handlers
-    * "QUIT"
     * "AWAY"
-    * "TOPIC"
-    * "NICK"
     * "ME" ???
     * etc.
