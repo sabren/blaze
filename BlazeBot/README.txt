@@ -11,8 +11,6 @@ BOT: admin *nickname* <-- add *nickname* to controllers list
 BOT: ban *nickname*   <-- remove *nickname* from controllers
 BOT: start            <-- start recording a log
 BOT: stop             <-- stop recording the log (doubles as "pause")
-BOT: block *nickname* <-- don't allow messages from *nickname* in log
-BOT: allow *nickname* <-- allow messages from *nickname* in log (default)
 BOT: post             <-- post current log to the website
 BOT: reset            <-- reset the log to an empty string
 BOT: disconnect       <-- post current log and terminate program
