@@ -8,7 +8,7 @@ see "README.txt" for more information
 
 from testbot import *
 from ircbot import *
-import string, time, os
+import string, time, os, sys
 from cgi import escape
 
 class variables:
@@ -20,7 +20,7 @@ class variables:
 
     # other variables
     admins = ['mcferrill', 'maia', 'nathortheri']
-    logging = False
+    logging = True
     blocklist = []
     log = ''
 
@@ -99,12 +99,6 @@ def command(cmd):
     elif cmd[0] == 'ban':
         if cmd[1] in variables.admins and cmd[1] <> 'mcferrill':
             variables.admins.remove(cmd[1])
-    elif cmd[0] == 'block':
-        if cmd[1] not in variables.blocklist:
-            variables.blocklist.append(cmd[1])
-    elif cmd[0] == 'allow':
-        if cmd[1] in variables.blocklist:
-            variables.blocklist.remove(cmd[1])
     elif cmd[0] == 'post':
         make_log(variables.log)
     elif cmd[0] == 'reset':
@@ -118,6 +112,10 @@ class BlazeBot(TestBot):
         TestBot.__init__(self, channel, nickname, server, port)
         self.channel = channel
 
+    '''
+    event handlers
+    --------------
+    '''
     def on_topic(self, c, e):
         t = time.gmtime(time.time())
         nick = nm_to_n(e.source())
@@ -176,24 +174,13 @@ class BlazeBot(TestBot):
         * check to see if we should stop
         * if stop then post log and quit
         * if continue then add time, username, and message to log
-        --todo--
-        * more controls (see top of page)
-          * --admin--
-            * ban
-            * admin
-            * start
-            * stop
-            * post
-            * disconnect
-            * block
-            * reset
-          * -?-user-?-
         '''
         msg = e.arguments()[0]
         nick = nm_to_n(e.source())
         if msg == 'BOT: disconnect' and nick in variables.admins:
             if variables.log <> '': make_log(variables.log)
             self.die()
+            sys.exit(0)
         elif msg[:5] == 'BOT: ' and nick in variables.admins:
             command(msg)
         else:
@@ -202,6 +189,21 @@ class BlazeBot(TestBot):
                     t = time.gmtime(time.time())
                     variables.log += '%s <%s> %s\n' % (time.strftime('[%H:%M]', t), nick, msg)
         return
+
+    '''
+    /event handlers
+    ---------------
+    '''
+
+    def start(self):
+        """Start the bot."""
+        self._connect()
+        starttime = time.time()+600
+        while 1:
+            if starttime < time.time():
+                make_log(variables.log)
+                starttime = time.time()+600
+            self.ircobj.process_once()
 
 if __name__=='__main__':
     bot = BlazeBot(variables.channel, variables.nickname, variables.server)
