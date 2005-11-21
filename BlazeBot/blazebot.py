@@ -31,6 +31,27 @@ def make_log(s):
     '''
     title=time.strftime('%A, %B %d %Y', time.gmtime(time.time()))
 
+    # make sure we're making a new file and not overwriting an old one
+    fn = 'file'
+    if os.path.exists(fn+'.html'):
+        num = 1
+        while os.path.exists(fn+'.html'):
+            num += 1
+            prev = fn
+            fn = 'file'+str(num)
+
+    # see if we have a log entry for this already
+    description = '<p><a href="./%s">%s</a></p>' % (fn, title)
+    index = open('IRCIntoLog.html').read()
+    if index.count(title):
+        fn = prev
+
+    else:
+        # add entry to log index (IRCIntoLog on the site)
+        index = '\n'.join([index[:index.rfind('</p>')+4], description,
+                           index[index.rfind('</p>')+4:]])
+        open('IRCIntoLog.html', 'w').write(index)
+
     # add HTML header
     html = '''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" >
 
@@ -56,30 +77,9 @@ href="./@info/%s">stats</a>)</div>
 
 <address>BlazeOfGlory.org. This is a <a
 href="http://infomesh.net/pwyky/">pwyky</a> site. <a
-href="./@edit/file3" class="edit">Edit this document</a>.</address>
+href="./@edit/%s" class="edit">Edit this document</a>.</address>
 </body>
-</html>'''
-
-    # make sure we're making a new file and not overwriting an old one
-    fn = 'file'
-    if os.path.exists(fn+'.html'):
-        num = 1
-        while os.path.exists(fn+'.html'):
-            num += 1
-            prev = fn
-            fn = 'file'+str(num)
-
-    # see if we have a log entry for this already
-    description = '<p><a href="./%s">%s</a></p>' % (fn, title)
-    index = open('IRCIntoLog.html').read()
-    if index.count(title):
-        fn = prev
-
-    else:
-        # add entry to log index (IRCIntoLog on the site)
-        index = '\n'.join([index[:index.rfind('</p>')+4], description,
-                           index[index.rfind('</p>')+4:]])
-        open('IRCIntoLog.html', 'w').write(index)
+</html>''' % fn[:-5]
         
     # write finished HTML to file
     open(fn+'.html', 'w').write(html)
