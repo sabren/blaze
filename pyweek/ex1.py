@@ -9,7 +9,7 @@ Micah
 '''
 
 #import and initialize
-import ode, pygame, sys
+import ode, pygame, sys, os
 from pygame.locals import *
 pygame.init()
 
@@ -23,7 +23,7 @@ pygame.display.set_caption('ODE/pygame test')
 world = ode.World()
 
 #information for our ball "body" and "ball.bmp"
-img = pygame.image.load('ball.bmp')
+img = pygame.image.load(os.path.join('data', 'soccer.png'))
 body = ode.Body(world)
 M = ode.Mass()
 M.setSphere(2500.0, 0.05)
