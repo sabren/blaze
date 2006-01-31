@@ -87,8 +87,6 @@ class SpriteGear(Gear):
         super(SpriteGear, self).__init__(display)
         self.foreground = None
         self.background = pygame.image.load(IMAGE.GAME)
-        self.display.screen.blit(self.background, (0,0))
-        self.display.flip()
         fgSprite = pygame.sprite.Sprite()
         fgSprite.image = pygame.image.load(IMAGE.STATUS.TXT)
         fgSprite.rect = fgSprite.image.get_rect()
@@ -105,21 +103,21 @@ class SpriteGear(Gear):
         refresh the screen completely. you
         probably don't need to call this yourself.
         """
-        self.display.screen.blit(self.background, (0,0))
+        self.display.blit(self.background, (0,0))
         if self.foreground:
-            self.display.screen.blit(self.foreground, (0,0))
-        self.display.flip()
+            self.display.blit(self.foreground, (0,0))
+        if pygame.display.get_init(): pygame.display.flip()
 
         
     def tick(self):
-        self.display.blit(self.background, (0,0))
-        if pygame.display.get_init(): pygame.display.flip()
+        #self.display.blit(self.background, (0,0))
+        #if pygame.display.get_init(): pygame.display.flip()
         self.sprites.update()
         rects = self.sprites.draw(self.display.screen)
         if self.foreground:
             for r in rects:
                 self.display.blit(self.foreground, r, r)
-        self.display.update(rects)
+        if pygame.display.get_init(): pygame.display.update(rects)
         self.sprites.clear(self.display, self.background)
 
     def fromRoom(self, rm, rmName):  
