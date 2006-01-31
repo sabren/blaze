@@ -2,7 +2,7 @@
 sprite rendering engine
 """
 import unittest
-import pygame.sprite
+import pygame
 from states import Gear
 from constants import SPRITE_SIZE, IMAGE, ROOM
 import random
@@ -86,7 +86,9 @@ class SpriteGear(Gear):
     def __init__(self, display):
         super(SpriteGear, self).__init__(display)
         self.foreground = None
-        self.background = pygame.image.load(IMAGE.GAME)        
+        self.background = pygame.image.load(IMAGE.GAME)
+        self.display.screen.blit(self.background, (0,0))
+        self.display.flip()
         fgSprite = pygame.sprite.Sprite()
         fgSprite.image = pygame.image.load(IMAGE.STATUS.TXT)
         fgSprite.rect = fgSprite.image.get_rect()
@@ -103,13 +105,15 @@ class SpriteGear(Gear):
         refresh the screen completely. you
         probably don't need to call this yourself.
         """
-        self.display.blit(self.background, (0,0))
+        self.display.screen.blit(self.background, (0,0))
         if self.foreground:
-            self.display.blit(self.foreground, (0,0))
+            self.display.screen.blit(self.foreground, (0,0))
         self.display.flip()
 
         
     def tick(self):
+        self.display.blit(self.background, (0,0))
+        if pygame.display.get_init(): pygame.display.flip()
         self.sprites.update()
         rects = self.sprites.draw(self.display.screen)
         if self.foreground:
