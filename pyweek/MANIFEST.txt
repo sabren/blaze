@@ -1,0 +1,46 @@
+This is an attempt to categorize the various python files.
+
+
+key
+---
+   k=kiwi g=generic, b=both, p=prototype/spike 
+
+
+python file list
+----------------
+?  physics.py : i don't think this is used at all anymore.
+                loader imported it but didn't use it. 
+-
+b  states.py 
+b  statusbox.py 
+-
+g  controls.py
+g  display.py
+g  frmrate.py - frame rate tool
+g  health.py : generic(?) metabolism/health code
+g  levellist.py
+g  loader.py
+g  main.py : mostly generic
+g  menu.py
+g  render.py
+g  room.py
+g  roomphysics.py
+g  rotate.py : used by loader.. may not be working correctly
+g  scorelist.py
+g  scores.py : display score screen
+g  sounds.py
+g  soundtrack.py
+-
+k  README.txt : duh
+k  ball.py
+k  constants.py
+k  egg.py
+k  events.py
+k  food.py
+k  game.py : kiwi specific,  i think
+k  hero.py
+-
+p  atmospheretest.py  : test of whether atmosphere works
+p  eventtest.py
+p  odetest.py
+
