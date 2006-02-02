@@ -6,8 +6,7 @@ Micah
 
 # not sure if we need all of these but they're here just in case
 import pygame, unittest
-import cPickle, os, sys, string, loader, eventnet.driver, eventnet._pygame, events, string
-from pygame.locals import *
+import cPickle, os, sys, loader, eventnet.driver, events
 from menu import Menu
 from game import Game
 from levellist import LevelList
@@ -16,7 +15,7 @@ from display import Display, ImageManager, MockDisplay
 from events import MENU, GAME, LEVELLIST
 from soundtrack import Soundtrack
 
-#function to load all 3 level elements
+#function to get list of filenames for a level
 def load(name):    
     suffixes = ['back.png', 'geom.svg', 'fore.png']
     return ["-".join([name, suf]) for suf in suffixes]
@@ -178,7 +177,7 @@ def main():
     for lvl in os.listdir('rooms'):
 
         # adds name of level to list
-        if string.find(lvl, '-') == -1:
+        if lvl.find('-') == -1:
             lvl_list += [os.path.splitext(lvl)[0]]
 
     #loop to keep checking for mode changes            

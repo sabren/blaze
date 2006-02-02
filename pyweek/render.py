@@ -110,8 +110,6 @@ class SpriteGear(Gear):
 
         
     def tick(self):
-        #self.display.blit(self.background, (0,0))
-        #if pygame.display.get_init(): pygame.display.flip()
         self.sprites.update()
         rects = self.sprites.draw(self.display.screen)
         if self.foreground:
