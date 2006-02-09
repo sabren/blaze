@@ -8,7 +8,8 @@ from physics import *
 from loader import *
 from health import *
 from room import *
-from game import *    
+from states import *
+#from game import *    
 from hero import *
 from main import *
 

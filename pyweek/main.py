@@ -7,10 +7,10 @@ Micah
 # not sure if we need all of these but they're here just in case
 import pygame, unittest
 import cPickle, os, sys, loader, eventnet.driver, events
-from menu import Menu
-from game import Game
-from levellist import LevelList
-from states import Gear, EXIT
+#from menu import Menu
+#from game import Game
+#from levellist import LevelList
+from states import Gear, EXIT, Game, Menu, LevelList
 from display import Display, ImageManager, MockDisplay
 from events import MENU, GAME, LEVELLIST
 from soundtrack import Soundtrack
@@ -62,7 +62,7 @@ class ConsoleTest(unittest.TestCase):
         eventnet.driver.post(LEVELLIST.ENTER)
         con.tick()
         assert isinstance(con.state, Game),\
-               "the game should start when we pick play" \
+               "the game should start when we pick play " \
                "expected Game state, got %s" % con.state
 
 
