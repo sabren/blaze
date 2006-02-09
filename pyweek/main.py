@@ -7,9 +7,6 @@ Micah
 # not sure if we need all of these but they're here just in case
 import pygame, unittest
 import cPickle, os, sys, loader, eventnet.driver, events
-#from menu import Menu
-#from game import Game
-#from levellist import LevelList
 from states import Gear, EXIT, Game, Menu, LevelList
 from display import Display, ImageManager, MockDisplay
 from events import MENU, GAME, LEVELLIST
@@ -25,8 +22,6 @@ class TestLoad(unittest.TestCase):
     def test(self):
         goal = ["xyz-back.png","xyz-geom.svg","xyz-fore.png"]
         self.assertEquals(goal, load("xyz"))
-
-
 
 """
 The Console is the main state machine for our game

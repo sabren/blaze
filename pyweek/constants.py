@@ -58,7 +58,7 @@ class CODE:
     PIT  = 6  # the bottomless pit
 
 class IMAGE:    
-    MENU="menu.png"
+    MENU="menu_img.png"
     SCORES='high_scores.png'
     CREDITS='credits.png'
     HELP='help.png'

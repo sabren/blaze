@@ -12,11 +12,8 @@ from health import Food
 #from render import SpriteGear, BlockSprite, randomlyColoredSquare
 from statusbox import StatusBox
 from display import MockDisplay, Display
-#from controls import Controller
-from health import Food
 from room import Room
 from hero import Bird
-from roomphysics import RoomPhysics
 from ode_to_pixel import *
 
 # Menu moved to menu.py... and back again :)
@@ -57,38 +54,36 @@ class State(Gear):
 
 class Scores(State):
 
+    def __init__(self, display, maxScores=10):
+        super(Scores, self).__init__(display)
+        self.maxScores = maxScores
+        self.display = display
+
     def kick(self):
         super(Scores, self).kick()
         try:
-            file = open('scores', 'r')
-            names = cPickle.load(file)
-            scores = cPickle.load(file)
-            file.close()
+            f = open('scores')
+            self.scores = cPickle.load(f)
+            f.close()
         except:
-            names = []
             scores = []
-            file = open('scores', 'w')
-            cPickle.dump(names, file)
-            cPickle.dump(scores, file)
-            file.close()
+            f = open('scores', 'w')
+            cPickle.dump(scores, f)
+            f.close()
             pass
-        self.scores = ScoreList(names, scores)
-        scr = []
-        scor = self.scores.getScores()
-        for score in scor:
-            scr += [string.join([score[0], str(score[1])], ': ')]
-        print scr
+
         self.display.showImage(0,0, IMAGE.SCORES)
+        '''
         self.display.addFont(30)
         pos=[640/2, 480/2]
-        for text in scr:
-            self.display.text (text, 30, pos, justify=self.display.CENTER)
-            pos = [pos[0]+50, pos[1]+30]
+        for score in self.scores:
+            score = ': '.join([score[0], score[1]])
+            self.display.text (score, 30, pos, justify=self.display.CENTER)
+            pos = [pos[0]+50, pos[1]+30]'''
         self.display.flip()
 
     def EVT_KeyDown(self, event):
-        if not self.done:
-            self.done = True
+        if not self.done: self.done = True
 
 class Credits(State):
 
@@ -308,7 +303,7 @@ class Menu(State):
             if event.key == K_p:
                 eventnet.driver.post(MENU.PLAY)
             elif event.key == K_h:
-                #eventnet.driver.post('SCORE')
+                eventnet.driver.post('SCORE')
                 pass
             elif event.key == K_e:
                 eventnet.driver.post('HELP')
