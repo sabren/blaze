@@ -159,7 +159,8 @@ HOW TO BEAT THE ROOM
         
 def pygame_events():
     for event in pygame.event.get():
-        eventnet.driver.post(pygame.event.event_name(event.type),
+        if event.type == pygame.QUIT: sys.exit()
+        else: eventnet.driver.post(pygame.event.event_name(event.type),
                              **event.dict)
 
 def main():

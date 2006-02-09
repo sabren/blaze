@@ -54,10 +54,11 @@ class State(Gear):
 
 class Scores(State):
 
-    def __init__(self, display, maxScores=10):
+    def __init__(self, display, new=('', 0), maxScores=10):
         super(Scores, self).__init__(display)
         self.maxScores = maxScores
         self.display = display
+        self.new = new
 
     def kick(self):
         super(Scores, self).kick()
@@ -66,24 +67,51 @@ class Scores(State):
             self.scores = cPickle.load(f)
             f.close()
         except:
-            scores = []
+            self.scores = []
             f = open('scores', 'w')
             cPickle.dump(scores, f)
             f.close()
             pass
-
-        self.display.showImage(0,0, IMAGE.SCORES)
-        '''
+        self.display.addFont(20)
         self.display.addFont(30)
-        pos=[640/2, 480/2]
-        for score in self.scores:
-            score = ': '.join([score[0], score[1]])
-            self.display.text (score, 30, pos, justify=self.display.CENTER)
-            pos = [pos[0]+50, pos[1]+30]'''
+        self.display.addFont(40)
+
+        if self.new <> ('', 0):
+            self.score = self.new[1]
+            if self.new[0] == '':
+                self.text = ''
+
+        else:
+            self.display.showImage(0,0, IMAGE.SCORES)
+
+            pos=[640/2, 480/2]
+            for score in self.scores:
+                score = ': '.join([score[0], str(score[1])])
+                self.display.text (score, 20, pos, (255, 255, 255),
+                                   self.display.CENTER)
+                pos = [pos[0]+50, pos[1]+30]
         self.display.flip()
 
+    def tick(self):
+        if self.new <> ('', 0):
+            self.display.clear()
+            self.display.text('What are your initials?', 40,
+                              (640/3.5, 480/3), (255, 255, 255))
+            self.display.text(self.text, 30, (640/2, 480/2), (255, 255, 255))            
+            self.display.flip()
+
     def EVT_KeyDown(self, event):
-        if not self.done: self.done = True
+        if self.new <> ('', 0):
+            if pygame.key.name(event.key) in string.ascii_lowercase:
+                if len(self.text) < 3:
+                    self.text += pygame.key.name(event.key).upper()
+            elif event.key == K_BACKSPACE:
+                if self.text <> '': self.text = self.text[:-1]
+            elif event.key == K_RETURN:
+                self.done = True
+                self.next = Scores((self.text, self.score[1]))
+        else:
+            if not self.done: self.done = True
 
 class Credits(State):
 
@@ -104,88 +132,6 @@ class Help(State):
     def EVT_KeyDown(self, event):
         if not self.done:
             self.done = True
-
-class TextInput(State):
-
-    def kick(self):
-        super(TextInput, self).kick()
-        try:
-            file = open('scores', 'r')
-            list = cPickle.load(file)
-            file.close()
-        except:
-            file = open('scores', 'w')
-            file.close()
-            list = []
-            pass
-        self.scores = ScoreList(list)
-        self.display.showImage(0,0, IMAGE.SCORE)
-        self.s = ''
-
-    def tick(self):
-        if not self.done:
-            if len(self.s) == 3:
-                self.done = True
-                self.next = Scores(self.display)
-            else:
-                self.display.text(self.s, 30, [640/2, 480/2])
-
-    def EVT_KeyDown(self, event):
-        if not self.done:
-            if event.key == K_ESCAPE:
-                self.done = True
-            elif event.key == K_a:
-                self.s += 'A'
-            elif event.key == K_b:
-                self.s += 'B'
-            elif event.key == K_c:
-                self.s += 'C'
-            elif event.key == K_d:
-                self.s += 'D'
-            elif event.key == K_e:
-                self.s += 'E'
-            elif event.key == K_f:
-                self.s += 'F'
-            elif event.key == K_g:
-                self.s += 'G'
-            elif event.key == K_h:
-                self.s += 'H'
-            elif event.key == K_i:
-                self.s += 'I'
-            elif event.key == K_j:
-                self.s += 'J'
-            elif event.key == K_k:
-                self.s += 'K'
-            elif event.key == K_l:
-                self.s += 'L'
-            elif event.key == K_m:
-                self.s += 'M'
-            elif event.key == K_n:
-                self.s += 'N'
-            elif event.key == K_o:
-                self.s += 'O'
-            elif event.key == K_p:
-                self.s += 'P'
-            elif event.key == K_q:
-                self.s += 'Q'
-            elif event.key == K_r:
-                self.s += 'R'
-            elif event.key == K_s:
-                self.s += 'S'
-            elif event.key == K_t:
-                self.s += 'T'
-            elif event.key == K_u:
-                self.s += 'U'
-            elif event.key == K_v:
-                self.s += 'V'
-            elif event.key == K_w:
-                self.s += 'W'
-            elif event.key == K_x:
-                self.s += 'X'
-            elif event.key == K_y:
-                self.s += 'Y'
-            elif event.key == K_z:
-                self.s += 'Z'
 
 class Exit(State):
     """
@@ -310,14 +256,14 @@ class Menu(State):
             elif event.key == K_c:
                 eventnet.driver.post('CREDITS')
             elif event.key == K_1:
-                #eventnet.driver.post('HIGHSCORE')
+                eventnet.driver.post('HIGHSCORE')
                 pass
             elif event.key == K_x:
                 eventnet.driver.post(MENU.EXIT)
 
     def EVT_HIGHSCORE(self, event):
         self.done = True
-        self.next = TextInput(self.display)
+        self.next = Scores(self.display, True)
             
     def EVT_MENU_PLAY(self, event):
         # we need done = true in *here* because
