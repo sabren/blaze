@@ -222,7 +222,7 @@ from display import MockDisplay
 from display import Display
 from controls import Controller
 from render import BlockSprite, randomlyColoredSquare
-from game import Game
+#from game import Game
 import pygame
 
 class LevelList(State):
@@ -311,11 +311,11 @@ class LevelList(State):
 
 
 #from states import State, EXIT, Scores, Credits, Help, TextInput
-from game import Game
+#from game import Game
 from constants import IMAGE
 import eventnet.driver
 from pygame.locals import *
-from levellist import LevelList
+#from levellist import LevelList
 
 class Menu(State):
 
