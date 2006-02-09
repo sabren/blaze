@@ -1,14 +1,23 @@
 """
 here we define some states for our console.
 """
-import pygame, display, sys, eventnet.driver, cPickle, string
-import pygame, display, sys, eventnet.driver
-from constants import IMAGE
+import pygame, display, sys, eventnet.driver, unittest, os
+import events, sounds, loader, cPickle, string, random
+from constants import *
 from pygame.locals import *
+from pygame import locals as pg
 from scorelist import ScoreList
-#from levellist import LevelList
-#from menu import Menu
-#from game import Game
+from events import GAME, LEVELLIST, MENU
+from health import Food
+#from render import SpriteGear, BlockSprite, randomlyColoredSquare
+from statusbox import StatusBox
+from display import MockDisplay, Display
+#from controls import Controller
+from health import Food
+from room import Room
+from hero import Bird
+from roomphysics import RoomPhysics
+from ode_to_pixel import *
 
 # Menu moved to menu.py... and back again :)
 # Game moved to game.py... and back again :)
@@ -204,32 +213,11 @@ del Exit
 Game : this is the main control
 loop for actually playing the game.
 """
-import unittest
-import os
-
-#import states
-#from states import State
-from events import GAME, LEVELLIST, MENU
-import eventnet.driver
-from constants import *
-from health import Food
-import sounds
-from render import SpriteGear
-from statusbox import StatusBox
-from pygame import locals as pg
-
-from display import MockDisplay
-from display import Display
-from controls import Controller
-from render import BlockSprite, randomlyColoredSquare
-#from game import Game
-import pygame
 
 class LevelList(State):
     FONTSIZE = 30
 
     def __init__(self, display):
-	import loader
 
         super(LevelList, self).__init__(display) #@TODO: fix me!
         self.controls = Controller()
@@ -309,14 +297,6 @@ class LevelList(State):
         self.selected = 0
         self.tick()
 
-
-#from states import State, EXIT, Scores, Credits, Help, TextInput
-#from game import Game
-from constants import IMAGE
-import eventnet.driver
-from pygame.locals import *
-#from levellist import LevelList
-
 class Menu(State):
 
     def kick(self):
@@ -371,19 +351,6 @@ class Menu(State):
 Game : this is the main control
 loop for actually playing the game.
 """
-import unittest
-import os
-
-import states
-from states import State
-from events import GAME
-import eventnet.driver
-from constants import *
-from health import Food
-import sounds
-from render import SpriteGear
-from statusbox import StatusBox
-
 
 """
 Okay. So the Game object is the main routine for the
@@ -444,29 +411,14 @@ class GameTest(unittest.TestCase):
 # goal: on collide with exit
 # goal: GAME_up to go up (ladder) or through door
 
-
-
-from room import Room
-from hero import Bird
-from display import MockDisplay
-from roomphysics import RoomPhysics
-from constants import SCREEN, ROOM
-
-
 def makeTestRoom():
     return Room()
 
 #############################################################
 
-from display import MockDisplay
-from controls import Controller
-from render import BlockSprite, randomlyColoredSquare
-import pygame
-
 class Game(State):
 
     def __init__(self, display, roomName=ROOM.TEST_ROOM):
-	import loader
 
         super(Game, self).__init__(display) #@TODO: fix me!
         self.controls = Controller()
@@ -532,3 +484,176 @@ class Game(State):
     def kick(self):
         super(Game, self).kick()
         self.sprites.refresh()
+
+
+# reference:
+# http://kai.vm.bytemark.co.uk/~piman/writing/sprite-tutorial.shtml
+
+"""
+Our goal here is to display sprites on the
+screen based on the positions calculated from
+pyODE.
+
+Remember, the room is modelled as blocks in pyODE,
+and as pyODE works its magic, the blocks move around
+in space. What we need to do on each frame is check
+where the blocks are and put some sprites in the
+corresponding places on the 2d screen.
+
+However, we *only* need to do this for blocks
+that move: since immobile platforms are just
+static bitmaps, they don't need their own
+sprites.
+
+So, after reading piman's sprite tutorial, it seems
+like we're in good shape. All we really need to do
+is create a Sprite that's linked to a GeomBox:
+"""
+
+class BlockSpriteTest(unittest.TestCase):
+    def test(self):
+        # first we create the physics side:
+        import room
+        rm = room.Room()
+
+        #@TODO: this really should be a sphere i think...
+        bk = rm.addBlock((50, 50), *SPRITE_SIZE)
+
+        # now the display side:
+        bs = BlockSprite(bk, pygame.surface.Surface((5,5)))
+        self.assertEquals((50,50), bs.rect.center)
+        
+
+# here's the implementation
+class BlockSprite(pygame.sprite.Sprite):
+    def __init__(self, block, image):
+        self.old_position = None
+
+        super(BlockSprite, self).__init__()
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.block = block
+        self.update()
+
+
+    def update(self):
+        # ode tracks the center, so we just assign that
+        # directly to our rect.center ... the [:2] of
+        # course just drops the Z coordinate, which is
+        # always 0 for our 2d world. :)
+        self.rect.center = map(round, self.block.getPosition()[:2])
+
+
+class WithForeground(pygame.sprite.RenderUpdates):
+    """
+    simple sprite ordering: foreground is always on top
+    """
+    def __init__(self, fg, *sprites):
+        pygame.sprite.RenderUpdates.__init__(self, *sprites)
+        self.add(fg)
+        self.fg = fg
+        
+    def sprites(self):
+        all = pygame.sprite.RenderUpdates.sprites(self)
+        all.remove(self.fg)
+        all.append(self.fg)
+        return all
+
+
+class SpriteGear(Gear):
+    def __init__(self, display):
+        super(SpriteGear, self).__init__(display)
+        self.foreground = None
+        self.background = pygame.image.load(IMAGE.GAME)
+        fgSprite = pygame.sprite.Sprite()
+        fgSprite.image = pygame.image.load(IMAGE.STATUS.TXT)
+        fgSprite.rect = fgSprite.image.get_rect()
+        fgSprite.rect.topleft = IMAGE.STATUS.TEXT_POS
+        self.sprites = WithForeground(fgSprite)
+        self.refresh()        
+
+        self.heroSprite = None
+        self.heroLeft = pygame.image.load(IMAGE.KIWI.LEFT)
+        self.heroRight = pygame.image.load(IMAGE.KIWI.RIGHT)
+
+    def refresh(self):
+        """
+        refresh the screen completely. you
+        probably don't need to call this yourself.
+        """
+        self.display.blit(self.background, (0,0))
+        if self.foreground:
+            self.display.blit(self.foreground, (0,0))
+        if pygame.display.get_init(): pygame.display.flip()
+
+        
+    def tick(self):
+        self.sprites.update()
+        rects = self.sprites.draw(self.display.screen)
+        if self.foreground:
+            for r in rects:
+                self.display.blit(self.foreground, r, r)
+        if pygame.display.get_init(): pygame.display.update(rects)
+        self.sprites.clear(self.display, self.background)
+
+    def fromRoom(self, rm, rmName):  
+        # make sprites based on the content of the level
+        self.heroSprite =BlockSprite(rm.hero, self.heroRight)
+        self.sprites.add(self.heroSprite)
+        if rmName != ROOM.TEST_ROOM:
+            self.foreground = pygame.image.load("rooms/%s-fore.png" % rmName)
+            newBack = pygame.image.load("rooms/%s-back.png" % rmName)
+            self.background.blit(newBack, (0,0),((0,0),(540,480)))
+        self.refresh()
+
+    def EVT_GAME_LEFT(self, event):
+        self.heroSprite.image = self.heroLeft
+
+    def EVT_GAME_RIGHT(self, event):
+        self.heroSprite.image = self.heroRight
+            
+
+
+# this is just a handy sprite maker: a randomly colored square
+# (with an alpha channel)
+
+def randomlyColoredSquare():
+    image = pygame.Surface(SPRITE_SIZE)
+    image = image.convert()
+    image.fill(pygame.color.Color("0x%08x" % random.randint(0,256**4)))
+    return image
+
+class Controller(Gear):
+    """
+    like a gamepad with repeating events...
+    """
+    def __init__(self):
+        super(Controller, self).__init__(None)
+        self.buttonsDown = []
+        self.ticks = 0
+        self.keymap = {
+            pg.K_x : GAME.QUIT,
+            pg.K_RIGHT : GAME.RIGHT,
+            pg.K_LEFT : GAME.LEFT,
+            pg.K_UP : GAME.UP,
+            pg.K_DOWN : GAME.DOWN,
+            pg.K_SPACE : GAME.JUMP,
+        }
+
+    def EVT_KeyDown(self, event):
+        if event.key in self.keymap:
+            eventnet.driver.post(self.keymap[event.key])
+            self.buttonsDown.append(self.keymap[event.key])
+
+    def EVT_KeyUp(self, event):
+        if event.key in self.keymap:
+            self.buttonsDown.remove(self.keymap[event.key])
+
+    def tick(self):
+        self.ticks += 1
+        if self.ticks < REPEAT.TICKS:
+            pass
+        else:
+            self.ticks = 0
+            for button in self.buttonsDown:
+                eventnet.driver.post(button)
