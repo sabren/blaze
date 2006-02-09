@@ -18,6 +18,7 @@ from ode_to_pixel import *
 
 # Menu moved to menu.py... and back again :)
 # Game moved to game.py... and back again :)
+# Moved scores and levellist here
 
 class Gear(eventnet.driver.Handler):
     def __init__(self, display):
@@ -54,11 +55,12 @@ class State(Gear):
 
 class Scores(State):
 
-    def __init__(self, display, new=('', 0), maxScores=10):
+    def __init__(self, display, score=0):
         super(Scores, self).__init__(display)
-        self.maxScores = maxScores
+        self.maxScores = 10
         self.display = display
-        self.new = new
+        self.new = False
+        self.score = score
 
     def kick(self):
         super(Scores, self).kick()
@@ -72,16 +74,23 @@ class Scores(State):
             cPickle.dump(scores, f)
             f.close()
             pass
+        
         self.display.addFont(20)
         self.display.addFont(30)
         self.display.addFont(40)
 
-        if self.new <> ('', 0):
-            self.score = self.new[1]
-            if self.new[0] == '':
-                self.text = ''
+        if self.score:
+            if self.score > self.scores[-1]:
+                high = 0
+                while self.score < self.scores[high][1]:
+                    high += 1
+                self.place = high+1
+            else: self.place = int(len(self.scores))
+            self.new = True
+            self.text = ''
+        else: self.new = False
 
-        else:
+        if not self.new:
             self.display.showImage(0,0, IMAGE.SCORES)
 
             pos=[640/2, 480/2]
@@ -90,28 +99,32 @@ class Scores(State):
                 self.display.text (score, 20, pos, (255, 255, 255),
                                    self.display.CENTER)
                 pos = [pos[0]+50, pos[1]+30]
+
         self.display.flip()
 
     def tick(self):
-        if self.new <> ('', 0):
+        if self.new:
             self.display.clear()
             self.display.text('What are your initials?', 40,
                               (640/3.5, 480/3), (255, 255, 255))
-            self.display.text(self.text, 30, (640/2, 480/2), (255, 255, 255))            
+            self.display.text(self.text, 30, [640/2, 480/2], (255, 255, 255),
+                              self.display.CENTER)
             self.display.flip()
 
     def EVT_KeyDown(self, event):
-        if self.new <> ('', 0):
+        if self.new:
             if pygame.key.name(event.key) in string.ascii_lowercase:
                 if len(self.text) < 3:
                     self.text += pygame.key.name(event.key).upper()
-            elif event.key == K_BACKSPACE:
+            elif event.key == K_BACKSPACE and self.text <> '':
                 if self.text <> '': self.text = self.text[:-1]
-            elif event.key == K_RETURN:
+            elif event.key == K_RETURN and len(self.text) == 3:
+                print self.place
+                self.scores.insert(self.place, (self.text, self.score))
+                cPickle.dump(self.scores, open('scores', 'w'))
                 self.done = True
-                self.next = Scores((self.text, self.score[1]))
-        else:
-            if not self.done: self.done = True
+                self.next = Scores(self.display)
+        elif not self.done: self.done = True
 
 class Credits(State):
 
@@ -248,6 +261,9 @@ class Menu(State):
         if not self.done:
             if event.key == K_p:
                 eventnet.driver.post(MENU.PLAY)
+            elif event.key == K_2:
+                self.done= True
+                self.next = Scores(self.display, 2000)
             elif event.key == K_h:
                 eventnet.driver.post('SCORE')
                 pass
@@ -263,7 +279,7 @@ class Menu(State):
 
     def EVT_HIGHSCORE(self, event):
         self.done = True
-        self.next = Scores(self.display, True)
+        self.next = Scores(self.display)
             
     def EVT_MENU_PLAY(self, event):
         # we need done = true in *here* because
