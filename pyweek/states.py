@@ -93,13 +93,14 @@ class Scores(State):
         if not self.new:
             self.display.showImage(0,0, IMAGE.SCORES)
 
-            pos=[640/2, 480/2-50]
-            for score in self.scores:
-                score = ': '.join([str(self.scores.index(score)+1),
-                                       score[0], str(score[1])])
+            pos=[640/2+50, 480/2-50]
+            for score in range(len(self.scores)):
+                score = ': '.join([str(score+1),
+                                   self.scores[score][0],
+                                   str(self.scores[score][1])])
                 self.display.text (score, 20, pos, (255, 255, 255),
-                                   self.display.CENTER)
-                pos = [pos[0]+37, pos[1]+20]
+                                   self.display.RIGHT)
+                pos = [pos[0]+72, pos[1]+20]
 
         self.display.flip()
 
@@ -264,7 +265,7 @@ class Menu(State):
             if event.key == K_p:
                 eventnet.driver.post(MENU.PLAY)
             elif event.key == K_2:
-                self.done= True
+                self.done = True
                 self.next = Scores(self.display, 2000)
             elif event.key == K_h:
                 eventnet.driver.post('SCORE')
@@ -273,9 +274,6 @@ class Menu(State):
                 eventnet.driver.post('HELP')
             elif event.key == K_c:
                 eventnet.driver.post('CREDITS')
-            elif event.key == K_1:
-                eventnet.driver.post('HIGHSCORE')
-                pass
             elif event.key == K_x:
                 eventnet.driver.post(MENU.EXIT)
 
