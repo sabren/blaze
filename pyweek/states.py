@@ -18,7 +18,7 @@ from ode_to_pixel import *
 
 # Menu moved to menu.py... and back again :)
 # Game moved to game.py... and back again :)
-# Moved scores and levellist here
+# Moved scores, controller,  and levellist here
 
 class Gear(eventnet.driver.Handler):
     def __init__(self, display):
@@ -71,7 +71,7 @@ class Scores(State):
         except:
             self.scores = []
             f = open('scores', 'w')
-            cPickle.dump(scores, f)
+            cPickle.dump(self.scores, f)
             f.close()
             pass
         
@@ -80,7 +80,7 @@ class Scores(State):
         self.display.addFont(40)
 
         if self.score:
-            if self.score > self.scores[-1]:
+            if len(self.scores) and self.score > self.scores[-1]:
                 high = 0
                 while self.score < self.scores[high][1]:
                     high += 1
@@ -93,12 +93,13 @@ class Scores(State):
         if not self.new:
             self.display.showImage(0,0, IMAGE.SCORES)
 
-            pos=[640/2, 480/2]
+            pos=[640/2, 480/2-50]
             for score in self.scores:
-                score = ': '.join([score[0], str(score[1])])
+                score = ': '.join([str(self.scores.index(score)+1),
+                                       score[0], str(score[1])])
                 self.display.text (score, 20, pos, (255, 255, 255),
                                    self.display.CENTER)
-                pos = [pos[0]+50, pos[1]+30]
+                pos = [pos[0]+37, pos[1]+20]
 
         self.display.flip()
 
@@ -121,6 +122,7 @@ class Scores(State):
             elif event.key == K_RETURN and len(self.text) == 3:
                 print self.place
                 self.scores.insert(self.place, (self.text, self.score))
+                if len(self.scores) > 10: self.scores = self.scores[:10]
                 cPickle.dump(self.scores, open('scores', 'w'))
                 self.done = True
                 self.next = Scores(self.display)
