@@ -1,6 +1,5 @@
-"""
-here we define some states for our console.
-"""
+'Here we define some states for our console.'
+
 import pygame, display, sys, eventnet.driver, unittest, os
 import events, sounds, loader, cPickle, string, random
 from constants import *
@@ -9,87 +8,89 @@ from pygame import locals as pg
 from scorelist import ScoreList
 from events import GAME, LEVELLIST, MENU
 from health import Food
-#from render import SpriteGear, BlockSprite, randomlyColoredSquare
 from statusbox import StatusBox
 from display import MockDisplay, Display
 from room import Room
 from hero import Bird
 from ode_to_pixel import *
 
-# Menu moved to menu.py... and back again :)
-# Game moved to game.py... and back again :)
-# Moved scores, controller,  and levellist here
-
+'----Base classes----'
 class Gear(eventnet.driver.Handler):
+
+    'Top-level "Gear" object.'
+
     def __init__(self, display):
         super(Gear, self).__init__()
         self.display = display
         self.done = False
-        self.capture() # listen for events
+        self.capture() # start event handlers
 
     def tick(self):
-        """
-        then it starts ticking...
-        by default, each tick does nothing.
-        """
-        pass
+        'This is what the mainloop calls.'
+        pass # do nothing by default
 
-
-# other states should do this:
+# Other states should do this:
 class State(Gear):
-
+    'Ahh, yes. Our State class.'
+    
     def __init__(self, display):
         super(State, self).__init__(display)
         self.next = None
 
     def kick(self):
-        """
-        you kick it to make it start. :)
+        '''
+        You kick it to make it start. ;)
         
         This is so we can pause the execution
-        of a state and com back to it later.
+        of a state and come back to it later.
         (eg, when a confirmation dialog pops
         up or whatever)
-        """
-        self.done = False
+        '''
+        self.done = False #we're not finished yet :)
 
 class Scores(State):
-
+    "A Scores state object that'll (in theory) handle all of our score related details"
+    
     def __init__(self, display, score=0):
         super(Scores, self).__init__(display)
-        self.maxScores = 10
+        self.maxScores = 10 # max number of scores on the highscore list
         self.display = display
-        self.new = False
-        self.score = score
+        self.new = False # bool to tell us if we have a new score to post
+        self.score = score # the points score for our new winner (if any)
 
     def kick(self):
         super(Scores, self).kick()
+
+        #load previous scores (a list of tuples ('player_name', score)  )
         try:
             f = open('scores')
             self.scores = cPickle.load(f)
             f.close()
-        except:
+        except: # if the scores file doesn't exist create one
             self.scores = []
             f = open('scores', 'w')
             cPickle.dump(self.scores, f)
             f.close()
             pass
-        
+
+        # prep our font sizes (do this automatically in future?)
         self.display.addFont(20)
         self.display.addFont(30)
         self.display.addFont(40)
 
-        if self.score:
-            if len(self.scores) and self.score > self.scores[-1]:
+        self.new = True
+        if self.score: # if we're checking out a new score
+            if len(self.scores) > 0 and self.score > self.scores[-1]:
+                #if there are other scores and we beat the last one
+                #get our position
                 high = 0
                 while self.score < self.scores[high][1]:
                     high += 1
                 self.place = high+1
-            else: self.place = int(len(self.scores))
-            self.new = True
+            elif len(self.scores) < 1: self.place = 0 # or just put us in front
+            else: self.new = False
             self.text = ''
         else: self.new = False
-
         if not self.new:
             self.display.showImage(0,0, IMAGE.SCORES)
 
@@ -264,6 +265,9 @@ class Menu(State):
         if not self.done:
             if event.key == K_p:
                 eventnet.driver.post(MENU.PLAY)
+            elif event.key == K_1:
+                self.done = True
+                self.next = Scores(self.display, 1000)
             elif event.key == K_2:
                 self.done = True
                 self.next = Scores(self.display, 2000)
