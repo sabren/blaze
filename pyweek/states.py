@@ -49,7 +49,10 @@ class State(Gear):
         self.done = False #we're not finished yet :)
 
 class Scores(State):
-    "A Scores state object that'll (in theory) handle all of our score related details"
+    '''
+    A Scores state object that'll (in theory) handle all of our score
+    related details
+    '''
     
     def __init__(self, display, score=0):
         super(Scores, self).__init__(display)
@@ -80,14 +83,14 @@ class Scores(State):
 
         self.new = True
         if self.score: # if we're checking out a new score
-            if len(self.scores) > 0 and self.score > self.scores[-1]:
-                #if there are other scores and we beat the last one
-                #get our position
-                high = 0
+            print 'score'
+            if len(self.scores) > 0:
+                high = len(self.scores)-1
                 while self.score < self.scores[high][1]:
-                    high += 1
-                self.place = high+1
-            elif len(self.scores) < 1: self.place = 0 # or just put us in front
+                    high -= 1
+                self.place = high
+            elif len(self.scores) < 10:
+                self.place = len(self.scores) # or just put us in the back
             else: self.new = False
             self.text = ''
         else: self.new = False
@@ -102,7 +105,6 @@ class Scores(State):
                 self.display.text (score, 20, pos, (255, 255, 255),
                                    self.display.RIGHT)
                 pos = [pos[0]+72, pos[1]+20]
-
         self.display.flip()
 
     def tick(self):
@@ -116,18 +118,20 @@ class Scores(State):
 
     def EVT_KeyDown(self, event):
         if self.new:
+            print self.new
             if pygame.key.name(event.key) in string.ascii_lowercase:
                 if len(self.text) < 3:
                     self.text += pygame.key.name(event.key).upper()
             elif event.key == K_BACKSPACE and self.text <> '':
                 if self.text <> '': self.text = self.text[:-1]
             elif event.key == K_RETURN and len(self.text) == 3:
-                print self.place
+                print 'Place:', self.place
                 self.scores.insert(self.place, (self.text, self.score))
                 if len(self.scores) > 10: self.scores = self.scores[:10]
                 cPickle.dump(self.scores, open('scores', 'w'))
+                self.new = False
                 self.done = True
-                self.next = Scores(self.display)
+                self.next = Scores(self.display, 0)
         elif not self.done: self.done = True
 
 class Credits(State):
