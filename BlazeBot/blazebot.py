@@ -19,7 +19,7 @@ class variables:
     server = 'irc.freenode.net'
 
     # other variables
-    admins = ['mcferrill', 'maia', 'nathortheri']
+    admins = ['mcferrill', 'maia']
     logging = True
     blocklist = []
     log = ''
@@ -88,7 +88,7 @@ def command(cmd):
     '''
     commands function for control via IRC
     '''
-    cmd = cmd[len('BOT: '):].split()
+    if cmd.startswith('BOT: '): cmd = cmd[len('BOT: '):].split()
     if cmd[0] == 'admin':
         if not cmd[1] in variables.admins:
             variables.admins.append(cmd[1])
@@ -168,6 +168,22 @@ class BlazeBot(TestBot):
                                                                         t),
                                                          nick, e.arguments())
 
+    def on_privmsg(self, c, e):
+        msg = e.arguments()[0]
+        if msg == 'quit':
+            make_log(variables.log)
+            self.die()
+        elif msg == 'post': make_log(variables.log)
+        elif msg.split()[0] == 'admin':
+            if not msg.split()[1] in variables.admins:
+                variables.admins.append(cmd[1])
+        elif msg.split()[0] == 'ban':
+             if cmd[1] in variables.admins and cmd[1] <> 'mcferrill':
+                variables.admins.remove(cmd[1])
+        else:
+            c.privmsg('#trailblazer', msg)
+            msg = 'ok'
+
     def on_pubmsg(self, c, e):
         '''
         when message is posted:
@@ -187,13 +203,29 @@ class BlazeBot(TestBot):
             if variables.logging:
                 if nick not in variables.blocklist:
                     t = time.gmtime(time.time())
-                    variables.log += '%s <%s> %s\n' % (time.strftime('[%H:%M]', t), nick, msg)
+                    variables.log += '%s <%s> %s\n' % (time.strftime('[%H:%M]',
+                                                                     t), nick,
+                                                       msg)
         return
 
     '''
     /event handlers
     ---------------
     '''
+
+    def _connect(self):
+        """[Internal]"""
+        password = 'burn'
+        #if len(self.server_list[0]) > 2:
+        #    password = self.server_list[0][2]
+        try:
+            self.connect(self.server_list[0][0],
+                         self.server_list[0][1],
+                         self._nickname,
+                         password,
+                         ircname=self._realname)
+        except ServerConnectionError:
+            pass
 
     def start(self):
         """Start the bot."""
