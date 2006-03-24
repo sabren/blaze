@@ -1,49 +1,143 @@
+"""
+
+This module contains helpers for using the basevent.Dispatcher.
+It provides a decorator for subscribing functions and methods, a class for
+handling mutiple events and a hook function for Dispatcher.post integration.
+
+"""
+import weakref
+
 import baseevent
 
-observer = baseevent.Observer()
-post = observer.post
+SUBSCRIBE_PREFIX = "EVT_"
+CAPTURE_PREFIX = "CAP_"
 
-handler_prefix = "EVT_"
+dispatcher = baseevent.Dispatcher()
+post = dispatcher.post
 
-class handle(object):
-    "A decorator which will register a function to handle an event."
-    def __init__(self, *args):
-        self.events = args
+
+def hook(callback):
+    """
+    Hook a callback function into the event dispatch machinery.
+    """
+    first_post = globals()["post"]
+    def hooked_post(name, **kw):
+        callback(name, **kw)
+        return first_post(name, **kw)
+    globals()["post"] = hooked_post
+    
+
+class subscribe(object):
+    """
+    A decorator, which subscribes a callable to an event.
+    """
+    def __init__(self, _event_identity):
+        self.name = _event_identity
+
+    
     def __call__(self, func):
         self.func = func
-        observer.register(func, self.events)
+        self.id = dispatcher.subscribe(func, self.name)
         return self
+    
+    def release(self):
+        """
+        Unsubscribe this function from the event.
+        """
+        dispatcher.unsubscribe(self.id, self.name)
 
-    def kill(self):
-        observer.unregister(self.func)
+
+class capture(object):
+    """
+    A decorator, which binds a callable to an event.
+    """
+    def __init__(self, _event_identity):
+        self.name = _event_identity
+
+    
+    def __call__(self, func):
+        self.id = dispatcher.capture(func, self.name)
+        return self
+    
+    def release(self):
+        """
+        Unbind this function from the event.
+        """
+        dispatcher.release(self.id, self.name)
+
+
+
+class Subscriber(object):
+    """
+    A Subscriber instance receives multiple events, which are handled by 
+    methods defined with a special prefix, 'EVT_'.
+    eg:
+
+    class Handler(Subscriber):
+        def EVT_SomeEvent(self, event):
+            "This method will be called whenever 'SomeEvent' is posted."
+            pass
+        def EVT_SomeOtherEvent(self, event):
+            "This method will be called whenever 'SomeOtherEvent' is posted."
+            pass
+
+    h = Handler()
+    #enable event handling, call the .capture method.
+    h.capture()
+    #disable event handling, call the .release method.
+    h.release()
+    """
+
+    def capture(self):
+        """
+        Enable event handling for all EVT_ methods in this instance.
+        """
+        self.__subscribers = []
+        for meth in dir(self):
+            if SUBSCRIBE_PREFIX in meth[:len(SUBSCRIBE_PREFIX)]:
+                name = meth[len(SUBSCRIBE_PREFIX):]
+                s = subscribe(name)(getattr(self, meth))
+                self.__subscribers.append(s)
+            if CAPTURE_PREFIX in meth[:len(CAPTURE_PREFIX)]:
+                name = meth[len(CAPTURE_PREFIX):]
+                s = capture(name)(getattr(self, meth))
+                self.__subscribers.append(s)
+
+    def release(self):
+        """
+        Disable event handling for all EVT_ methods in this instance.
+        """
+        for subscriber in self.__subscribers: subscriber.release()
+
 
 
 class Handler(object):
-    def __init__(self, prefix=handler_prefix):
-        self.handler_prefix = prefix
-    def capture(self):
-        for meth in dir(self):
-            if self.handler_prefix in meth[:len(self.handler_prefix)]:
-                name = meth[len(self.handler_prefix):]
-                observer.register(getattr(self, meth), [name])
-
-    def release(self):
-        for meth in dir(self):
-            if self.handler_prefix in meth[:len(self.handler_prefix)]:
-                observer.unregister(getattr(self, meth))
-
-
+    """
+    A handler is different, in that it does not receive dispatched events, 
+    but only events which are posted directly to it, via its own post method.
+    """
+    def post(self, _event_identity, **kw):
+        return tuple([baseevent.call_with_keywords(getattr(self, meth), kw) for meth in dir(self) if SUBSCRIBE_PREFIX+_event_identity == meth])
+        
 
 
 if __name__ == "__main__":
-    class Test(Handler):
-        def __init__(self):
-            Handler.__init__(self)
+    
+    
+    @subscribe('A')
+    def a(b):
+        return "a", b
+    
+    
+    class B(Subscriber):
+        def EVT_A(self, b):
+            print "-", self
+            return "b", b
 
-        def EVT_A(self, event):
-            print event
-
-    t = Test()
-    t.capture()
-    post('A',b=1)
-    t.release()
+    b = B()
+    b.capture()
+    print post('A',b=1)
+    print post('A',b=2)
+    del b
+    print post('A',b=3)
+    print post('A',b=4)
