@@ -12,8 +12,10 @@ class game:
     '''
 
     def __init__(self):
-        self.done = False
-        self.state = State()
+        pygame.init()
+        self.screen = pygame.display.set_mode((800, 600)) #windowed for now
+
+        self.state = State(self.screen)
         self.state.start()
 
     def tick(self):
@@ -25,12 +27,10 @@ class game:
 
     def load_default_state(self):
         self.state.quit()
-        self.state = State()
+        self.state = State(self.screen)
         self.state.start()
 
 def main():
-    pygame.init()
-    screen = pygame.display.set_mode((800, 600)) #windowed for now
     g = game()
 
     while 1: #mainloop
