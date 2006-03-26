@@ -6,13 +6,15 @@
 import pygame, eventnet.driver, sys
 from states import State
 
-class game:
+class game(eventnet.driver.Subscriber):
     '''
     Game object. Will prob'ly make others (LAN_Game, Net_Game, etc)
     '''
 
     def __init__(self):
         pygame.init()
+        self.capture()
+        self.done = False
         self.screen = pygame.display.set_mode((800, 600)) #windowed for now
         self.load_default_state()
 
@@ -29,20 +31,18 @@ class game:
         self.state = State(self.screen)
         self.state.start()
 
+    def EVT_Quit(self):
+        pygame.quit()
+        self.release()
+        self.done = True
+
 def main():
     g = game()
-
-    while 1: #mainloop
-
+    while not g.done: #mainloop
         #post pygame events to eventnet
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit(0)
-
             eventnet.driver.post(pygame.event.event_name(event.type),
                                  **event.dict)
-
         g.tick()
         
 if __name__=='__main__':

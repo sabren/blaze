@@ -2,11 +2,10 @@ import pygame, eventnet.driver
 '''
 Store states here.
 '''
-pygame.font.init()
 
 class State(eventnet.driver.Subscriber):
     '''
-    State superclass.
+    State superclass. Doubles as a dummy state.
     '''
     def __init__(self, screen):
         self.next = None
