@@ -14,9 +14,7 @@ class game:
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((800, 600)) #windowed for now
-
-        self.state = State(self.screen)
-        self.state.start()
+        self.load_default_state()
 
     def tick(self):
         if not self.state.done:
@@ -26,7 +24,8 @@ class game:
         else: self.load_default_state()
 
     def load_default_state(self):
-        self.state.quit()
+        try: self.state.quit()
+        except: pass
         self.state = State(self.screen)
         self.state.start()
 
