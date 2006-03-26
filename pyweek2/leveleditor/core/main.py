@@ -1,5 +1,5 @@
 import pygame, eventnet.driver, sys, states
-from parser import Parser
+from parser import LEParser
 from view import LEView
 
 

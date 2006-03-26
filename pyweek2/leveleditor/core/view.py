@@ -29,7 +29,8 @@ class LEWindow(State):
         State.__init__(self,screen)
         self.config = config
     def tick(self):
-        self.screen.fill((0,255,0))
+        r = pygame.Rect(100,0,800,600)
+        self.screen.fill((0,255,0),r)
         pygame.display.flip()
         
 class LEToolbar(State):
@@ -38,7 +39,8 @@ class LEToolbar(State):
         self.config = config
         self.objects = objects
     def tick(self):
-        self.screen.fill((255,0,0))
+        r = pygame.Rect(0,0,100,600)
+        self.screen.fill((255,0,0),r)
         pygame.display.flip()
         
 class LEState(State):
@@ -49,8 +51,8 @@ class LEState(State):
         self.window = LEWindow(screen,config)
         self.toolbar = LEToolbar(screen,config,objects)
     def tick(self):
-        self.screen.fill((255,255,0))
-        pygame.display.flip()
+        #self.screen.fill((0,0,0))
+        #pygame.display.flip()
         self.window.tick()
         self.toolbar.tick()
     

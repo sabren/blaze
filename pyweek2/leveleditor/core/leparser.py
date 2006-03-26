@@ -4,7 +4,7 @@ from object import GameObject
 #Location of the config files, relative to the main game dir
 DATADIR = "leveleditor/data/"
 
-class Parser:
+class LEParser:
     def __init__(self):
         pass
     def read_config(self):
