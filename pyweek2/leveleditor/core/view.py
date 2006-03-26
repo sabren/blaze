@@ -38,10 +38,17 @@ class LEToolbar(State):
         State.__init__(self,screen)
         self.config = config
         self.objects = objects
+        self.objects_rendered = False
     def tick(self):
-        r = pygame.Rect(0,0,100,600)
-        self.screen.fill((255,0,0),r)
-        pygame.display.flip()
+        if not self.objects_rendered:
+            r = pygame.Rect(0,0,100,600)
+            self.screen.fill((255,0,0),r)
+            x = 0
+            y = 0
+            for object in self.objects:
+                x,y = object.render(self.screen,r,x,y)
+            pygame.display.flip()
+            self.objects_rendered = True
         
 class LEState(State):
     def __init__(self,screen,config,objects): 
