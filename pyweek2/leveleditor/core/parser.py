@@ -1,8 +1,8 @@
 import os
 from object import GameObject
 
-#Location of the config files, relative to this one
-DATADIR = "../data"
+#Location of the config files, relative to the main game dir
+DATADIR = "leveleditor/data/"
 
 class Parser:
     def __init__(self):
@@ -30,7 +30,7 @@ class Parser:
     def read_objects(self):
         """
         Reads the all the objects files, returning a list of GameObjects.
-        Each object file (located under DATADIR) has to have the following options defined (required for each GameObject
+        Each object file (located under DATADIR) has to have the following options defined (required for each GameObject)
         There cannot be an object file called 'main' for obvious reasons
         Current options are:
         name = Name of the object
@@ -39,7 +39,7 @@ class Parser:
         global DATADIR
         objects = {}
         for file in os.listdir(DATADIR):
-            if file !='main':
+            if file !='main' and not os.path.isdir(file):
                 content = open(os.path.join(DATADIR,file),"r").read()
                 for line in content.split(os.linesep):
                     line = line.split('=')
