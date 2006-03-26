@@ -4,26 +4,7 @@
 
 #add your imports here
 import pygame, eventnet.driver
-
-class dummyState:
-    '''
-    This is an empty state.
-    '''
-    
-    def __init__(self):
-        self.next = None
-
-    def start(self):
-        '''
-        Start the state running. (put initialization here)
-        '''
-        self.done = False
-
-    def tick(self):
-        '''
-        Called every frame, put updates here.
-        '''
-        pass
+from states import state
 
 class game:
     '''
@@ -32,7 +13,7 @@ class game:
 
     def __init__(self):
         self.done = False
-        self.state = dummyState()
+        self.state = state()
         self.state.start()
 
     def tick(self):
@@ -43,21 +24,25 @@ class game:
         else: self.load_default_state()
 
     def load_default_state(self):
-        self.state.done = True
-        self.state = dummyState()
+        self.state.quit()
+        self.state = state()
         self.state.start()
 
 def main():
     pygame.init()
     screen = pygame.display.set_mode((800, 600)) #windowed for now
-    game = game()
+    g = game()
 
     while 1: #mainloop
 
         #post pygame events to eventnet
         for event in pygame.event.get():
-            driver.post(pygame.event.event_name(event.type),
-                        **event.dict)
+            if event.type == pygame.QUIT: sys.exit(0)
 
-        game.tick()
+            eventnet.driver.post(pygame.event.event_name(event.type),
+                                 **event.dict)
+
+        g.tick()
         
+if __name__=='__main__':
+    main()
