@@ -1,11 +1,11 @@
 import pygame, eventnet.driver, sys, states
-from parser import LEParser
+from leparser import LEParser
 from view import LEView
 
 
 class LevelEditor:
     def __init__(self):
-        parser = Parser()
+        parser = LEParser()
         self.config = parser.read_config()
         self.objects = parser.read_objects()
         self.locations = {}
