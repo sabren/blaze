@@ -4,7 +4,7 @@
 
 #add your imports here
 import pygame, eventnet.driver, sys
-from states import state
+from states import State
 
 class game:
     '''
