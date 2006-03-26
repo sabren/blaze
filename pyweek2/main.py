@@ -3,7 +3,7 @@
 '''
 
 #add your imports here
-import pygame, eventnet.driver
+import pygame, eventnet.driver, sys
 from states import state
 
 class game:
@@ -13,7 +13,7 @@ class game:
 
     def __init__(self):
         self.done = False
-        self.state = state()
+        self.state = State()
         self.state.start()
 
     def tick(self):
@@ -25,7 +25,7 @@ class game:
 
     def load_default_state(self):
         self.state.quit()
-        self.state = state()
+        self.state = State()
         self.state.start()
 
 def main():
@@ -37,7 +37,9 @@ def main():
 
         #post pygame events to eventnet
         for event in pygame.event.get():
-            if event.type == pygame.QUIT: sys.exit(0)
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit(0)
 
             eventnet.driver.post(pygame.event.event_name(event.type),
                                  **event.dict)
