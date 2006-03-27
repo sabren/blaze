@@ -13,11 +13,14 @@ class Group(pygame.sprite.Group, eventnet.driver.Subscriber):
         self.update()
         self.draw()
 
+    def add_sprite(self, sprite):
+        self.sprites.append(sprite)
+
     def kill(self):
         '''
         Kill all sprites and self-destruct.
         '''
-        
+
         for sprite in self.sprites:
             sprite.kill()
         self.empty()
