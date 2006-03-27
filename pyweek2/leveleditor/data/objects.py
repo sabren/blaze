@@ -39,7 +39,7 @@ def get_objects():
     sprite = '/relative/path/to/sprite'
     objects.append(GameObject(name,sprite,group))
     
-    name = 'Good guy, but converted to evil'
+    name = 'Good evil guy'
     group = 'Bosses'
     sprite = '/relative/path/to/sprite'
     objects.append(GameObject(name,sprite,group))
