@@ -72,7 +72,8 @@ class Menu(State):
         '''
         Method to check if the mouse is over an image
         '''
-        return self.over_coordinates(image.get_width(),image.get_height(),top_left)
+        return self.over_coordinates(image.get_width(),image.get_height(),
+                                     top_left)
 
     def tick(self):
         self.screen.fill((0,0,0))
