@@ -1,3 +1,7 @@
+'''
+Contains scrolling_display class to handle scrolling displays.
+'''
+
 import states, pygame
 
 class scrolling_display:
