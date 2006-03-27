@@ -1,13 +1,13 @@
 import pygame, eventnet.driver, sys, states
 from view import LEView
 from leveleditor.data.config import get_config
-from leveleditor.data.objects import get_objects
+from leveleditor.data.objects import get_grouped_objects
 
 
 class LevelEditor:
     def __init__(self):
         self.config = get_config()
-        self.objects = get_objects()
+        self.objects = get_grouped_objects()
         self.locations = {}
     def locate(self,what,where):
         if what not in self.objects: raise Exception("Invalid object")

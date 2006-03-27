@@ -46,13 +46,14 @@ class Menu(State):
         self.screen = screen
         self.options = options
 
-    def over_image(self, image, top_left):
+    def over_coordinates(self, width, height, top_left):
         '''
-        Method to check if the mouse is over an image
+        Method to check if the mouse is in a certain position
         '''
         ms_pos = pygame.mouse.get_pos()
-        bottom_right = (top_left[0]+image.get_width(),
-                        top_left[1]+image.get_height())
+        print ms_pos
+        bottom_right = (top_left[0]+width,
+                        top_left[1]+height)
         if ms_pos[0] > top_left[0] and ms_pos[0] < bottom_right[0]:
             x = True
         else:
@@ -65,7 +66,13 @@ class Menu(State):
             return True
         else:
             return False
-
+        
+    def over_image(self, image, top_left):
+        '''
+        Method to check if the mouse is over an image
+        '''
+        return self.over_coordinates(image.get_width(),image.get_height(),top_left)
+        
     def tick(self):
         self.screen.fill((0,0,0))
         self.screen.blit(self.title, self.title_pos)
