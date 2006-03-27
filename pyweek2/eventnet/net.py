@@ -47,6 +47,7 @@ class MessageProtocol(protocol.Protocol):
     def __init__(self, *args, **kw):
         self.buffer = StringQueue()
         self.message_unpacker = message_unpacker(self.buffer)
+        self.callbacks = {}
 
     def connectionMade(self):
         if self.factory.handleNewConnection:
@@ -54,14 +55,11 @@ class MessageProtocol(protocol.Protocol):
 
     def connectionLost(self, reason):
         if self.factory.handleCloseConnection:
-            self.factory.handleCloseConnection(self, reason)
+            self.factory.handleCloseConnection(self)
 
     def post(self, name, **kw):
         data = pack_message(encoder.dumps((name, kw)))
         self.transport.write(data)
-
-    def flush(self):
-        reactor.iterate()
 
     def dataReceived(self, data):
         self.buffer.write(data)
@@ -69,65 +67,72 @@ class MessageProtocol(protocol.Protocol):
             if message is not None:
                 name, kw = encoder.loads(message)
                 kw['_conn'] = self
-                kw['conn'] = self
                 kw['reply'] = self.post
-                if hasattr(self, 'event_handler'):
-                    self.event_handler.post(name, **kw)
+                if name == 'NET_RESPONSE':
+                    self.callbacks[kw['_uid']](kw)
                 else:
                     driver.post(name, **kw)
             else: break
 
+    def request(self, name, **kw):
+        if 'callback' not in kw:
+            raise ValueError, 'callback keyword not supplied.'
+        kw['_request'] = name
+        kw['_uid'] = self.factory.uid
+        self.callbacks[kw['_uid']] = kw['callback']
+        del kw['callback']
+        self.post('NET_REQUEST', **kw)
+
+
+
 
 class ClientFactory(protocol.ReconnectingClientFactory):
-    def __init__(self, onConnect,onClose, protocol):
+    def __init__(self, onConnect,onClose):
         self.handleNewConnection = onConnect
         self.handleCloseConnection = onClose
+        self._uid = 0
         self.maxDelay = 10
-        self.__protocol = protocol
+
+
+
+
+
+    def get_uid(self):
+        self._uid += 1
+        return self._uid
+    uid = property(get_uid)
 
     def buildProtocol(self, addr):
         self.resetDelay()
-        p = self.__protocol()
+        p = MessageProtocol()
         p.factory = self
         return p
 
 
 class ServerFactory(protocol.ServerFactory):
-    def __init__(self, onConnect,onClose, protocol):
+    def __init__(self, onConnect,onClose):
         self.handleNewConnection = onConnect
         self.handleCloseConnection = onClose
-        self.__protocol = protocol
+        self._uid = 0
+
+    def get_uid(self):
+        self._uid += 1
+        return self._uid
+        uid = property(get_uid)
 
     def buildProtocol(self, addr):
-        p = self.__protocol()
+        p = MessageProtocol()
         p.factory = self
         return p
 
 
-def listen(port, onConnect, onClose, protocol=MessageProtocol):
-    """
-    Listen on a port.
-    Calls onConnect (with connection as argument) when a new connection occurs.
-    Calls onClose (with connection and reason as arguments) when a connection is closed.
-    """
-    reactor.listenTCP(port, ServerFactory(onConnect, onClose, protocol))
+def listen(port, onConnect, onClose):
+    reactor.listenTCP(port, ServerFactory(onConnect, onClose))
 
-def connect(address, port, onConnect, onClose, protocol=MessageProtocol):
-    """
-    Connects to an address and port.
-    Calls onConnect (with connection as argument) when a new connection occurs.
-    Calls onClose (with connection and reason as arguments) when the connection is closed.
-    """
-    reactor.connectTCP(address, port, ClientFactory(onConnect, onClose, protocol))
+def connect(address, port,onConnect, onClose):
+    reactor.connectTCP(address, port, ClientFactory(onConnect, onClose))
 
 poll = reactor.iterate
-
-def poll_iterator():
-    """
-    An iterator which polls the network stuff as it is iterated.
-    """
-    while True:
-        yield poll()
 
 if __name__ == "__main__":
     pass

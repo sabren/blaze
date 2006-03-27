@@ -1,98 +1,63 @@
-"""
-
-A simple event/signal dispatcher.
-
-"""
 import weakref
-from collections import deque
 
+class Event(object):
+    def __init__(self, *args, **kw):
+        self.__dict__.update(kw)
+        self.args = kw
+        self.type = args[0]
+    def __repr__(self):
+        return '<Event %s %s>' % (str(self.type), " ".join([("%s=%s" % i) for i in self.args.items()]))
 
-
-def call_with_keywords(func, *args, **kw):
-    """
-    Call a function with allowed keywords only.
-    """
-    return func(*args, **dict([i for i in kw.items() if i[0] in func.func_code.co_varnames]))
-
-
-
-class Dispatcher(object):
-    """
-    A simple event dispatcher.
-    """
+class Observer(object):
+    __slots__ = ['events']
     def __init__(self):
         self.events = {}
-        self.stacks = {}
-        
 
-    def subscribe(self, func, name):
+    def register(self, who, eventtypes):
         """
-        Subscribe a callable to an event. Keeps a weakref to func.
+        Register a Listener for a list of event types.
+        The listener will receive any events it is registered for.
         """
-        
-        if hasattr(func, 'im_self'):
-            obj = weakref.proxy(func.im_self)
-            callable = func.im_func
-            function = lambda kw: call_with_keywords(callable, obj, **kw)
-            function.ref = weakref.ref(func.im_self, lambda x: self.events[name].remove(function))
-        else:
-            callable = weakref.proxy(func)
-            function = lambda kw: call_with_keywords(callable, **kw)
-            function.ref = weakref.ref(func, lambda x: self.events[name].remove(function))
-                
         try:
-            self.events[name].append(function)
-        except KeyError:
-            self.events[name] = [function]
+            callback = who.dispatch
         except AttributeError:
-            raise RuntimeError("Cannot subscribe to a captured event. %s is currently captured by %s." % (name,self.events[name][0]))
-        
-        return function    
-            
-    def capture(self, func, name):
-        """
-        Bind a callable exclusively to an event.
-        """
-        try:
-            handlers = self.events[name]
-        except KeyError:
-            handlers = []
-        self.stacks.setdefault(name, deque()).appendleft(handlers)
-        function = lambda kw: call_with_keywords(func, **kw)
-        self.events[name] = (function,)
-        return function
-        
-        
-    def release(self, func, name):
-        """
-        Release a captured event.
-        """
-        if func is not self.events[name][0]:
-            raise RuntimeError("A callable bound to %s was released out of sequence." % name)
-        handlers = self.stacks[name].popleft()
-        self.events[name] = handlers
-        
+            callback = who
 
-    def unsubscribe(self, func, name):
-        """
-        Unsubscribe a callable from an event.
-        """
-        try:
-            self.events[name].remove(func)
-        except ValueError:
-            pass
-        
+        for eventtype in eventtypes:
+            try:
+                self.events[eventtype].append(callback)
+            except KeyError:
+                self.events[eventtype] = []
+                self.events[eventtype].append(callback)
 
-    def post(self, _event_identity, **kw):
-        """
-        Post an event, which is dispatched to all callables which are subscribed to that event.
-        """
-        try:
-            events = self.events[_event_identity]
-        except KeyError:
-            return tuple()
+    def unregister(self, who):
+        """Remove an event Listener. The listener will no longer receive events."""
+        remove = []
+        for event in self.events:
+            if who in self.events[event]:
+                self.events[event].remove(who)
+
+    def post(self, eventType, **kw):
+        """Post an event, which is dispatched to registered listeners."""
+        e = []
+        if eventType in self.events: e = self.events[eventType]
+        #print "POST:", const.lookup(eventType), kw, e
+        if eventType in self.events:
+            event = Event(eventType, **kw)
+            for func in self.events[event.type]:
+                if func: func(event)
+            return self.events[event.type]
         else:
-            return tuple((i(kw) for i in events))
-        
+            print 'Unhandled event %s.' % (eventType)
+            return []
 
+class Handler(object):
+    def __init__(self, observer, events=[]):
+        """Creates a handler object which listens and posts to an Observer for events."""
+        self.observer = observer
+        self.observer.register(self, events)
+        self.post = self.observer.post
 
+    def dispatch(self, event):
+        """Called when the self.observer has an event for self to process."""
+        pass
