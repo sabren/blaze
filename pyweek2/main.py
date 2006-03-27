@@ -5,7 +5,6 @@
 #add your imports here
 import pygame, eventnet.driver, sys, states
 
-
 class State(eventnet.driver.Handler):
     '''
     State superclass. Doubles as a dummy state.
@@ -33,6 +32,8 @@ class State(eventnet.driver.Handler):
         Exit state and specify next state.
         '''
         self.done = True
+        if next <> None:
+            self.next = next
         self.release() # stop listening
 
 class Menu(State):

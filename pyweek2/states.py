@@ -19,6 +19,7 @@ class State(eventnet.driver.Handler):
         Start the state running. (put initialization here)
         '''
         self.done = False
+        self.next = next
         self.capture() #start listening for events
 
     def tick(self):
@@ -101,17 +102,17 @@ class Menu(State):
 
     def EVT_MENU_Quit(self, event):
         eventnet.driver.post('Quit')
-        self.quit()
 
 class GameState(State):
     def __init__(self, screen):
         State.__init__(self, screen)
+        self.done = False
         self.level = level.level()
         self.display = scrolling.scrolling_display(self.level.level,
                                                    self.screen, (0,0))
-        print 'initted!'
 
     def tick(self):
+        print 'tick'
         self.level.tick()
         self.display.background = self.level.level
         self.display.pos = (self.level.hero.rect.centerx-(self.screen.get_width()/2),
