@@ -46,6 +46,7 @@ class Menu(State):
         self.reg_font = pygame.font.SysFont('Arial', 40)
         self.screen = screen
         self.options = options
+        self.evt_prefix = 'MENU_'
 
     def over_coordinates(self, width, height, top_left):
         '''
@@ -72,7 +73,7 @@ class Menu(State):
         Method to check if the mouse is over an image
         '''
         return self.over_coordinates(image.get_width(),image.get_height(),top_left)
-        
+
     def tick(self):
         self.screen.fill((0,0,0))
         self.screen.blit(self.title, self.title_pos)
@@ -92,4 +93,9 @@ class Menu(State):
         pygame.display.flip()
 
     def EVT_MouseButtonDown(self, event):
-        if self.selected <> None: eventnet.driver.post(self.selected)
+        if self.selected <> None: eventnet.driver.post(
+            self.evt_prefix+self.selected)
+
+    def EVT_MENU_Quit(self, event):
+        eventnet.driver.post('Quit')
+        self.quit()

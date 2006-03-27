@@ -5,12 +5,13 @@
 #add your imports here
 import pygame, eventnet.driver, sys, states
 
-class game(eventnet.driver.Subscriber):
+class game(eventnet.driver.Handler):
     '''
     Game object. Will prob'ly make others (LAN_Game, Net_Game, etc)
     '''
 
     def __init__(self):
+        eventnet.driver.Handler.__init__(self)
         pygame.init()
         self.capture()
         self.done = False
@@ -25,12 +26,14 @@ class game(eventnet.driver.Subscriber):
         else: self.load_default_state()
 
     def load_default_state(self):
+        #try:catch is because the first time this is called there is
+        #no self.state
         try: self.state.quit()
         except: pass
         self.state = states.Menu(self.screen)
         self.state.start()
 
-    def EVT_Quit(self):
+    def EVT_Quit(self, event):
         self.release()
         self.done = True
 
