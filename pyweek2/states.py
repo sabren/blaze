@@ -51,7 +51,6 @@ class Menu(State):
         Method to check if the mouse is in a certain position
         '''
         ms_pos = pygame.mouse.get_pos()
-        print ms_pos
         bottom_right = (top_left[0]+width,
                         top_left[1]+height)
         if ms_pos[0] > top_left[0] and ms_pos[0] < bottom_right[0]:
