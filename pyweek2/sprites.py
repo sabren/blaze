@@ -1,6 +1,12 @@
-import pygame, eventnet.driver
+import pygame, eventnet.driver, os
 
-class Group(pygame.sprite.Group, eventnet.driver.Subscriber):
+def check_collisions(sprite, groups):
+    for group in groups:
+        collidelist = pygame.sprite.spritecollide(sprite, group, False)
+        if collidelist <> []:
+            eventnet.driver.post('Collide', collidelist=collidelist+[sprite])
+
+class Group(pygame.sprite.Group, eventnet.driver.Handler):
     '''
     Our base sprite group object.
     '''
@@ -26,7 +32,7 @@ class Group(pygame.sprite.Group, eventnet.driver.Subscriber):
         self.empty()
         self.release()
 
-class Sprite(pygame.sprite.Sprite, eventnet.driver.Subscriber):
+class Sprite(pygame.sprite.Sprite, eventnet.driver.Handler):
     '''
     Our sprite base class.
     '''
@@ -45,7 +51,6 @@ class Sprite(pygame.sprite.Sprite, eventnet.driver.Subscriber):
         '''
         self.rect = self.image.get_rect()
         self.rect.move(self.pos)
-        pass
 
     def kill(self):
         '''

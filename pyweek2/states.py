@@ -1,8 +1,10 @@
-import pygame, eventnet.driver, os
-import sprites
+import pygame, eventnet.driver, os, sys, sprites
+from leveleditor.data.config import get_config
+from leveleditor.data.objects import get_grouped_objects
 '''
 Store states here.
 '''
+
 pygame.font.init()
 
 class State(eventnet.driver.Handler):
@@ -35,8 +37,9 @@ class State(eventnet.driver.Handler):
         self.release() # stop listening
 
 class Menu(State):
-    def __init__(self, screen, options=['New Game', 'Load Game', 'Highscores',
-                                        'Help', 'Quit'], title='Main Menu'):
+    def __init__(self, screen, options=['New Game', 'Load Game', 'Level Editor',
+                                        'Highscores', 'Help', 'Quit'],
+                 title='Main Menu'):
         State.__init__(self, screen)
         self.selected = None
         title_font = pygame.font.SysFont('Arial', 50, bold=True)
@@ -96,7 +99,7 @@ class Menu(State):
 
     def EVT_MouseButtonDown(self, event):
         if self.selected <> None: eventnet.driver.post(
-            self.evt_prefix+self.selected)
+            self.evt_prefix+''.join(self.selected.split()))
 
     def EVT_MENU_Quit(self, event):
         eventnet.driver.post('Quit')
