@@ -1,4 +1,4 @@
-import pygame, eventnet.driver, sprites, cPickle, os
+import pygame, eventnet.driver, sprites, cPickle, os, glob
 
 class tile(sprites.Sprite):
     def __init__(self, image, pos=(0,0), solid=False):
@@ -13,7 +13,8 @@ class tile(sprites.Sprite):
         self.rect.move(pos)
 
 default_tile = tile(os.path.join('data', 'tiles', 'blue.bmp'))
-empty_level={'enemies': [], 'hero': (0,0), 'tiles': [[default_tile]]}
+tiles = [tile(x) for x in glob.glob(os.path.join('data', 'tiles', '*.bmp'))]
+empty_level={'enemies': [], 'hero': (0,0), 'tiles': [tiles]}
 
 class level:
     '''

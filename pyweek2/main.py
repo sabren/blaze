@@ -32,8 +32,7 @@ class State(eventnet.driver.Handler):
         Exit state and specify next state.
         '''
         self.done = True
-        if next <> None:
-            self.next = next
+        self.next = next
         self.release() # stop listening
 
 class Menu(State):
@@ -126,6 +125,7 @@ class game(eventnet.driver.Handler):
             self.state.tick()
         elif self.state.next <> None:
             self.state = self.state.next
+            self.state.start()
         else: self.load_default_state()
 
     def load_default_state(self):

@@ -13,7 +13,7 @@ class Group(pygame.sprite.Group, eventnet.driver.Handler):
 
     def __init__(self, sprites=[]):
         pygame.sprite.Group.__init__(self, sprites)
-        self.handler_prefix = 'EVT_' #no clue why I'm having to do this
+        eventnet.driver.Handler.__init__(self)
         self.capture()
 
     def tick(self):
@@ -40,7 +40,7 @@ class Sprite(pygame.sprite.Sprite, eventnet.driver.Handler):
 
     def __init__(self, img, groups=[], pos=(0,0)):
         pygame.sprite.Sprite.__init__(self, groups)
-        self.handler_prefix = 'EVT_' #no clue why I'm having to do this
+        eventnet.driver.Handler.__init__(self)
         self.capture()
         self.image = img
         self.rect = self.image.get_rect()

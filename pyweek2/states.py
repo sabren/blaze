@@ -19,7 +19,6 @@ class State(eventnet.driver.Handler):
         Start the state running. (put initialization here)
         '''
         self.done = False
-        self.next = next
         self.capture() #start listening for events
 
     def tick(self):
@@ -33,6 +32,7 @@ class State(eventnet.driver.Handler):
         Exit state and specify next state.
         '''
         self.done = True
+        self.next = next
         self.release() # stop listening
 
 class Menu(State):
@@ -112,9 +112,12 @@ class GameState(State):
                                                    self.screen, (0,0))
 
     def tick(self):
-        print 'tick'
         self.level.tick()
         self.display.background = self.level.level
         self.display.pos = (self.level.hero.rect.centerx-(self.screen.get_width()/2),
                             self.level.hero.rect.centery-(self.screen.get_height()/2))
         self.display.tick()
+
+    def EVT_KeyDown(self, event):
+        if event.key == pygame.K_ESCAPE:
+            self.quit()
