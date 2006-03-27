@@ -4,18 +4,19 @@ class scrolling_display:
     '''
     Class to handle a scrolling display. Give it a pos and keep it ticking
     and it'll center the screen over the background.
+
+    self.pos is the coords of the background to put in the top-left corner
+    of the screen.
     '''
 
-    def __init__(self, screen, background, pos):
+    def __init__(self, background, screen, pos):
         self.background = background
         self.screen = screen
         self.pos = pos
 
     def tick(self):
         self.screen.fill((0,0,0))
-        self.screen.blit(self.background,
-                         (self.pos[0]+(self.screen.get_width()/2),
-                          self.pos[1]+(self.screen.get_height()/2)))
+        self.screen.blit(self.background, (-self.pos[0], -self.pos[1]))
         pygame.display.flip()
 
 if __name__=='__main__':
@@ -39,10 +40,10 @@ if __name__=='__main__':
         y += 50
 
     screen = pygame.display.set_mode((800, 600))
-    pos = (5,5)
+    pos = (0,0)
     sd = scrolling_display(background, screen, pos)
     for x in range(100):
-        sd.pos = (sd.pos[0]+5, sd.pos[1]+5)
+        sd.pos = (sd.pos[0]-5, sd.pos[1]-5)
         sd.tick()
         pygame.time.wait(1000)
     while 1:
