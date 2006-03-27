@@ -1,6 +1,4 @@
-import pygame, eventnet.driver, os, sys, sprites
-from leveleditor.data.config import get_config
-from leveleditor.data.objects import get_grouped_objects
+import pygame, eventnet.driver, os, sys, sprites, scrolling, level
 '''
 Store states here.
 '''
@@ -106,13 +104,16 @@ class Menu(State):
         self.quit()
 
 class GameState(State):
-
     def __init__(self, screen):
-        State.__init__(screen)
-        self.sprites = sprites.Group()
-
-    def join_sprite_group(self, sprite):
-        self.sprites.add_sprite(sprite)
+        State.__init__(self, screen)
+        self.level = level.level()
+        self.display = scrolling.scrolling_display(self.level.level,
+                                                   self.screen, (0,0))
+        print 'initted!'
 
     def tick(self):
-        self.sprites.tick()
+        self.level.tick()
+        self.display.background = self.level.level
+        self.display.pos = (self.level.hero.rect.centerx-(self.screen.get_width()/2),
+                            self.level.hero.rect.centery-(self.screen.get_height()/2))
+        self.display.tick()

@@ -11,9 +11,10 @@ class Group(pygame.sprite.Group, eventnet.driver.Handler):
     Our base sprite group object.
     '''
 
-    def __init__(self):
+    def __init__(self, sprites=[]):
+        pygame.sprite.Group.__init__(self, sprites)
+        self.handler_prefix = 'EVT_' #no clue why I'm having to do this
         self.capture()
-        pygame.sprite.Group.__init__(self)
 
     def tick(self):
         self.update()
@@ -38,12 +39,13 @@ class Sprite(pygame.sprite.Sprite, eventnet.driver.Handler):
     '''
 
     def __init__(self, img, groups=[], pos=(0,0)):
-        self.capture()
         pygame.sprite.Sprite.__init__(self, groups)
-        self.image = pygame.image.load(img)
+        self.handler_prefix = 'EVT_' #no clue why I'm having to do this
+        self.capture()
+        self.image = img
         self.rect = self.image.get_rect()
-        self.rect.move(self.pos)
         self.pos = pos
+        self.rect.move(self.pos)
 
     def update(self):
         '''
@@ -59,7 +61,7 @@ class Sprite(pygame.sprite.Sprite, eventnet.driver.Handler):
         self.release()
         pygame.sprite.Sprite.kill(self)
 
-class hero(eventnet.driver.Handler):
+class hero(Sprite):
     '''
     Class to manage the hero.
     INCOMPLETE
@@ -69,8 +71,8 @@ class hero(eventnet.driver.Handler):
     TURRET_IMAGE = pygame.image.load(os.path.join('data', 'hero', 'turret.bmp'))
     TURRET_POS = (HULL_IMAGE.get_width()/2, HULL_IMAGE.get_height()/3)
 
-    def __init__(self, pos):
-        Sprite.__init__(self)
-        self.turret = Sprite(TURRET_IMAGE)
-        self.hull = Sprite(HULL_IMAGE)
+    def __init__(self, pos, groups=[]):
+        Sprite.__init__(self, pygame.Surface((0,0)), groups)
+        self.turret = Sprite(self.TURRET_IMAGE)
+        self.hull = Sprite(self.HULL_IMAGE)
 
