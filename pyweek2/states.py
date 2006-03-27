@@ -1,4 +1,5 @@
 import pygame, eventnet.driver, os
+import sprites
 '''
 Store states here.
 '''
@@ -67,7 +68,7 @@ class Menu(State):
             return True
         else:
             return False
-        
+
     def over_image(self, image, top_left):
         '''
         Method to check if the mouse is over an image
@@ -100,3 +101,15 @@ class Menu(State):
     def EVT_MENU_Quit(self, event):
         eventnet.driver.post('Quit')
         self.quit()
+
+class GameState(State):
+
+    def __init__(self, screen):
+        State.__init__(screen)
+        self.sprites = sprites.Group()
+
+    def join_sprite_group(self, sprite):
+        self.sprites.add_sprite(sprite)
+
+    def tick(self):
+        self.sprites.tick()
