@@ -1,14 +1,15 @@
-import pygame, eventnet.driver
+import pygame, eventnet.driver, os
 '''
 Store states here.
 '''
 pygame.font.init()
 
-class State(eventnet.driver.Subscriber):
+class State(eventnet.driver.Handler):
     '''
     State superclass. Doubles as a dummy state.
     '''
     def __init__(self, screen):
+        eventnet.driver.Handler.__init__(self)
         self.next = None
         self.screen = screen
 
@@ -89,3 +90,6 @@ class Menu(State):
                 self.selected = None
             y += img.get_height()+5
         pygame.display.flip()
+
+    def EVT_MouseButtonDown(self, event):
+        if self.selected <> None: eventnet.driver.post(self.selected)
