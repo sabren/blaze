@@ -131,7 +131,7 @@ class LevelEditor(Menu):
              -self.background.get_height()))
 
         #toolbar
-        self.toolbar = pygame.Surface((150, 1000))
+        self.toolbar = pygame.Surface((150, 650))
         self.toolbar.fill((100,100,100))
         self.toolbar_items = sprites.Group()
         self.font = pygame.font.SysFont('Arial', 30)
@@ -195,10 +195,10 @@ class LevelEditor(Menu):
         elif event.key == pygame.K_DOWN:
             self.scrolling = (self.scrolling[0],
                               self.scrolling[1]+1)
-        elif event.key == pygame.K_PAGEUP and self.toolbar_pos[1] > 0:
+        elif event.key == pygame.K_PAGEUP and self.toolbar_pos[1] < 0:
             self.toolbar_pos = (0, self.toolbar_pos[1] + 50)
         elif event.key == pygame.K_PAGEDOWN:
-            if self.toolbar_pos[0] < self.toolbar.get_height()-self.screen.get_height():
+            if self.toolbar_pos[1]+self.toolbar.get_height() > self.screen.get_rect().bottom:
                 self.toolbar_pos = (0, self.toolbar_pos[1] - 50)
 
 
