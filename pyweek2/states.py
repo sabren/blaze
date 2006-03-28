@@ -109,31 +109,60 @@ class LevelEditor(Menu):
     A level editor.
     '''
 
-    def __init__(self, screen, level=level.empty_level):
-        Menu.__init__(self, screen, ['Hero', 'Tiles', 'Solid Tiles',
-                                     'Enemies'], '')
-        self.background = pygame.Surface((len(level['tiles'])*50,
-                                          len(level['tiles'][0])*50))
-        self.tiles = sprites.Group()
+    def __init__(self, screen, lvl=level.empty_level):
+        Menu.__init__(self, screen, ['Hero', 'Tiles', 'Enemies'], '')
+        self.background = pygame.Surface((len(lvl['tiles'])*50,
+                                          len(lvl['tiles'][0])*50))
+
+        #tiles
+        self.tiles = sprites.Group(lvl['tiles'])
         y = 0
-        for row in level['tiles']:
+        for row in lvl['tiles']:
             x = 0
             for tile in row:
                 self.background.blit(tile.image, (x,y))
-                self.tiles.add(tile)
                 x += 50
             y += 50                
-        self.tiles = sprites.Group(level['tiles'])
-        self.tiles.draw(self.background)
+
         self.edit_window = pygame.Surface((650, 600))
         self.display = scrolling.scrolling_display(
             self.background, self.edit_window,
             (-self.background.get_width(),
              -self.background.get_height()))
+
+        #toolbar
         self.toolbar = pygame.Surface((150, 600))
-        self.toolbar.fill((255,255,255))
-        self.hero = sprites.hero(level['hero'])
-        self.enemies = sprites.Group(level['enemies'])
+        self.toolbar.fill((100,100,100))
+        self.toolbar_items = sprites.Group()
+        self.font = pygame.font.SysFont('Arial', 30)
+        self.font.set_underline(True)
+        self.labels = [self.font.render(option, True, (0,0,0))
+                       for option in self.options]
+        self.toolbar.blit(
+            self.labels[0],
+            ((self.toolbar.get_width()/2)-(self.labels[0].get_width()/2),
+             5))
+        h = sprites.hero((0,0), [self.toolbar_items])
+        h.rect = h.rect.move(
+            ((self.toolbar.get_width()/2)-(h.image.get_width()/2),
+             self.labels[0].get_height()+10))
+        #self.toolbar.blit(
+        #    self.labels[1],
+        #    ((self.toolbar.get_width()/2)-(self.labels[1].get_width()/2),
+        #     5))
+        x = 22
+        y = 50
+        for tile in level.tiles:
+            tile.rect = tile.rect.move((x,y))
+            #self.toolbar_items.add(tile)
+            if x == 22:
+                x += 55
+            else:
+                x = 22
+                y += 55
+        self.toolbar_items.draw(self.toolbar)
+        self.hero = sprites.hero(lvl['hero'])
+        self.enemies = sprites.Group(lvl['enemies'])
         self.scrolling = (0,0)
         self.selected = None
 

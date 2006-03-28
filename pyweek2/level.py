@@ -8,9 +8,10 @@ class tile(sprites.Sprite):
         self.solid = solid
 
 default_tile = tile(os.path.join('data', 'tiles', 'blue.bmp'))
-tiles = [tile(x) for x in glob.glob(os.path.join('data', 'tiles', '*.bmp'))]
+reg_tiles = [tile(x) for x in glob.glob(os.path.join('data', 'tiles', '*.bmp'))]
 solid_tiles = [tile(x, True) for x in glob.glob(os.path.join('data', 'tiles',
                                                              'solid', '*.bmp'))]
+tiles = solid_tiles + reg_tiles
 test_tiles = [
     solid_tiles,
     solid_tiles,
