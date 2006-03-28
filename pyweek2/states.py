@@ -132,7 +132,7 @@ class LevelEditor(Menu):
              -self.background.get_height()))
 
         #toolbar
-        self.toolbar = pygame.Surface((150, 650))
+        self.toolbar = pygame.Surface((150, 2000))
         self.toolbar.fill((100,100,100))
         self.toolbar_items = sprites.Group()
         self.font = pygame.font.SysFont('Arial', 30)
@@ -157,6 +157,21 @@ class LevelEditor(Menu):
         for tile in level.tiles:
             tile.rect = tile.rect.move((x,y))
             self.toolbar_items.add(tile)
+            if x == 22:
+                x += 55
+            else:
+                x = 22
+                y += 55
+        for sprite in self.toolbar_items.sprites():
+            if sprite.rect.bottom > y: y = sprite.rect.bottom+5
+        self.toolbar.blit(
+            self.labels[2],
+            ((self.toolbar.get_width()/2)-(self.labels[2].get_width()/2),
+             y))
+        x = 22
+        for enemy in sprites.enemies:
+            enemy.rect = enemy.rect.move((x,y))
+            self.toolbar_items.add(enemy)
             if x == 22:
                 x += 55
             else:
@@ -201,7 +216,6 @@ class LevelEditor(Menu):
         elif event.key == pygame.K_PAGEDOWN:
             if self.toolbar_pos[1]+self.toolbar.get_height() > self.screen.get_rect().bottom:
                 self.toolbar_pos = (0, self.toolbar_pos[1] - 50)
-
 
     def EVT_KeyUp(self, event):
         if event.key == pygame.K_RIGHT:
