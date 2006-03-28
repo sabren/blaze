@@ -217,13 +217,6 @@ class LevelEditor(Menu):
             self.scrolling = (self.scrolling[0],
                               self.scrolling[1]-1)
 
-    def quit(self, next=None):
-        Menu.quit(self, next)
-        self.tiles.kill()
-        self.sprites.kill()
-        self.hero.kill()
-        del(self)
-
 class EditChoice(Menu):
     '''
     This is a choice for the level editor.
