@@ -111,6 +111,7 @@ class LevelEditor(Menu):
 
     def __init__(self, screen, lvl=level.empty_level):
         Menu.__init__(self, screen, ['Hero', 'Tiles', 'Enemies'], '')
+        reload(level)
         self.background = pygame.Surface((len(lvl['tiles'])*50,
                                           len(lvl['tiles'][0])*50))
 
@@ -215,6 +216,13 @@ class LevelEditor(Menu):
         elif event.key == pygame.K_DOWN:
             self.scrolling = (self.scrolling[0],
                               self.scrolling[1]-1)
+
+    def quit(self, next=None):
+        Menu.quit(self, next)
+        self.tiles.kill()
+        self.sprites.kill()
+        self.hero.kill()
+        del(self)
 
 class EditChoice(Menu):
     '''
