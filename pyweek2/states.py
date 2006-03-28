@@ -1,4 +1,5 @@
-import pygame, eventnet.driver, os, sys, sprites, scrolling, level
+import pygame, eventnet.driver, os, sys, sprites, scrolling, level, glob
+import leveleditor
 '''
 Store states here.
 '''
@@ -103,10 +104,108 @@ class Menu(State):
     def EVT_MENU_Quit(self, event):
         eventnet.driver.post('Quit')
 
+class LevelEditor(Menu):
+    '''
+    A level editor.
+    '''
+
+    def __init__(self, screen, level=level.empty_level):
+        Menu.__init__(self, screen, ['Hero', 'Tiles', 'Solid Tiles',
+                                     'Enemies'], '')
+        self.background = pygame.Surface((len(level['tiles'])*50,
+                                          len(level['tiles'][0])*50))
+        self.tiles = sprites.Group()
+        y = 0
+        for row in level['tiles']:
+            x = 0
+            for tile in row:
+                self.background.blit(tile.image, (x,y))
+                self.tiles.add(tile)
+                x += 50
+            y += 50                
+        self.tiles = sprites.Group(level['tiles'])
+        self.tiles.draw(self.background)
+        self.edit_window = pygame.Surface((650, 600))
+        self.display = scrolling.scrolling_display(
+            self.background, self.edit_window,
+            (-self.background.get_width(),
+             -self.background.get_height()))
+        self.toolbar = pygame.Surface((150, 600))
+        self.toolbar.fill((255,255,255))
+        self.hero = sprites.hero(level['hero'])
+        self.enemies = sprites.Group(level['enemies'])
+        self.scrolling = (0,0)
+        self.selected = None
+
+    def tick(self):
+        if self.selected != None:
+            self.background.blit(self.selected.image,
+                                 pygame.mouse.get_pos())
+        self.display.background = self.background
+        self.display.pos = (self.display.pos[0]+self.scrolling[0],
+                            self.display.pos[1]+self.scrolling[1])
+        self.display.tick()
+        self.screen.blit(self.toolbar, (0,0))
+        self.screen.blit(self.edit_window, (150,0))
+        pygame.display.update(self.screen.get_rect())
+
+    def EVT_KeyDown(self, event):
+        if event.key == pygame.K_ESCAPE:
+            self.quit()
+        elif event.key == pygame.K_RIGHT:
+            self.scrolling = (self.scrolling[0]+1,
+                              self.scrolling[1])
+        elif event.key == pygame.K_LEFT:
+            self.scrolling = (self.scrolling[0]-1,
+                              self.scrolling[1])
+        elif event.key == pygame.K_UP:
+            self.scrolling = (self.scrolling[0],
+                              self.scrolling[1]-1)
+        elif event.key == pygame.K_DOWN:
+            self.scrolling = (self.scrolling[0],
+                              self.scrolling[1]+1)
+
+    def EVT_KeyUp(self, event):
+        if event.key == pygame.K_RIGHT:
+            self.scrolling = (self.scrolling[0]-1,
+                              self.scrolling[1])
+        elif event.key == pygame.K_LEFT:
+            self.scrolling = (self.scrolling[0]+1,
+                              self.scrolling[1])
+        elif event.key == pygame.K_UP:
+            self.scrolling = (self.scrolling[0],
+                              self.scrolling[1]+1)
+        elif event.key == pygame.K_DOWN:
+            self.scrolling = (self.scrolling[0],
+                              self.scrolling[1]-1)
+
+class EditChoice(Menu):
+    '''
+    This is a choice for the level editor.
+    '''
+
+    def __init__(self, screen):
+        self.levels = ['Create New']+[os.path.splitext(
+            os.path.split(lvl)[-1])[0]for lvl in glob.glob(os.path.join(
+                'data','levels', '*.lvl'))]
+        Menu.__init__(self, screen, self.levels, 'Choose a Level')
+
+    def EVT_KeyDown(self, event):
+        self.quit()
+
+    def EVT_MouseButtonDown(self, event):
+        if self.selected == 'Create New':
+            self.quit(LevelEditor(self.screen))
+        elif self.selected != None:
+            self.quit(LevelEditor(self.screen, self.selected))
+
 class GameState(State):
+    '''
+    Our gamestate.
+    '''
+
     def __init__(self, screen):
         State.__init__(self, screen)
-        self.done = False
         self.level = level.level()
         self.display = scrolling.scrolling_display(self.level.level,
                                                    self.screen, (0,0))
@@ -117,7 +216,11 @@ class GameState(State):
         self.display.pos = (self.level.hero.rect.centerx-(self.screen.get_width()/2),
                             self.level.hero.rect.centery-(self.screen.get_height()/2))
         self.display.tick()
+        self.level.hero.rect.move((self.level.hero.pos[0]-5,
+                                   self.level.hero.pos[1]-5))
 
     def EVT_KeyDown(self, event):
         if event.key == pygame.K_ESCAPE:
+            pygame.image.save(self.level.level, 'temp.bmp')
             self.quit()
+

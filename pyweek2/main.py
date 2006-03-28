@@ -37,7 +37,7 @@ class State(eventnet.driver.Handler):
 
 class Menu(State):
     def __init__(self, screen, options=['New Game', 'Load Game', 'Level Editor',
-                                        'Highscores', 'Help', 'Quit'],
+                                        'Highscores', 'Options', 'Quit'],
                  title='Main Menu'):
         State.__init__(self, screen)
         self.selected = None
@@ -107,6 +107,9 @@ class Menu(State):
     def EVT_MENU_NewGame(self, event):
         self.quit(states.GameState(self.screen))
 
+    def EVT_MENU_LevelEditor(self, event):
+        self.quit(states.EditChoice(self.screen))
+
 class game(eventnet.driver.Handler):
     '''
     Game object. Will prob'ly make others (LAN_Game, Net_Game, etc)
@@ -115,6 +118,7 @@ class game(eventnet.driver.Handler):
     def __init__(self):
         eventnet.driver.Handler.__init__(self)
         pygame.init()
+        pygame.display.set_caption('Team Trailblazer')
         self.capture()
         self.done = False
         self.screen = pygame.display.set_mode((800, 600)) #windowed for now

@@ -2,7 +2,7 @@
 Contains scrolling_display class to handle scrolling displays.
 '''
 
-import states, pygame
+import pygame
 
 class scrolling_display:
     '''
@@ -21,7 +21,7 @@ class scrolling_display:
     def tick(self):
         self.screen.fill((0,0,0))
         self.screen.blit(self.background, (-self.pos[0], -self.pos[1]))
-        pygame.display.flip()
+        pygame.display.update(self.screen.get_rect())
 
 if __name__=='__main__':
     #visual scrolling test[s]
