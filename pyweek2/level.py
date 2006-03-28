@@ -12,12 +12,7 @@ reg_tiles = [tile(x) for x in glob.glob(os.path.join('data', 'tiles', '*.bmp'))]
 solid_tiles = [tile(x, True) for x in glob.glob(os.path.join('data', 'tiles',
                                                              'solid', '*.bmp'))]
 tiles = solid_tiles + reg_tiles
-test_tiles = [
-    solid_tiles,
-    solid_tiles,
-    solid_tiles,
-    solid_tiles
-    ]
+test_tiles = [tiles, tiles, tiles, tiles]
 empty_level={'enemies': [], 'hero': (0,0), 'tiles': test_tiles}
 
 class level:
@@ -34,7 +29,7 @@ class level:
         for row in source['tiles']:
             x = 0
             for tile in row:
-                self.background.blit(tile.image, (x,y))
+                tile.rect = tile.rect.move((x,y))
                 self.tiles.add(tile)
                 x += 50
             y += 50
@@ -50,6 +45,6 @@ class level:
 if __name__=='__main__':
     lvl = level()
     lvl.tick()
-    pygame.display.set_mode((800, 600)).blit(lvl.background, (0,0))
+    pygame.display.set_mode((640, 480)).blit(lvl.background, (0,0))
     pygame.display.flip()
     pygame.time.wait(5000)

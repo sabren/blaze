@@ -131,7 +131,7 @@ class LevelEditor(Menu):
              -self.background.get_height()))
 
         #toolbar
-        self.toolbar = pygame.Surface((150, 600))
+        self.toolbar = pygame.Surface((150, 1000))
         self.toolbar.fill((100,100,100))
         self.toolbar_items = sprites.Group()
         self.font = pygame.font.SysFont('Arial', 30)
@@ -142,40 +142,42 @@ class LevelEditor(Menu):
             self.labels[0],
             ((self.toolbar.get_width()/2)-(self.labels[0].get_width()/2),
              5))
-        h = sprites.hero((0,0), [self.toolbar_items])
-        h.rect = h.rect.move(
-            ((self.toolbar.get_width()/2)-(h.image.get_width()/2),
+        self.hero = sprites.hero(lvl['hero'])
+        self.h = sprites.Sprite(
+            self.hero.image, [self.toolbar_items],
+            ((self.toolbar.get_width()/2)-(self.hero.image.get_width()/2),
              self.labels[0].get_height()+10))
-        #self.toolbar.blit(
-        #    self.labels[1],
-        #    ((self.toolbar.get_width()/2)-(self.labels[1].get_width()/2),
-        #     5))
+        self.toolbar.blit(
+            self.labels[1],
+            ((self.toolbar.get_width()/2)-(self.labels[1].get_width()/2),
+             self.h.rect.bottom+5))
         x = 22
-        y = 50
+        y =  self.h.rect.bottom+self.labels[1].get_height()+10
         for tile in level.tiles:
             tile.rect = tile.rect.move((x,y))
-            #self.toolbar_items.add(tile)
+            self.toolbar_items.add(tile)
             if x == 22:
                 x += 55
             else:
                 x = 22
                 y += 55
         self.toolbar_items.draw(self.toolbar)
-        self.hero = sprites.hero(lvl['hero'])
-        self.enemies = sprites.Group(lvl['enemies'])
+        self.toolbar_pos = (0,0)
+
+        self.sprites = sprites.Group(lvl['enemies']+[self.hero])
         self.scrolling = (0,0)
         self.selected = None
 
     def tick(self):
-        if self.selected != None:
-            self.background.blit(self.selected.image,
-                                 pygame.mouse.get_pos())
         self.display.background = self.background
         self.display.pos = (self.display.pos[0]+self.scrolling[0],
                             self.display.pos[1]+self.scrolling[1])
         self.display.tick()
-        self.screen.blit(self.toolbar, (0,0))
+        self.screen.blit(self.toolbar, self.toolbar_pos)
         self.screen.blit(self.edit_window, (150,0))
+        if self.selected != None:
+            self.background.blit(self.selected.image,
+                                 pygame.mouse.get_pos())
         pygame.display.update(self.screen.get_rect())
 
     def EVT_KeyDown(self, event):
@@ -193,6 +195,12 @@ class LevelEditor(Menu):
         elif event.key == pygame.K_DOWN:
             self.scrolling = (self.scrolling[0],
                               self.scrolling[1]+1)
+        elif event.key == pygame.K_PAGEUP and self.toolbar_pos[1] > 0:
+            self.toolbar_pos = (0, self.toolbar_pos[1] + 50)
+        elif event.key == pygame.K_PAGEDOWN:
+            if self.toolbar_pos[0] < self.toolbar.get_height()-self.screen.get_height():
+                self.toolbar_pos = (0, self.toolbar_pos[1] - 50)
+
 
     def EVT_KeyUp(self, event):
         if event.key == pygame.K_RIGHT:

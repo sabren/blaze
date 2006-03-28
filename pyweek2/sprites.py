@@ -18,7 +18,6 @@ class Group(pygame.sprite.Group, eventnet.driver.Handler):
 
     def tick(self):
         self.update()
-        self.draw()
 
     def add_sprite(self, sprite):
         self.sprites.append(sprite)
@@ -45,14 +44,14 @@ class Sprite(pygame.sprite.Sprite, eventnet.driver.Handler):
         self.image = img
         self.rect = self.image.get_rect()
         self.pos = pos
-        self.rect.move(self.pos)
+        self.rect = self.rect.move(self.pos)
 
     def update(self):
         '''
         This is called instead of tick() .
         '''
         self.rect = self.image.get_rect()
-        self.rect.move(self.pos)
+        self.rect = self.rect.move(self.pos)
 
     def kill(self):
         '''
@@ -72,7 +71,8 @@ class hero(Sprite):
     TURRET_POS = (HULL_IMAGE.get_width()/2, HULL_IMAGE.get_height()/3)
 
     def __init__(self, pos, groups=[]):
-        Sprite.__init__(self, pygame.Surface((0,0)), groups)
+        Sprite.__init__(self, self.HULL_IMAGE, groups)
         self.turret = Sprite(self.TURRET_IMAGE)
         self.hull = Sprite(self.HULL_IMAGE)
 
+enemies = []
