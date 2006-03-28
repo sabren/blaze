@@ -8,8 +8,7 @@ pygame.init()
 def create_dummies():
 
     #dummy tiles (filled with different colors)
-    dummy_colors = [('blue', (0,0,255)),
-                    ('red', (255,0,0)),
+    dummy_colors = [('red', (255,0,0)),
                     ('green', (0,255,0)),
                     ('black', (0,0,0)),
                     ('white', (255,255,255)),
@@ -17,8 +16,10 @@ def create_dummies():
     dummy_tile = pygame.Surface((50, 50))
     for color in dummy_colors:
         dummy_tile.fill(color[1])
-        pygame.image.save(dummy_tile, os.path.join('tiles',
+        pygame.image.save(dummy_tile, os.path.join('tiles', 'solid',
                                                    '%s.bmp' % color[0]))
+    dummy_tile.fill((0,0,255))
+    pygame.image.save(dummy_tile, os.path.join('tiles', 'blue.bmp'))
 
     #hero images
     hull = pygame.Surface((50,100))
