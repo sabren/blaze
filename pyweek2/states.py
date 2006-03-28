@@ -104,6 +104,11 @@ class Menu(State):
     def EVT_MENU_Quit(self, event):
         eventnet.driver.post('Quit')
 
+class SaveLevel(Menu):
+    '''
+    Small input to save a level.
+    '''
+
 class LevelEditor(Menu):
     '''
     A level editor.

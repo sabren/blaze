@@ -19,15 +19,12 @@ class Group(pygame.sprite.Group, eventnet.driver.Handler):
     def tick(self):
         self.update()
 
-    def add_sprite(self, sprite):
-        self.sprites.append(sprite)
-
     def kill(self):
         '''
         Kill all sprites and self-destruct.
         '''
 
-        for sprite in self.sprites:
+        for sprite in self.sprites():
             sprite.kill()
         self.empty()
         self.release()

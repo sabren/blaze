@@ -2,18 +2,24 @@ import pygame, eventnet.driver, sprites, cPickle, os, glob
 
 class tile(sprites.Sprite):
     def __init__(self, image, solid=False):
-        self.image = pygame.image.load(image)
-        sprites.Sprite.__init__(self, self.image)
+        sprites.Sprite.__init__(self, image)
+        self.image = image
         self.rect = self.image.get_rect()
         self.solid = solid
 
-default_tile = tile(os.path.join('data', 'tiles', 'blue.bmp'))
-reg_tiles = [tile(x) for x in glob.glob(os.path.join('data', 'tiles', '*.bmp'))]
-solid_tiles = [tile(x, True) for x in glob.glob(os.path.join('data', 'tiles',
-                                                             'solid', '*.bmp'))]
+default_tile = tile(pygame.image.load(os.path.join(
+    'data', 'tiles', 'blue.bmp')))
+reg_tiles = [tile(pygame.image.load(x)) for x in glob.glob(
+    os.path.join('data', 'tiles', '*.bmp'))]
+solid_tiles = [tile(pygame.image.load(x), True) for x in glob.glob(
+    os.path.join('data', 'tiles', 'solid', '*.bmp'))]
 tiles = solid_tiles + reg_tiles
 test_tiles = [tiles, tiles, tiles, tiles]
 empty_level={'enemies': [], 'hero': (0,0), 'tiles': test_tiles}
+
+def new(width, height):
+    return {'enemies': [], 'hero': (0,0),
+            'tiles': [[default_tile.dup() for tile in range(width)]*height]}
 
 class level:
     '''
@@ -30,6 +36,7 @@ class level:
             x = 0
             for tile in row:
                 tile.rect = tile.rect.move((x,y))
+                self.background.blit(tile.image, (x,y))
                 self.tiles.add(tile)
                 x += 50
             y += 50
@@ -43,7 +50,8 @@ class level:
         self.sprites.clear(self.level, self.background)
 
 if __name__=='__main__':
-    lvl = level()
+    print new(5,5)
+    lvl = level(new(5,5))
     lvl.tick()
     pygame.display.set_mode((640, 480)).blit(lvl.background, (0,0))
     pygame.display.flip()
