@@ -51,14 +51,6 @@ class Menu(State):
         self.screen = screen
         self.options = options
         self.evt_prefix = 'MENU_'
-        jkbx = Jukebox()
-        jkbx.load_sound('background007')
-        jkbx.load_sound('battle003')
-        jkbx.load_sound('battle035')
-        jkbx.load_sound('nautical047')
-        jkbx.play_sound('battle003',5)
-        jkbx.play_sound('battle035',6)
-        jkbx.play_sound('nautical047',7)
 
     def over_coordinates(self, width, height, top_left):
         '''
@@ -131,9 +123,19 @@ class game(eventnet.driver.Handler):
         self.capture()
         self.done = False
         self.screen = pygame.display.set_mode((800, 600)) #windowed for now
+        self.volume = 0.7
+        self.jkbx = Jukebox()
+        self.jkbx.load_sound('explosion')
+        self.jkbx.load_sound('water')
+        self.jkbx.load_sound('howitzer')
+        self.jkbx.load_song('sisters', '.mid')
+        self.jkbx.load_song('confedmarch', '.mid')
+        self.jkbx.play_song('confedmarch')
+
         self.load_default_state()
 
     def tick(self):
+        pygame.mixer.music.set_volume(self.volume)
         if not self.state.done:
             self.state.tick()
         elif self.state.next <> None:
@@ -165,6 +167,11 @@ class game(eventnet.driver.Handler):
                 fn = 'screenshot%s.bmp' % str(num)
                 num += 1
             pygame.image.save(self.screen, fn)
+        elif event.key == pygame.K_KP_PLUS and self.volume < 1.0:
+            self.volume += 0.1
+        elif event.key == pygame.K_KP_MINUS and self.volume > 0.0:
+            self.volume -= 0.1
+        
 
 def main():
     g = game()
