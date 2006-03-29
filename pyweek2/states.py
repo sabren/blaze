@@ -1,5 +1,6 @@
 import pygame, eventnet.driver, os, sys, sprites, scrolling, level, glob
-from string import digits
+import cPickle
+from string import digits, lowercase
 '''
 Store states here.
 '''
@@ -108,16 +109,63 @@ class SaveLevel(Menu):
     '''
     Small input to save a level.
     '''
+    def __init__(self, screen, lvl, lvl_name):
+        Menu.__init__(self, screen, [], '')
+        if lvl_name != '__NEW__':
+            level.save(lvl_name, lvl)
+            self.quit()
+        self.label = self.reg_font.render('Name:', True, (115,115,115))
+        self.name = ''
+        self.lvl = lvl
+        self.topleft = (300, 200)
+        self.shift = False
+
+    def tick(self):
+        self.screen.fill((0,0,0))
+        self.screen.blit(self.label, self.topleft)
+        img = self.reg_font.render(self.name, True, (255,255,255))
+        self.screen.blit(img, (
+            self.topleft[0]+self.label.get_width()+5, self.topleft[1]))
+        pygame.draw.line(
+            self.screen, (255,255,255),
+            (self.topleft[0]+self.label.get_width()+img.get_width()+5,
+             self.topleft[1]),
+            (self.topleft[0]+self.label.get_width()+img.get_width()+5,
+             self.topleft[1]+img.get_height()))
+        pygame.display.flip()
+
+    def EVT_KeyDown(self, event):
+        if event.key == pygame.K_BACKSPACE:
+            if len(self.name) > 0:
+                self.name = self.name[:-1]
+        elif pygame.key.name(event.key).startswith('['):
+            if pygame.key.name(event.key)[1:-1] in digits:
+                self.name += pygame.key.name(event.key)[1:-1]
+        elif pygame.key.name(event.key) in lowercase:
+            if self.shift:
+                self.name += pygame.key.name(event.key).upper()
+            else:
+                self.name += pygame.key.name(event.key)
+        elif event.key in [pygame.K_RSHIFT, pygame.K_LSHIFT]:
+            self.shift = True
+        elif event.key == pygame.K_RETURN and self.name != '':
+            level.save(self.name, self.lvl)
+            self.quit()
+
+    def EVT_KeyUp(self, event):
+        if event.key in [pygame.K_RSHIFT, pygame.K_LSHIFT]:
+            self.shift = False
 
 class LevelEditor(Menu):
     '''
     A level editor.
     '''
 
-    def __init__(self, screen, lvl):
+    def __init__(self, screen, lvl, lvl_name):
         Menu.__init__(self, screen, ['Hero', 'Tiles', 'Enemies'], '')
         reload(level)
         self.lvl = lvl
+        self.lvl_name = lvl_name
         self.background = pygame.Surface((len(lvl['tiles'])*50,
                                           len(lvl['tiles'][0])*50))
 
@@ -214,25 +262,21 @@ class LevelEditor(Menu):
                     if self.over_image(tile.image, pos):
                         tile.image = self.selected.image
                         tile.solid = self.selected.solid
+                        self.lvl['tiles'][pos[1]/50][pos[0]/50] = tile
                         self.draw()
 
         self.display.pos = (self.display.pos[0]+self.scrolling[0],
                             self.display.pos[1]+self.scrolling[1])
         self.display.tick()
-        '''
-        if self.over_coordinates(
-            150, self.font.get_ascent()+self.font.get_descent()+10, (0,0)):
+        if self.over_coordinates(150, 50, (0,0)):
             img = self.font.render('Save', True, (255,255,255),
                                    (0,0,0))
-            self.screen.blit(img, (
-                ((self.toolbar.get_width()/2)-(self.font.size('Save')[0]/2), 2))
-                             )
         else:
-            img = self.font.render('Save', True, (0,0,0))
-            self.toolbar.blit(img, (
-                ((self.toolbar.get_width()/2)-(self.font.size('Save')[0]/2), 2))
-                              )
-        '''
+            img = self.font.render('Save', True, (0,0,0), (100,100,100))
+
+        self.toolbar.blit(img, (
+            ((self.toolbar.get_width()/2)-(self.font.size('Save')[0]/2), 2))
+                         )
         self.screen.blit(self.toolbar, self.toolbar_pos)
         self.screen.blit(self.edit_window, (150,0))
 
@@ -241,16 +285,21 @@ class LevelEditor(Menu):
         pygame.display.update(self.screen.get_rect())
 
     def EVT_MouseButtonDown(self, event):
-        for item in self.toolbar_items.sprites():
-            if self.over_image(item.image, item.rect.topleft):
-                if isinstance(item, level.tile):
-                    self.selected = level.tile(item.image, item.solid)
-                elif isinstance(item, sprites.hero):
-                    self.selected = self.hero(item.pos)
-                else:
-                    self.selected = sprites.Sprite(item.image, pos=item.pos)
-                pygame.mouse.set_visible(False)
-        if self.over_image(self.edit_window, (150,0)):
+        if self.over_image(self.toolbar, (0,0)):
+            if self.over_coordinates(150, 50, (0,0)):
+                self.quit(SaveLevel(self.screen, self.lvl, self.lvl_name))
+            else:
+                for item in self.toolbar_items.sprites():
+                    if self.over_image(item.image, item.rect.topleft):
+                        if isinstance(item, level.tile):
+                            self.selected = level.tile(item.image, item.solid)
+                        elif isinstance(item, sprites.hero):
+                            self.selected = self.hero(item.pos)
+                        else:
+                            self.selected = sprites.Sprite(item.image,
+                                                           pos=item.pos)
+                        pygame.mouse.set_visible(False)
+        elif self.over_image(self.edit_window, (150,0)):
             if isinstance(self.selected, sprites.hero):
                 self.hero.kill()
                 self.hero = sprites.hero(pygame.mouse.get_pos(), [self.sprites])
@@ -363,7 +412,7 @@ class NewLevel(Menu):
         elif event.key == pygame.K_RETURN:
             try:
                 self.quit(LevelEditor(self.screen, level.new(
-                    int(self.width), int(self.height))))
+                    int(self.width), int(self.height)), '__NEW__'))
             except:
                 pass
 
@@ -386,9 +435,8 @@ class EditChoice(Menu):
             #self.quit(LevelEditor(self.screen, level.empty_level))
             self.quit(NewLevel(self.screen))
         elif self.selected != None:
-            self.quit(LevelEditor(self.screen,
-                                  os.path.join('data','levels',
-                                               self.selected+'.lvl')))
+            self.quit(LevelEditor(self.screen, level.load(self.selected),
+                                  self.selected))
 
 class GameState(State):
     '''
