@@ -49,6 +49,7 @@ class Jukebox:
         The mnemonic of the song, loops is how many times will it play, and start
         is the starting position. All args are optional, if no name specified, will play the last
         song loaded
+        loops = -1 means infinite loop
         """
         if not name is None:
             try:
@@ -64,18 +65,21 @@ class Jukebox:
     def play_sound(self,name,loops=0,maxtime=0):
         """
         Here the name is not optional, as I think sounds shouldn't be played by load ordering or randomly
+        loops = -1 means infinite loop
         """
         self.soundlist[name].play(loops,maxtime)
         self.current_sound = name
 
-    def stop_sound(self,name=None):
+    def stop_sound(self,name=None,fade=True,time=1.0):
         """
-        Stops sound by name or by current if name is omitted
+        Stops sound by name or by current if name is omitted. If fade, the sound will fade time seconds
         """
-        if not name is None:
-            self.soundlist[name].stop()
+        if name is None:
+            name = self.current_sound
+        if fade:
+            self.soundlist[name].fade(time)
         else:
-            self.soundlist[self.current_sound].stop()
+            self.soundlist[name].stop()
 
     def stop_song(self,fade=True,time=1.0):
         """
@@ -84,7 +88,57 @@ class Jukebox:
         """
         if fade:
             pygame.mixer.music.fadeout(time)
-        pygame.mixer.music.stop()
+        else:
+            pygame.mixer.music.stop()
+
+    def set_sound_volume(self,vol,name=None):
+        """Between 0.0 and 1.0"""
+        if vol > 1.0 or vol < 0.0: return
+        if name is None:
+            name = self.current_sound
+        self.soundlist[name].set_volume(vol)
+
+    def get_sound_volume(self,name=None):
+        """Between 0.0 and 1.0"""
+        if name is None:
+            name = self.current_sound
+        return self.soundlist[name].get_volume()
+        
+    def set_song_volume(self,vol):
+        """Between 0.0 and 1.0"""
+        if vol > 1.0 or vol < 0.0: return
+        pygame.mixer.music.set_volume(vol)
+
+    def get_song_volume(self):
+        return pygame.mixer.music.set_volume()
+        
+    def is_sound_playing(self,name):
+        return self.current_sound == name and pygame.mixer.get_busy()
+        
+    def get_sound_playing(self):
+        """Returns a Sound() instance of the sound playing"""
+        return self.soundlist[self.current_song]
+
+    def is_song_playing(self,name=None):
+        if name is None:
+            return pygame.mixer.music.get_busy()
+        else:
+            return self.current_song == name and pygame.mixer.music.get_busy()
+    
+    def pause_song(self):
+        pygame.mixer.music.pause()
+
+    def resume_song(self):
+        pygame.mixer.music.unpause()
+
+    def pause_all_sounds(self):
+        pygame.mixer.pause()
+        
+    def resume_all_sounds(self):
+        pygame.mixer.unpause()
+    
+    def get_sounds(self):
+        return self.soundlist.values()
         
     def play_random_song(self,loops=0,start=0.0):
         import random

@@ -125,17 +125,36 @@ class game(eventnet.driver.Handler):
         self.screen = pygame.display.set_mode((800, 600)) #windowed for now
         self.volume = 0.7
         self.jkbx = Jukebox()
+        vinko = """
+        self.jkbx.load_song('bg','.mp3')
+        self.jkbx.play_song()        
+        self.jkbx.stop_song('bg',150)
+        self.jkbx.load_sound('background007')
+        self.jkbx.load_sound('battle003')
+        self.jkbx.load_sound('battle035')
+        self.jkbx.load_sound('nautical047')
+        self.jkbx.play_sound('battle003',5)
+        self.jkbx.set_sound_volume('battle003',0.1)
+        self.jkbx.play_sound('battle035',6)
+        self.jkbx.set_sound_volume('battle035',0.5)
+        self.jkbx.play_sound('nautical047',7)
+        self.jkbx.set_sound_volume('nautical047',0.3)
+        """
+        #micah = """
         self.jkbx.load_sound('explosion')
         self.jkbx.load_sound('water')
         self.jkbx.load_sound('howitzer')
         self.jkbx.load_song('sisters', '.mid')
         self.jkbx.load_song('confedmarch', '.mid')
         self.jkbx.play_song('confedmarch')
-
+        self.jkbx.stop_song('confedmarch',100)
+        #"""
         self.load_default_state()
 
     def tick(self):
-        pygame.mixer.music.set_volume(self.volume)
+        self.jkbx.set_song_volume(self.volume)
+        for sound in self.jkbx.get_sounds():
+            sound.set_volume(self.volume)
         if not self.state.done:
             self.state.tick()
         elif self.state.next <> None:
