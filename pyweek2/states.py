@@ -130,11 +130,11 @@ class SaveLevel(Menu):
     def tick(self):
         self.screen.blit(self.background, (0,0))
         self.screen.blit(self.label, self.topleft)
-        img = self.reg_font.render(self.name, True, (255,255,255))
+        img = self.reg_font.render(self.name, True, (0,0,0))
         self.screen.blit(img, (
             self.topleft[0]+self.label.get_width()+5, self.topleft[1]))
         pygame.draw.line(
-            self.screen, (255,255,255),
+            self.screen, (0,0,0),
             (self.topleft[0]+self.label.get_width()+img.get_width()+5,
              self.topleft[1]),
             (self.topleft[0]+self.label.get_width()+img.get_width()+5,
@@ -195,8 +195,13 @@ class LevelEditor(Menu):
                 (self.background.get_height()/2)-(self.edit_window.get_height()/2)))
 
         #toolbar
+        self.toolbar_background = pygame.image.load(
+            os.path.join('data', 'flag2.bmp'))
         self.toolbar = pygame.Surface((150, 2000))
-        self.toolbar.fill((100,100,100))
+        #self.toolbar.fill((100,100,100))
+        self.toolbar.blit(self.toolbar_background, (0,0))
+        self.toolbar.blit(self.toolbar_background, (0,600))
+        self.toolbar.blit(self.toolbar_background, (0,1200))
         self.toolbar_items = sprites.Group()
         self.font = pygame.font.SysFont('Arial', 30)
         self.font.set_underline(True)
@@ -278,10 +283,9 @@ class LevelEditor(Menu):
                             self.display.pos[1]+self.scrolling[1])
         self.display.tick()
         if self.over_coordinates(150, 50, (0,0)):
-            img = self.font.render('Save', True, (255,255,255),
-                                   (0,0,0))
+            img = self.font.render('Save', True, (255,255,255))
         else:
-            img = self.font.render('Save', True, (0,0,0), (100,100,100))
+            img = self.font.render('Save', True, (0,0,0))
 
         self.toolbar.blit(img, (
             ((self.toolbar.get_width()/2)-(self.font.size('Save')[0]/2), 2))
