@@ -198,7 +198,6 @@ class LevelEditor(Menu):
         self.toolbar_background = pygame.image.load(
             os.path.join('data', 'flag2.bmp'))
         self.toolbar = pygame.Surface((150, 2000))
-        #self.toolbar.fill((100,100,100))
         self.toolbar.blit(self.toolbar_background, (0,0))
         self.toolbar.blit(self.toolbar_background, (0,600))
         self.toolbar.blit(self.toolbar_background, (0,1200))
@@ -315,9 +314,7 @@ class LevelEditor(Menu):
                                                            pos=item.pos)
         elif self.over_image(self.edit_window, (150,0)):
             if isinstance(self.selected, sprites.hero):
-                self.hero.kill()
-                self.hero = sprites.hero(pygame.mouse.get_pos(), [self.sprites])
-                self.hero.update()
+                self.hero.rect = hero.rect.move(pygame.mouse.get_pos())
                 self.selected = None
             else:
                 self.mouse_down = True
