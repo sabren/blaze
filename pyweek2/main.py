@@ -4,6 +4,7 @@
 
 #add your imports here
 import pygame, eventnet.driver, sys, states
+from jukebox import Jukebox
 
 class State(eventnet.driver.Handler):
     '''
@@ -50,6 +51,14 @@ class Menu(State):
         self.screen = screen
         self.options = options
         self.evt_prefix = 'MENU_'
+        jkbx = Jukebox()
+        jkbx.load_sound('background007')
+        jkbx.load_sound('battle003')
+        jkbx.load_sound('battle035')
+        jkbx.load_sound('nautical047')
+        jkbx.play_sound('battle003',5)
+        jkbx.play_sound('battle035',6)
+        jkbx.play_sound('nautical047',7)
 
     def over_coordinates(self, width, height, top_left):
         '''
