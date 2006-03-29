@@ -294,7 +294,9 @@ class LevelEditor(Menu):
         self.screen.blit(self.edit_window, (150,0))
 
         if self.selected != None:
-            self.screen.blit(self.selected.image, pygame.mouse.get_pos())
+            self.screen.blit(pygame.transform.scale(
+                self.selected.image, (20,20)), (pygame.mouse.get_pos()[0]+20,
+                                                pygame.mouse.get_pos()[1]+20))
         pygame.display.update(self.screen.get_rect())
 
     def EVT_MouseButtonDown(self, event):
@@ -311,7 +313,6 @@ class LevelEditor(Menu):
                         else:
                             self.selected = sprites.Sprite(item.image,
                                                            pos=item.pos)
-                        pygame.mouse.set_visible(False)
         elif self.over_image(self.edit_window, (150,0)):
             if isinstance(self.selected, sprites.hero):
                 self.hero.kill()
@@ -424,8 +425,13 @@ class NewLevel(Menu):
                     self.width += pygame.key.name(event.key)[1:-1]
         elif event.key == pygame.K_RETURN:
             try:
-                self.quit(LevelEditor(self.screen, level.new(
-                    int(self.width), int(self.height)), '__NEW__'))
+                x = int(round(float(self.width)/50.0))
+                y = int(round(float(self.height)/50.0))
+                if x == 0:
+                    x = 1
+                if y == 0:
+                    y = 1
+                self.quit(LevelEditor(self.screen, level.new(x,y), '__NEW__'))
             except:
                 pass
 
