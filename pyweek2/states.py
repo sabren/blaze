@@ -328,7 +328,6 @@ class NewLevel(Menu):
                                                              int(self.height))))
             except:
                 pass
-            print level.new(int(self.width), int(self.height))
 
 class EditChoice(Menu):
     '''
