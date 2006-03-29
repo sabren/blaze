@@ -146,8 +146,9 @@ class game(eventnet.driver.Handler):
         self.jkbx.load_sound('howitzer')
         self.jkbx.load_song('sisters', '.mid')
         self.jkbx.load_song('confedmarch', '.mid')
-        self.jkbx.play_song('confedmarch')
-        self.jkbx.stop_song('confedmarch',100)
+        #self.jkbx.play_song('confedmarch')
+        self.jkbx.play_random_song()
+        #self.jkbx.stop_song('confedmarch',100)
         #"""
         self.load_default_state()
 
