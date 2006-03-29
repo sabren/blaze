@@ -55,7 +55,7 @@ class Grid:
         print "BEFORE SAVING:"
         self.print_non_nones()
         strmatrix = pickle.dumps(self.matrix)
-        f = open("temporarylevel.pic","w")
+        f = open("temporarylevel.pic","wb")
         f.write(strmatrix)
         f.close()
         self.load_level()
@@ -63,6 +63,6 @@ class Grid:
         self.print_non_nones()
     def load_level(self):
         if os.path.exists("temporarylevel.pic"):
-            self.matrix = pickle.loads(open("temporarylevel.pic","r").read())
+            self.matrix = pickle.loads(open("temporarylevel.pic","rb").read())
     def render(self):
         pass
