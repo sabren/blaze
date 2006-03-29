@@ -134,7 +134,9 @@ class LevelEditor(Menu):
         self.tiles.draw(self.background)
         self.edit_window = pygame.Surface((650, 600))
         self.display = scrolling.scrolling_display(
-            self.background, self.edit_window, (0,0))
+            self.background, self.edit_window, (
+                (self.background.get_width()/2)-(self.edit_window.get_width()/2),
+                (self.background.get_height()/2)-(self.edit_window.get_height()/2)))
 
         #toolbar
         self.toolbar = pygame.Surface((150, 2000))
@@ -197,11 +199,15 @@ class LevelEditor(Menu):
 
     def tick(self):
         if self.mouse_down:
-            for tile in self.tiles.sprites():
-                pos = (tile.rect.left+150-self.display.pos[0],
-                       tile.rect.top-self.display.pos[1])
-                if self.over_image(tile.image, pos):
-                    tile.image = self.selected
+            if isinstance(self.selected, level.tile):
+                for tile in self.tiles.sprites():
+                    pos = (tile.rect.left+150-self.display.pos[0],
+                           tile.rect.top-self.display.pos[1])
+                    if self.over_image(tile.image, pos):
+                        tile.image = self.selected.image
+                        tile.solid = self.selected.solid
+            elif isinstance(self.selected, sprites.hero):
+                self.hero.rect = hero.rect.move(pygame.mouse.get_pos())
 
         self.background.fill((0,0,0))
         self.tiles.draw(self.background)
@@ -227,13 +233,19 @@ class LevelEditor(Menu):
         self.screen.blit(self.edit_window, (150,0))
 
         if self.selected != None:
-            self.screen.blit(self.selected, pygame.mouse.get_pos())
+            self.screen.blit(self.selected.image, pygame.mouse.get_pos())
         pygame.display.update(self.screen.get_rect())
 
     def EVT_MouseButtonDown(self, event):
         for item in self.toolbar_items.sprites():
             if self.over_image(item.image, item.rect.topleft):
-                self.selected = item.image
+                if isinstance(item, level.tile):
+                    self.selected = level.tile(item.image, item.solid)
+                elif isinstance(item, sprites.hero):
+                    self.selected = sprites.hero(item.pos)
+                else:
+                    self.selected = sprites.Sprite(item.image, pos=item.pos)
+                #self.selected = item.image
                 pygame.mouse.set_visible(False)
         if self.over_image(self.edit_window, (150,0)):
             self.mouse_down = True
