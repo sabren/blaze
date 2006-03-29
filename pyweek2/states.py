@@ -60,7 +60,6 @@ class Menu(State):
         frame.set_alpha(100)
         self.background.blit(frame, (0,0))
 
-
     def over_coordinates(self, width, height, top_left):
         '''
         Method to check if the mouse is in a certain position
@@ -178,7 +177,7 @@ class LevelEditor(Menu):
                                           len(lvl['tiles'][0])*50))
 
         #tiles
-        self.tiles = sprites.Group(lvl['tiles'])
+        self.tiles = sprites.Group()
         y = 0
         for row in lvl['tiles']:
             x = 0

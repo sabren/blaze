@@ -127,6 +127,8 @@ class game(eventnet.driver.Handler):
         eventnet.driver.Handler.__init__(self)
         pygame.init()
         pygame.display.set_caption('Clad in Iron')
+        pygame.display.set_icon(pygame.image.load(
+            os.path.join('data', 'flag.jpg')))
         self.capture()
         self.done = False
         self.screen = pygame.display.set_mode((800, 600)) #windowed for now
