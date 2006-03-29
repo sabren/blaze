@@ -22,13 +22,13 @@ def create_dummies():
     pygame.image.save(dummy_tile, os.path.join('tiles', 'blue.bmp'))
 
     #hero images
-    hull = pygame.Surface((50,100))
-    hull.fill((255,255,255))
-    pygame.draw.polygon(hull, (115,115,115), [(0,100),(50,100),(25,0)])
+    hull = pygame.Surface((25,50))
+    hull.fill((100,100,100))
+    pygame.draw.polygon(hull, (115,115,115), [(0,50),(25,50),(12,0)])
     pygame.image.save(hull, os.path.join('hero', 'hull.bmp'))
 
     turret = pygame.surface.Surface((50,50))
-    turret.fill((255,255,255,0))
+    turret.fill((100,100,100))
     pygame.draw.line(turret, (0,0,0), (25,25), (25,5), 3)
     pygame.draw.circle(turret, (95,95,95), (25,25), 10)
     pygame.image.save(turret, os.path.join('hero', 'turret.bmp'))
