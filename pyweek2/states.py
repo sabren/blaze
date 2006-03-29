@@ -126,10 +126,12 @@ class LevelEditor(Menu):
         for row in lvl['tiles']:
             x = 0
             for tile in row:
-                self.background.blit(tile.image, (x,y))
+                tile = level.tile(tile.image)
+                tile.rect = tile.rect.move((x,y))
+                self.tiles.add(tile)
                 x += 50
-            y += 50                
-
+            y += 50
+        self.tiles.draw(self.background)
         self.edit_window = pygame.Surface((650, 600))
         self.display = scrolling.scrolling_display(
             self.background, self.edit_window, (0,0))
@@ -187,16 +189,27 @@ class LevelEditor(Menu):
         self.sprites = sprites.Group(lvl['enemies']+[self.hero])
         self.scrolling = (0,0)
         self.selected = None
+        self.mouse_down = False
 
     def quit(self, next=None):
         pygame.mouse.set_visible(True)
         Menu.quit(self, next)
 
     def tick(self):
+        if self.mouse_down:
+            for tile in self.tiles.sprites():
+                pos = (tile.rect.left+150-self.display.pos[0],
+                       tile.rect.top-self.display.pos[1])
+                if self.over_image(tile.image, pos):
+                    tile.image = self.selected
+
+        self.background.fill((0,0,0))
+        self.tiles.draw(self.background)
         self.display.background = self.background
         self.display.pos = (self.display.pos[0]+self.scrolling[0],
                             self.display.pos[1]+self.scrolling[1])
         self.display.tick()
+        '''
         if self.over_coordinates(
             150, self.font.get_ascent()+self.font.get_descent()+10, (0,0)):
             img = self.font.render('Save', True, (255,255,255),
@@ -209,6 +222,7 @@ class LevelEditor(Menu):
             self.toolbar.blit(img, (
                 ((self.toolbar.get_width()/2)-(self.font.size('Save')[0]/2), 2))
                               )
+        '''
         self.screen.blit(self.toolbar, self.toolbar_pos)
         self.screen.blit(self.edit_window, (150,0))
 
@@ -222,28 +236,29 @@ class LevelEditor(Menu):
                 self.selected = item.image
                 pygame.mouse.set_visible(False)
         if self.over_image(self.edit_window, (150,0)):
-            for tile in self.tiles.sprites():
-                pos = tile.image.get_rect().topleft
-                if self.over_image(tile.image, pos):
-                    tile.kill()
-                    tile = level.tile(self.selected, pos)
-                    self.tiles.add(tile)
+            self.mouse_down = True
+
+    def EVT_MouseButtonUp(self, event):
+        self.mouse_down = False
 
     def EVT_KeyDown(self, event):
         if event.key == pygame.K_ESCAPE:
             self.quit()
-        elif event.key == pygame.K_RIGHT:
-            self.scrolling = (self.scrolling[0]+1,
-                              self.scrolling[1])
-        elif event.key == pygame.K_LEFT:
-            self.scrolling = (self.scrolling[0]-1,
-                              self.scrolling[1])
-        elif event.key == pygame.K_UP:
-            self.scrolling = (self.scrolling[0],
-                              self.scrolling[1]-1)
-        elif event.key == pygame.K_DOWN:
-            self.scrolling = (self.scrolling[0],
-                              self.scrolling[1]+1)
+        elif event.key in [pygame.K_RIGHT, pygame.K_LEFT,
+                           pygame.K_UP, pygame.K_DOWN]:
+            if event.key == pygame.K_RIGHT:
+                self.scrolling = (self.scrolling[0]+1,
+                                  self.scrolling[1])
+            elif event.key == pygame.K_LEFT:
+                self.scrolling = (self.scrolling[0]-1,
+                                  self.scrolling[1])
+            elif event.key == pygame.K_UP:
+                self.scrolling = (self.scrolling[0],
+                                  self.scrolling[1]-1)
+            elif event.key == pygame.K_DOWN:
+                self.scrolling = (self.scrolling[0],
+                                  self.scrolling[1]+1)
+
         elif event.key == pygame.K_PAGEUP and self.toolbar_pos[1] < 0:
             self.toolbar_pos = (0, self.toolbar_pos[1] + 50)
         elif event.key == pygame.K_PAGEDOWN:

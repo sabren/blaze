@@ -8,7 +8,7 @@ class tile(sprites.Sprite):
         self.solid = solid
 
 default_tile = tile(pygame.image.load(os.path.join(
-    'data', 'tiles', 'blue.bmp')))
+    'data', 'tiles', 'water.bmp')))
 reg_tiles = [tile(pygame.image.load(x)) for x in glob.glob(
     os.path.join('data', 'tiles', '*.bmp'))]
 solid_tiles = [tile(pygame.image.load(x), True) for x in glob.glob(
