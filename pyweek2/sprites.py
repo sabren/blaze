@@ -47,7 +47,6 @@ class Sprite(pygame.sprite.Sprite, eventnet.driver.Handler):
         '''
         This is called instead of tick() .
         '''
-        self.rect = self.image.get_rect()
         self.rect = self.rect.move(self.pos)
 
     def kill(self):
@@ -68,7 +67,7 @@ class hero(Sprite):
     TURRET_POS = (HULL_IMAGE.get_width()/2, HULL_IMAGE.get_height()/3)
 
     def __init__(self, pos, groups=[]):
-        Sprite.__init__(self, self.HULL_IMAGE, groups)
+        Sprite.__init__(self, self.HULL_IMAGE, groups, pos)
         self.turret = Sprite(self.TURRET_IMAGE)
         self.hull = Sprite(self.HULL_IMAGE)
 

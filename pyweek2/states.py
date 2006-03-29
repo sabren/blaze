@@ -117,6 +117,7 @@ class LevelEditor(Menu):
     def __init__(self, screen, lvl):
         Menu.__init__(self, screen, ['Hero', 'Tiles', 'Enemies'], '')
         reload(level)
+        self.lvl = lvl
         self.background = pygame.Surface((len(lvl['tiles'])*50,
                                           len(lvl['tiles'][0])*50))
 
@@ -192,10 +193,17 @@ class LevelEditor(Menu):
         self.scrolling = (0,0)
         self.selected = None
         self.mouse_down = False
+        self.draw()
 
     def quit(self, next=None):
         pygame.mouse.set_visible(True)
         Menu.quit(self, next)
+
+    def draw(self):
+        self.background.fill((0,0,0))
+        self.tiles.draw(self.background)
+        self.sprites.draw(self.background)
+        self.display.background = self.background
 
     def tick(self):
         if self.mouse_down:
@@ -206,12 +214,8 @@ class LevelEditor(Menu):
                     if self.over_image(tile.image, pos):
                         tile.image = self.selected.image
                         tile.solid = self.selected.solid
-            elif isinstance(self.selected, sprites.hero):
-                self.hero.rect = hero.rect.move(pygame.mouse.get_pos())
+                        self.draw()
 
-        self.background.fill((0,0,0))
-        self.tiles.draw(self.background)
-        self.display.background = self.background
         self.display.pos = (self.display.pos[0]+self.scrolling[0],
                             self.display.pos[1]+self.scrolling[1])
         self.display.tick()
@@ -242,13 +246,18 @@ class LevelEditor(Menu):
                 if isinstance(item, level.tile):
                     self.selected = level.tile(item.image, item.solid)
                 elif isinstance(item, sprites.hero):
-                    self.selected = sprites.hero(item.pos)
+                    self.selected = self.hero(item.pos)
                 else:
                     self.selected = sprites.Sprite(item.image, pos=item.pos)
-                #self.selected = item.image
                 pygame.mouse.set_visible(False)
         if self.over_image(self.edit_window, (150,0)):
-            self.mouse_down = True
+            if isinstance(self.selected, sprites.hero):
+                self.hero.kill()
+                self.hero = sprites.hero(pygame.mouse.get_pos(), [self.sprites])
+                self.hero.update()
+                self.selected = None
+            else:
+                self.mouse_down = True
 
     def EVT_MouseButtonUp(self, event):
         self.mouse_down = False
@@ -259,17 +268,17 @@ class LevelEditor(Menu):
         elif event.key in [pygame.K_RIGHT, pygame.K_LEFT,
                            pygame.K_UP, pygame.K_DOWN]:
             if event.key == pygame.K_RIGHT:
-                self.scrolling = (self.scrolling[0]+1,
+                self.scrolling = (self.scrolling[0]+3,
                                   self.scrolling[1])
             elif event.key == pygame.K_LEFT:
-                self.scrolling = (self.scrolling[0]-1,
+                self.scrolling = (self.scrolling[0]-3,
                                   self.scrolling[1])
             elif event.key == pygame.K_UP:
                 self.scrolling = (self.scrolling[0],
-                                  self.scrolling[1]-1)
+                                  self.scrolling[1]-3)
             elif event.key == pygame.K_DOWN:
                 self.scrolling = (self.scrolling[0],
-                                  self.scrolling[1]+1)
+                                  self.scrolling[1]+3)
 
         elif event.key == pygame.K_PAGEUP and self.toolbar_pos[1] < 0:
             self.toolbar_pos = (0, self.toolbar_pos[1] + 50)
@@ -279,17 +288,17 @@ class LevelEditor(Menu):
 
     def EVT_KeyUp(self, event):
         if event.key == pygame.K_RIGHT:
-            self.scrolling = (self.scrolling[0]-1,
+            self.scrolling = (self.scrolling[0]-3,
                               self.scrolling[1])
         elif event.key == pygame.K_LEFT:
-            self.scrolling = (self.scrolling[0]+1,
+            self.scrolling = (self.scrolling[0]+3,
                               self.scrolling[1])
         elif event.key == pygame.K_UP:
             self.scrolling = (self.scrolling[0],
-                              self.scrolling[1]+1)
+                              self.scrolling[1]+3)
         elif event.key == pygame.K_DOWN:
             self.scrolling = (self.scrolling[0],
-                              self.scrolling[1]-1)
+                              self.scrolling[1]-3)
 
 class NewLevel(Menu):
     def __init__(self, screen):
