@@ -156,6 +156,7 @@ class game(eventnet.driver.Handler):
         self.jkbx.set_song_volume(self.volume)
         for sound in self.jkbx.get_sounds():
             sound.set_volume(self.volume)
+        if not self.jkbx.is_song_playing(): self.jkbx.play_random_song()
         if not self.state.done:
             self.state.tick()
         elif self.state.next <> None:

@@ -53,7 +53,6 @@ class Jukebox:
         """
         if not name is None:
             try:
-                print self.songlist[name]
                 pygame.mixer.music.load(self.songlist[name])
                 pygame.mixer.music.play(loops,start)
                 self.current_song = name
