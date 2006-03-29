@@ -144,15 +144,16 @@ class LevelEditor(Menu):
         self.font.set_underline(True)
         self.labels = [self.font.render(option, True, (0,0,0))
                        for option in self.options]
+        self.font.set_underline(False)
         self.toolbar.blit(
             self.labels[0],
             ((self.toolbar.get_width()/2)-(self.labels[0].get_width()/2),
-             5))
+             50))
         self.hero = sprites.hero(lvl['hero'])
         self.h = sprites.Sprite(
             self.hero.image, [self.toolbar_items],
             ((self.toolbar.get_width()/2)-(self.hero.image.get_width()/2),
-             self.labels[0].get_height()+10))
+             self.labels[0].get_rect().bottom+55))
         self.toolbar.blit(
             self.labels[1],
             ((self.toolbar.get_width()/2)-(self.labels[1].get_width()/2),
@@ -196,10 +197,30 @@ class LevelEditor(Menu):
         self.display.tick()
         self.screen.blit(self.toolbar, self.toolbar_pos)
         self.screen.blit(self.edit_window, (150,0))
+        if self.over_coordinates(
+            150, self.font.get_ascent()+self.font.get_descent()+10, (0,0)):
+            img = self.font.render('Save', True, (255,255,255),
+                                   (0,0,0))
+        else:
+            img = self.font.render('Save', True, (0,0,0))
+        self.screen.blit(img, (
+            ((self.toolbar.get_width()/2)-(self.font.size('Save')[0]/2), 2)))
+
         if self.selected != None:
-            self.background.blit(self.selected.image,
-                                 pygame.mouse.get_pos())
+            self.screen.blit(self.selected, pygame.mouse.get_pos())
         pygame.display.update(self.screen.get_rect())
+
+    def EVT_MouseButtonDown(self, event):
+        for item in self.toolbar_items.sprites():
+            if self.over_image(item.image, item.rect.topleft):
+                self.selected = item.image
+        if self.over_image(self.edit_window, (150,0)):
+            for tile in self.tiles.sprites():
+                pos = tile.rect.topleft
+                if self.over_image(tile.image, pos):
+                    tile.kill()
+                    tile = level.tile(self.selected, pos)
+                    self.tiles.add(tile)
 
     def EVT_KeyDown(self, event):
         if event.key == pygame.K_ESCAPE:
@@ -254,7 +275,9 @@ class EditChoice(Menu):
         if self.selected == 'Create New':
             self.quit(LevelEditor(self.screen))
         elif self.selected != None:
-            self.quit(LevelEditor(self.screen, self.selected))
+            self.quit(LevelEditor(self.screen,
+                                  os.path.join('data','levels',
+                                               self.selected+'.lvl')))
 
 class GameState(State):
     '''
