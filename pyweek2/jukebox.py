@@ -23,7 +23,7 @@ class Jukebox:
         self.songlist = {}
         self.current_song = None
         self.current_sound = None
-        self.datadir = '/home/vinko/pygame/pyweek2/data' #This should be grabbed from a config class or something
+        self.datadir = os.path.join('data', 'sound')
         self.channels = pygame.mixer.get_num_channels()
     
     def load_sound(self,file,ext=".wav"):
