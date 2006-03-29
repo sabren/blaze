@@ -127,5 +127,5 @@ class level:
         self.sprites.clear(self.level, self.background)
 
 if __name__=='__main__':
-    save('test', new(5,5))
-    load('test')
+    for row in new(2,5)['tiles']:
+        print row

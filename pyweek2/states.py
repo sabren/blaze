@@ -262,7 +262,6 @@ class LevelEditor(Menu):
                     if self.over_image(tile.image, pos):
                         tile.image = self.selected.image
                         tile.solid = self.selected.solid
-                        self.lvl['tiles'][pos[1]/50][pos[0]/50] = tile
                         self.draw()
 
         self.display.pos = (self.display.pos[0]+self.scrolling[0],
