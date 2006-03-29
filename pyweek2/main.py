@@ -144,6 +144,21 @@ class game(eventnet.driver.Handler):
         self.release()
         self.done = True
 
+    def EVT_KeyDown(self, event):
+        print event.key
+        if event.key == pygame.K_F9:
+            fn = 'screenshot.bmp'
+            num = 0
+            while 1:
+                try:
+                    open(fn).close()
+                except:
+                    break
+                fn = 'screenshot%s.bmp' % str(num)
+                num += 1
+            pygame.image.save(self.screen, fn)
+        else: print 'no joy :/'
+
 def main():
     g = game()
     while not g.done: #mainloop

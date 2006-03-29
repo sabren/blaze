@@ -18,12 +18,22 @@ test_tiles = [tiles, tiles, tiles, tiles]
 empty_level={'enemies': [], 'hero': (0,0), 'tiles': test_tiles}
 
 def new(width, height):
-    return {'enemies': [], 'hero': (0,0),
-            'tiles': [[default_tile.dup() for tile in range(width)]*height]}
+    tiles = []
+    for row in range(height):
+        y = row*50
+        row = []
+        for tile in range(width):
+            x = tile*50
+            tile = default_tile
+            tile.rect = tile.rect.move((x,y))
+            row += [tile]
+        tiles += [row]
+    return {'enemies': [], 'hero': (0,0), 'tiles': tiles}
 
 class level:
     '''
-    A group to manage levels.
+    A class to manage levels. Prob'ly should have (and pyob'ly will) do
+    all this in gamestate.
     '''
 
     def __init__(self, source=empty_level):
@@ -50,7 +60,6 @@ class level:
         self.sprites.clear(self.level, self.background)
 
 if __name__=='__main__':
-    print new(5,5)
     lvl = level(new(5,5))
     lvl.tick()
     pygame.display.set_mode((640, 480)).blit(lvl.background, (0,0))
