@@ -432,7 +432,6 @@ class EditChoice(Menu):
 
     def EVT_MouseButtonDown(self, event):
         if self.selected == 'Create New':
-            #self.quit(LevelEditor(self.screen, level.empty_level))
             self.quit(NewLevel(self.screen))
         elif self.selected != None:
             self.quit(LevelEditor(self.screen, level.load(self.selected),

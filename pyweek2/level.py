@@ -1,5 +1,7 @@
 import pygame, eventnet.driver, sprites, cPickle, os, glob
 
+tmpfile = os.path.join(os.environ['TMP'], 'temp.bmp')
+
 class tile(sprites.Sprite):
     def __init__(self, image, solid=False):
         sprites.Sprite.__init__(self, image)
@@ -26,22 +28,24 @@ def load(name):
     f = open(os.path.join('data', 'levels', name+'.lvl'))
     lvl = cPickle.load(f)
     f.close()
-    for enemy in lvl['enemies']:
-        lvl['enemies'].remove(enemy)
-        tmp = os.tmpfile()
-        tmp.write(enemy.image)
-        enemy.image = pygame.image.load(tmp)
-        lvl['enemies'].append(enemy)
+    for i in range(len(lvl['enemies'])):
+        enemy = lvl['enemies'][i]
+        del(lvl['enemies'][i])
+        f = open(tmpfile, 'wb')
+        f.write(enemy[0])
+        f.close()
+        enemy = sprites.Sprite(pygame.image.load(tmpfile), pos=enemy[1])
+        lvl['enemies'].insert(i, enemy)
     for index in range(len(lvl['tiles'])):
         row = lvl['tiles'][index]
         del(lvl['tiles'][index])
         for i in range(len(row)):
             t = row[i]
             del(row[i])
-            f = open('temp.bmp', 'wb')
+            f = open(tmpfile, 'wb')
             f.write(t[0])
             f.close()
-            t = tile(pygame.image.load('temp.bmp'), t[1])
+            t = tile(pygame.image.load(tmpfile), t[1])
             row.insert(i, t)
         lvl['tiles'].insert(index, row)
 
@@ -52,12 +56,17 @@ def save(name, lvl):
     The ugliest code in the program as of today :p see load()
     '''
 
-    for enemy in lvl['enemies']:
-        lvl['enemies'].remove(enemy)
-        tmp = os.tmpfile()
-        pygame.image.save(enemy.image, tmp)
-        enemy.image = tmp.read()
-        lvl['enemies'].append(enemy)
+    for i in range(len(lvl['enemies'])):
+        enemy = lvl['enemies'][i]
+        rect = enemy.rect
+        del(lvl['enemies'][i])
+        enemy = sprites.Sprite(enemy.image, pos=enemy.rect.topleft)
+        enemy.rect = rect
+        pygame.image.save(enemy.image, tmpfile)
+        enemy.image = open(tmpfile, 'rb').read()
+        enemy = (enemy.image, enemy.solid)
+        lvl['enemies'].insert(i, enemy)
+
     for index in range(len(lvl['tiles'])):
         row = lvl['tiles'][index]
         del(lvl['tiles'][index])
@@ -67,8 +76,8 @@ def save(name, lvl):
             del(row[i])
             t = tile(t.image, t.solid)
             t.rect = rect
-            pygame.image.save(t.image, 'temp.bmp')
-            t.image = open('temp.bmp', 'rb').read()
+            pygame.image.save(t.image, tmpfile)
+            t.image = open(tmpfile, 'rb').read()
             t = (t.image, t.solid)
             row.insert(i, t)
         lvl['tiles'].insert(index, row)
@@ -119,4 +128,4 @@ class level:
 
 if __name__=='__main__':
     save('test', new(5,5))
-    print load('test')
+    load('test')
