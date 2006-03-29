@@ -20,10 +20,10 @@ empty_level={'enemies': [], 'hero': (0,0), 'tiles': test_tiles}
 def new(width, height):
     tiles = []
     for row in range(height):
-        y = row*50
+        y = row
         row = []
         for tile in range(width):
-            x = tile*50
+            x = tile
             tile = default_tile
             tile.rect = tile.rect.move((x,y))
             row += [tile]

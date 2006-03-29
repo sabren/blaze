@@ -132,9 +132,7 @@ class LevelEditor(Menu):
 
         self.edit_window = pygame.Surface((650, 600))
         self.display = scrolling.scrolling_display(
-            self.background, self.edit_window,
-            (-self.background.get_width(),
-             -self.background.get_height()))
+            self.background, self.edit_window, (0,0))
 
         #toolbar
         self.toolbar = pygame.Surface((150, 2000))
@@ -199,16 +197,20 @@ class LevelEditor(Menu):
         self.display.pos = (self.display.pos[0]+self.scrolling[0],
                             self.display.pos[1]+self.scrolling[1])
         self.display.tick()
-        self.screen.blit(self.toolbar, self.toolbar_pos)
-        self.screen.blit(self.edit_window, (150,0))
         if self.over_coordinates(
             150, self.font.get_ascent()+self.font.get_descent()+10, (0,0)):
             img = self.font.render('Save', True, (255,255,255),
                                    (0,0,0))
+            self.screen.blit(img, (
+                ((self.toolbar.get_width()/2)-(self.font.size('Save')[0]/2), 2))
+                             )
         else:
             img = self.font.render('Save', True, (0,0,0))
-        self.screen.blit(img, (
-            ((self.toolbar.get_width()/2)-(self.font.size('Save')[0]/2), 2)))
+            self.toolbar.blit(img, (
+                ((self.toolbar.get_width()/2)-(self.font.size('Save')[0]/2), 2))
+                              )
+        self.screen.blit(self.toolbar, self.toolbar_pos)
+        self.screen.blit(self.edit_window, (150,0))
 
         if self.selected != None:
             self.screen.blit(self.selected, pygame.mouse.get_pos())
@@ -324,8 +326,8 @@ class NewLevel(Menu):
                     self.width += pygame.key.name(event.key)[1:-1]
         elif event.key == pygame.K_RETURN:
             try:
-                self.quit(LevelEditor(self.screen, level.new(int(self.width),
-                                                             int(self.height))))
+                self.quit(LevelEditor(self.screen, level.new(
+                    int(self.width), int(self.height))))
             except:
                 pass
 
