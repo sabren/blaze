@@ -45,13 +45,21 @@ class Menu(State):
         self.selected = None
         title_font = pygame.font.SysFont('Arial', 50, bold=True)
         title_font.set_underline(True)
-        self.title = title_font.render(title, True, (115,115,115))
+        self.title = title_font.render(title, True, (0,0,0))
         self.title_pos = ((screen.get_width()/2)-(self.title.get_width()/2),
                           100)
         self.reg_font = pygame.font.SysFont('Arial', 40)
         self.screen = screen
         self.options = options
         self.evt_prefix = 'MENU_'
+
+        self.background = pygame.image.load(
+            os.path.join('data', 'background.bmp'))
+        frame = pygame.Surface((800,600))
+        frame.fill((255,255,255))
+        frame.set_alpha(100)
+        self.background.blit(frame, (0,0))
+
 
     def over_coordinates(self, width, height, top_left):
         '''
@@ -81,14 +89,14 @@ class Menu(State):
                                      top_left)
 
     def tick(self):
-        self.screen.fill((0,0,0))
+        self.screen.blit(self.background, (0,0))
         self.screen.blit(self.title, self.title_pos)
         y = self.title_pos[1]+self.title.get_height()+10
         for option in self.options:
             if self.selected == option:
                 img = self.reg_font.render(option, True, (255,255,255))
             else:
-                img = self.reg_font.render(option, True, (115,115,115))
+                img = self.reg_font.render(option, True, (0,0,0))
             x = (self.screen.get_width()/2)-(img.get_width()/2)
             self.screen.blit(img, (x,y))
             if self.over_image(img, (x,y)):
@@ -114,14 +122,14 @@ class SaveLevel(Menu):
         if lvl_name != '__NEW__':
             level.save(lvl_name, lvl)
             self.quit()
-        self.label = self.reg_font.render('Name:', True, (115,115,115))
+        self.label = self.reg_font.render('Name:', True, (0,0,0))
         self.name = ''
         self.lvl = lvl
         self.topleft = (300, 200)
         self.shift = False
 
     def tick(self):
-        self.screen.fill((0,0,0))
+        self.screen.blit(self.background, (0,0))
         self.screen.blit(self.label, self.topleft)
         img = self.reg_font.render(self.name, True, (255,255,255))
         self.screen.blit(img, (
@@ -200,7 +208,10 @@ class LevelEditor(Menu):
             self.labels[0],
             ((self.toolbar.get_width()/2)-(self.labels[0].get_width()/2),
              50))
-        self.hero = sprites.hero(lvl['hero'])
+        if lvl_name == '__NEW__':
+            self.hero = sprites.hero((-50, -50))
+        else:
+            self.hero = sprites.hero(lvl['hero'])
         self.h = sprites.Sprite(
             self.hero.image, [self.toolbar_items],
             ((self.toolbar.get_width()/2)-(self.hero.image.get_width()/2),
@@ -210,7 +221,7 @@ class LevelEditor(Menu):
             ((self.toolbar.get_width()/2)-(self.labels[1].get_width()/2),
              self.h.rect.bottom+5))
         x = 22
-        y =  self.h.rect.bottom+self.labels[1].get_height()+10
+        y = self.h.rect.bottom+self.labels[1].get_height()+10
         for tile in level.tiles:
             tile.rect = tile.rect.move((x,y))
             self.toolbar_items.add(tile)
@@ -351,7 +362,7 @@ class LevelEditor(Menu):
 class NewLevel(Menu):
     def __init__(self, screen):
         Menu.__init__(self, screen, [], '')
-        self.labels = [self.reg_font.render(label, True, (115,115,115))
+        self.labels = [self.reg_font.render(label, True, (0,0,0))
                        for label in ['Height:', 'Width:']]
         self.height = ''
         self.width = ''
@@ -359,29 +370,29 @@ class NewLevel(Menu):
         self.selected = 'height'
 
     def tick(self):
-        self.screen.fill((0,0,0))
+        self.screen.blit(self.background, (0,0))
         self.screen.blit(self.labels[0], self.topleft)
         self.screen.blit(self.labels[1],
                          (self.topleft[0],
                           self.topleft[1]+100))
-        img = self.reg_font.render(self.height, True, (255,255,255))
+        img = self.reg_font.render(self.height, True, (0,0,0))
         self.screen.blit(img, (
             self.topleft[0]+self.labels[0].get_width()+5, self.topleft[1]))
-        img2 = self.reg_font.render(self.width, True, (255,255,255))
+        img2 = self.reg_font.render(self.width, True, (0,0,0))
         self.screen.blit(img2, (
             self.topleft[0]+self.labels[1].get_width()+5,
             self.topleft[1]+100))
 
         if self.selected == 'height':
             pygame.draw.line(
-                self.screen, (255,255,255),
+                self.screen, (0,0,0),
                 (self.topleft[0]+self.labels[0].get_width()+img.get_width()+5,
                  self.topleft[1]),
                 (self.topleft[0]+self.labels[0].get_width()+img.get_width()+5,
                  self.topleft[1]+img.get_height()))
         else:
             pygame.draw.line(
-                self.screen, (255,255,255),
+                self.screen, (0,0,0),
                 (self.topleft[0]+self.labels[1].get_width()+2+img2.get_width(),
                  self.topleft[1]+100),
                 (self.topleft[0]+self.labels[1].get_width()+2+img2.get_width(),
@@ -460,4 +471,3 @@ class GameState(State):
         if event.key == pygame.K_ESCAPE:
             pygame.image.save(self.level.level, 'temp.bmp')
             self.quit()
-

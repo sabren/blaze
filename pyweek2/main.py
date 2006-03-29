@@ -3,7 +3,7 @@
 '''
 
 #add your imports here
-import pygame, eventnet.driver, sys, states
+import pygame, eventnet.driver, sys, states, os
 from jukebox import Jukebox
 
 class State(eventnet.driver.Handler):
@@ -39,18 +39,25 @@ class State(eventnet.driver.Handler):
 class Menu(State):
     def __init__(self, screen, options=['New Game', 'Load Game', 'Level Editor',
                                         'Highscores', 'Options', 'Quit'],
-                 title='Main Menu'):
+                 title='Clad in Iron'):
         State.__init__(self, screen)
         self.selected = None
         title_font = pygame.font.SysFont('Arial', 50, bold=True)
         title_font.set_underline(True)
-        self.title = title_font.render(title, True, (115,115,115))
+        self.title = title_font.render(title, True, (0,0,0))
         self.title_pos = ((screen.get_width()/2)-(self.title.get_width()/2),
                           100)
         self.reg_font = pygame.font.SysFont('Arial', 40)
         self.screen = screen
         self.options = options
         self.evt_prefix = 'MENU_'
+
+        self.background = pygame.image.load(
+            os.path.join('data', 'background.bmp'))
+        frame = pygame.Surface((800,600))
+        frame.fill((255,255,255))
+        frame.set_alpha(100)
+        self.background.blit(frame, (0,0))
 
     def over_coordinates(self, width, height, top_left):
         '''
@@ -80,14 +87,14 @@ class Menu(State):
                                      top_left)
 
     def tick(self):
-        self.screen.fill((0,0,0))
+        self.screen.blit(self.background, (0,0))
         self.screen.blit(self.title, self.title_pos)
         y = self.title_pos[1]+self.title.get_height()+10
         for option in self.options:
             if self.selected == option:
                 img = self.reg_font.render(option, True, (255,255,255))
             else:
-                img = self.reg_font.render(option, True, (115,115,115))
+                img = self.reg_font.render(option, True, (0,0,0))
             x = (self.screen.get_width()/2)-(img.get_width()/2)
             self.screen.blit(img, (x,y))
             if self.over_image(img, (x,y)):
@@ -119,7 +126,7 @@ class game(eventnet.driver.Handler):
     def __init__(self):
         eventnet.driver.Handler.__init__(self)
         pygame.init()
-        pygame.display.set_caption('Team Trailblazer')
+        pygame.display.set_caption('Clad in Iron')
         self.capture()
         self.done = False
         self.screen = pygame.display.set_mode((800, 600)) #windowed for now
