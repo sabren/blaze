@@ -56,7 +56,7 @@ class Sprite(pygame.sprite.Sprite, eventnet.driver.Handler):
         self.release()
         pygame.sprite.Sprite.kill(self)
 
-class hero:
+class hero(Sprite):
     '''
     Class to manage the hero.
     INCOMPLETE
@@ -67,9 +67,11 @@ class hero:
     #TURRET_POS = (HULL_IMAGE.get_width()/2, HULL_IMAGE.get_height()/3)
 
     def __init__(self, pos, groups=[]):
-        #Sprite.__init__(self, self.HULL_IMAGE, groups, pos)
+        Sprite.__init__(self, self.HULL_IMAGE, groups, pos)
         self.turret = Sprite(self.TURRET_IMAGE)
+        self.turret.angle = 0
         self.hull = Sprite(self.HULL_IMAGE)
+        self.hull.angle = 0
         self.rect = pygame.Rect(0,0,800,600)
         self._position_parts()
         self.rect = pygame.Rect.union(self.hull.rect, self.turret.rect)
@@ -83,6 +85,22 @@ class hero:
     def move(self, x, y):# x,y are from top left.
         self.rect.move_ip(x,y)
         self._position_parts()
+
+    def rotate_turret(self, angle):
+        self.turret.angle += angle
+        old_center = self.turret.rect.center
+        self.turret.image = pygame.transform.rotate(
+            self.TURRET_IMAGE, self.turret.angle)
+        self.turret.rect = self.turret.image.get_rect()
+        self.turret.rect.center = old_center
+
+    def rotate_hull(self, angle):
+        self.hull.angle += angle
+        old_center = self.hull.rect.center
+        self.hull.image = pygame.transform.rotate(
+            self.HULL_IMAGE, self.hull.angle)
+        self.hull.rect = self.hull.image.get_rect()
+        self.hull.rect.center = old_center
 
     def _position_parts(self):
         """Position turret and hull relative to hero.rect"""
