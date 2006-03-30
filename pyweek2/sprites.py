@@ -62,8 +62,8 @@ class hero(Sprite):
     INCOMPLETE
     '''
 
-    HULL_IMAGE = pygame.image.load(os.path.join('data', 'hero', 'hull.bmp'))
-    TURRET_IMAGE = pygame.image.load(os.path.join('data', 'hero', 'turret.bmp'))
+    HULL_IMAGE = pygame.image.load(os.path.join('data', 'hero', 'hull.png'))
+    TURRET_IMAGE = pygame.image.load(os.path.join('data', 'hero', 'turret.png'))
     #TURRET_POS = (HULL_IMAGE.get_width()/2, HULL_IMAGE.get_height()/3)
 
     def __init__(self, pos, groups=[]):
