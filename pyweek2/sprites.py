@@ -56,7 +56,7 @@ class Sprite(pygame.sprite.Sprite, eventnet.driver.Handler):
         self.release()
         pygame.sprite.Sprite.kill(self)
 
-class hero(Sprite):
+class hero:
     '''
     Class to manage the hero.
     INCOMPLETE
@@ -64,12 +64,30 @@ class hero(Sprite):
 
     HULL_IMAGE = pygame.image.load(os.path.join('data', 'hero', 'hull.bmp'))
     TURRET_IMAGE = pygame.image.load(os.path.join('data', 'hero', 'turret.bmp'))
-    TURRET_POS = (HULL_IMAGE.get_width()/2, HULL_IMAGE.get_height()/3)
+    #TURRET_POS = (HULL_IMAGE.get_width()/2, HULL_IMAGE.get_height()/3)
 
     def __init__(self, pos, groups=[]):
-        Sprite.__init__(self, self.HULL_IMAGE, groups, pos)
+        #Sprite.__init__(self, self.HULL_IMAGE, groups, pos)
         self.turret = Sprite(self.TURRET_IMAGE)
         self.hull = Sprite(self.HULL_IMAGE)
+        self.rect = pygame.Rect(0,0,800,600)
+        self._position_parts()
+        self.rect = pygame.Rect.union(self.hull.rect, self.turret.rect)
+        self.rect.move_ip(*pos)
+        self._position_parts()
+
+    def update(self):
+        self.hull.update()
+        self.turret.update()
+
+    def move(self, x, y):# x,y are from top left.
+        self.rect.move_ip(x,y)
+        self._position_parts()
+
+    def _position_parts(self):
+        """Position turret and hull relative to hero.rect"""
+        self.turret.rect.midtop = self.rect.midtop
+        self.hull.rect.midbottom = self.rect.midbottom
 
 enemies = [Sprite(
     pygame.image.load(os.path.join('data', 'enemies', 'dummy.bmp')))]
