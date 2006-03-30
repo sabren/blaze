@@ -509,8 +509,7 @@ class GameState(State):
             lvl = lvl.new(5,5)
         self.background = pygame.Surface((len(lvl['tiles'])*50,
                                           len(lvl['tiles'][0])*50))
-        self.level = pygame.Surface((len(lvl['tiles'])*50,
-                                     len(lvl['tiles'][0])*50))
+        self.level = self.background.copy()
         self.game_window = pygame.Surface((800,600))
         self.tiles = sprites.Group()
         y = 0
@@ -524,7 +523,7 @@ class GameState(State):
         self.tiles.draw(self.background)
         self.level.blit(self.background, (0,0))
         self.hero = sprites.hero(lvl['hero'])
-        self.hero.rect = self.hero.rect.move(lvl['hero'])
+        self.hero.rect = pygame.Rect(lvl['hero'], self.hero.rect.size)
         self.sprites = sprites.Group()
         self.sprites.add(lvl['enemies'], self.hero)
         self.display = scrolling.scrolling_display(self.level,
@@ -532,14 +531,15 @@ class GameState(State):
 
     def tick(self):
         self.sprites.update()
-        self.sprites.draw(self.level)
         self.sprites.clear(self.level, self.background)
+        self.sprites.draw(self.level)
         self.display.background = self.level
-        self.display.pos = (self.hero.rect.centerx-(self.screen.get_width()/2),
-                            self.hero.rect.centery-(self.screen.get_height()/2))
+        self.display.pos = (
+            (self.hero.rect.centerx-(self.screen.get_width()/2),
+             self.hero.rect.centery-(self.screen.get_height())))
         self.display.tick()
         self.screen.blit(self.game_window, (0,0))
-        pygame.display.flip()
+        pygame.display.update(self.screen.get_rect())
 
     def EVT_KeyDown(self, event):
         if event.key == pygame.K_ESCAPE:
