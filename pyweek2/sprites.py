@@ -47,7 +47,7 @@ class Sprite(pygame.sprite.Sprite, eventnet.driver.Handler):
         '''
         This is called instead of tick() .
         '''
-        self.rect = self.rect.move(self.pos)
+        self.rect = pygame.Rect(self.pos, self.rect.size)
 
     def kill(self):
         '''
@@ -71,4 +71,5 @@ class hero(Sprite):
         self.turret = Sprite(self.TURRET_IMAGE)
         self.hull = Sprite(self.HULL_IMAGE)
 
-enemies = []
+enemies = [Sprite(
+    pygame.image.load(os.path.join('data', 'enemies', 'dummy.bmp')))]

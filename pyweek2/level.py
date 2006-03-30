@@ -67,7 +67,7 @@ def save(name, lvl):
         enemy.rect = rect
         pygame.image.save(enemy.image, tmpfile)
         enemy.image = open(tmpfile, 'rb').read()
-        enemy = (enemy.image, enemy.solid)
+        enemy = (enemy.image, enemy.rect.topleft)
         lvl['enemies'].insert(i, enemy)
 
     for index in range(len(lvl['tiles'])):

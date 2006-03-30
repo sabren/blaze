@@ -38,7 +38,12 @@ def create_dummies():
     shell.fill((255,255,255,0))
     pygame.draw.circle(shell, (0,0,0), (10,10), 5)
     pygame.image.save(shell, 'shell.bmp')
-    
+
+    #"enemy"
+    enemy = pygame.Surface((25,50))
+    enemy.fill((100,100,100))
+    pygame.draw.polygon(enemy, (255,0,0), [(0,50),(25,50),(12,0)])
+    pygame.image.save(enemy, os.path.join('enemies', 'dummy.bmp'))
 
 if __name__=='__main__':
     create_dummies()
