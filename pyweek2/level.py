@@ -1,6 +1,9 @@
 import pygame, eventnet.driver, sprites, cPickle, os, glob
 
-tmpfile = os.path.join(os.environ['TMP'], 'temp.bmp')
+try:
+    tmpfile = os.path.join(os.environ['TMP'], 'temp.bmp')
+except KeyError, e:
+    tmpfile = 'temp.bmp' #defaulting to CWD doesn't seem nice, but...
 
 class tile(sprites.Sprite):
     def __init__(self, image, solid=False):
