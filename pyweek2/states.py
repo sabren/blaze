@@ -220,10 +220,11 @@ class LevelEditor(Menu):
             self.labels[0],
             ((self.toolbar.get_width()/2)-(self.labels[0].get_width()/2),
              50))
-        if lvl_name == '__NEW__':
-            self.hero = sprites.hero((-50, -50))
+        if self.lvl_name == '__NEW__':
+            self.hero = sprites.hero((-1000,0))
         else:
             self.hero = sprites.hero(lvl['hero'])
+        self.hero.update()
         self.h = sprites.Sprite(
             self.hero.image, [self.toolbar_items],
             ((self.toolbar.get_width()/2)-(self.hero.image.get_width()/2),
@@ -272,7 +273,7 @@ class LevelEditor(Menu):
         Menu.quit(self, next)
 
     def draw(self):
-        self.background.fill((0,0,0))
+        #self.background.fill((0,0,0))
         self.tiles.draw(self.background)
         self.sprites.draw(self.background)
         self.display.background = self.background
@@ -324,19 +325,21 @@ class LevelEditor(Menu):
                             if isinstance(item, level.tile):
                                 self.selected = level.tile(item.image, item.solid)
                             elif isinstance(item, sprites.hero):
-                                self.selected = self.hero(item.pos)
+                                self.selected = self.hero
                             else:
                                 self.selected = sprites.Sprite(item.image,
                                                                pos=item.pos)
-            elif self.over_image(self.edit_window, (150,0)):
+            elif self.over_image(
+                self.edit_window, (150,0)) and self.selected != None:
+
                 if self.selected.image == self.hero.image:
                     pos = (
                         (pygame.mouse.get_pos()[0]-150)+self.display.pos[0],
                         pygame.mouse.get_pos()[1]+self.display.pos[1])
-                    self.hero.pos = (pos[0]-(self.hero.rect.width/2),
-                                     pos[1]-(self.hero.rect.height/2))
-                    self.hero.update()
-                    self.lvl['hero'] = self.hero.pos
+                    self.hero.rect = self.selected.rect.move(
+                        (pos[0]-20-self.hero.image.get_width(),
+                         pos[1]-20-self.hero.image.get_height()))
+                    self.lvl['hero'] = self.hero.rect.topleft
                     self.selected = None
                 elif self.selected.image in [
                     sprite.image for sprite in sprites.enemies]:
@@ -344,11 +347,12 @@ class LevelEditor(Menu):
                         (pygame.mouse.get_pos()[0]-150)+self.display.pos[0],
                         pygame.mouse.get_pos()[1]+self.display.pos[1])
                     self.selected.pos = (pos[0]-(self.selected.rect.width/2),
-                                     pos[1]-(self.selected.rect.height/2))
+                                         pos[1]-(self.selected.rect.height/2))
                     self.selected.update()
                     self.lvl['enemies'] += [self.selected]
                     self.sprites.add(self.selected)
-                    
+                    self.selected = sprites.Sprite(self.selected.image,
+                                                   pos=self.selected.pos)
                 else:
                     self.mouse_down = True
                 self.draw()
@@ -471,7 +475,6 @@ class NewLevel(Menu):
                     x = 1
                 if y == 0:
                     y = 1
-                print (x,y)
                 self.quit(LevelEditor(self.screen, level.new(x,y), '__NEW__'))
             except:
                 pass
@@ -482,13 +485,9 @@ class EditChoice(Menu):
     '''
 
     def __init__(self, screen):
-        self.levels = ['Create New']+[os.path.splitext(
+        Menu.__init__(self, screen, ['Create New']+[os.path.splitext(
             os.path.split(lvl)[-1])[0]for lvl in glob.glob(os.path.join(
-                'data','levels', '*.lvl'))]
-        Menu.__init__(self, screen, self.levels, 'Choose a Level')
-
-    def EVT_KeyDown(self, event):
-        self.quit()
+                'data','levels', '*.lvl'))], 'Choose a Level')
 
     def EVT_MouseButtonDown(self, event):
         if self.selected == 'Create New':
@@ -502,27 +501,68 @@ class GameState(State):
     Our gamestate.
     '''
 
-    def __init__(self, screen):
+    def __init__(self, screen, lvl=None):
         State.__init__(self, screen)
-        self.level = level.level()
-        self.display = scrolling.scrolling_display(self.level.level,
-                                                   self.screen, (0,0))
+        if lvl != None:
+            lvl = level.load(lvl)
+        else:
+            lvl = lvl.new(5,5)
+        self.background = pygame.Surface((len(lvl['tiles'])*50,
+                                          len(lvl['tiles'][0])*50))
+        self.level = pygame.Surface((len(lvl['tiles'])*50,
+                                     len(lvl['tiles'][0])*50))
+        self.game_window = pygame.Surface((800,600))
+        self.tiles = sprites.Group()
+        y = 0
+        for row in lvl['tiles']:
+            x = 0
+            for t in row:
+                t.rect = pygame.Rect((x,y),(50,50))
+                t.add(self.tiles)
+                x += 50
+            y += 50
+        self.tiles.draw(self.background)
+        self.level.blit(self.background, (0,0))
+        self.hero = sprites.hero(lvl['hero'])
+        self.hero.rect = self.hero.rect.move(lvl['hero'])
+        self.sprites = sprites.Group()
+        self.sprites.add(lvl['enemies'], self.hero)
+        self.display = scrolling.scrolling_display(self.level,
+                                                   self.game_window, (0,0))
 
     def tick(self):
-        self.level.tick()
-        self.display.background = self.level.level
-        self.display.pos = (self.level.hero.rect.centerx-(self.screen.get_width()/2),
-                            self.level.hero.rect.centery-(self.screen.get_height()/2))
+        self.sprites.update()
+        self.sprites.draw(self.level)
+        self.sprites.clear(self.level, self.background)
+        self.display.background = self.level
+        self.display.pos = (self.hero.rect.centerx-(self.screen.get_width()/2),
+                            self.hero.rect.centery-(self.screen.get_height()/2))
         self.display.tick()
-        self.level.hero.rect.move((self.level.hero.pos[0]-5,
-                                   self.level.hero.pos[1]-5))
+        self.screen.blit(self.game_window, (0,0))
+        pygame.display.flip()
 
     def EVT_KeyDown(self, event):
         if event.key == pygame.K_ESCAPE:
-            pygame.image.save(self.level.level, 'temp.bmp')
             self.quit()
+
+class Skirmish(Menu):
+    '''
+    Single mission game for a single player.
+    '''
+
+    def __init__(self, screen):
+        Menu.__init__(self, screen, [os.path.splitext(
+            os.path.split(lvl)[-1])[0]for lvl in glob.glob(os.path.join(
+                'data','levels', '*.lvl'))], 'Choose a Mission')
+
+    def EVT_MouseButtonDown(self, event):
+        if self.selected != None:
+            self.quit(GameState(self.screen, self.selected))
 
 class SinglePlayerMenu(Menu):
     def __init__(self, screen):
         Menu.__init__(self, screen, ['Campaign', 'Skirmish',
                                      'Load Game'], 'Single Player')
+
+    def EVT_MENU_Skirmish(self, event):
+        self.quit(Skirmish(self.screen))

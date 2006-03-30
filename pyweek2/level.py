@@ -98,7 +98,7 @@ def new(width, height):
             Tile.rect = Tile.rect.move((x,y))
             row += [Tile]
         tiles += [row]
-    return {'enemies': [], 'hero': (0,0), 'tiles': tiles}
+    return {'enemies': [], 'hero': (-100,0), 'tiles': tiles}
 
 class level:
     '''
