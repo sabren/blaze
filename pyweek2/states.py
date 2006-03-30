@@ -110,6 +110,10 @@ class Menu(State):
         if self.selected <> None: eventnet.driver.post(
             self.evt_prefix+''.join(self.selected.split()))
 
+    def EVT_KeyDown(self, event):
+        if event.key == pygame.K_ESCAPE:
+            self.quit()
+
     def EVT_MENU_Quit(self, event):
         eventnet.driver.post('Quit')
 
@@ -517,3 +521,8 @@ class GameState(State):
         if event.key == pygame.K_ESCAPE:
             pygame.image.save(self.level.level, 'temp.bmp')
             self.quit()
+
+class SinglePlayerMenu(Menu):
+    def __init__(self, screen):
+        Menu.__init__(self, screen, ['Campaign', 'Skirmish',
+                                     'Load Game'], 'Single Player')

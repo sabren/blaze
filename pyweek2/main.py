@@ -37,8 +37,8 @@ class State(eventnet.driver.Handler):
         self.release() # stop listening
 
 class Menu(State):
-    def __init__(self, screen, options=['New Game', 'Load Game', 'Level Editor',
-                                        'Highscores', 'Options', 'Quit'],
+    def __init__(self, screen, options=['Single Player', 'Multiplayer',
+                                        'Level Editor', 'Options', 'Quit'],
                  title='Clad in Iron'):
         State.__init__(self, screen)
         self.selected = None
@@ -112,8 +112,8 @@ class Menu(State):
         eventnet.driver.post('Quit')
         self.quit()
 
-    def EVT_MENU_NewGame(self, event):
-        self.quit(states.GameState(self.screen))
+    def EVT_MENU_SinglePlayer(self, event):
+        self.quit(states.SinglePlayerMenu(self.screen))
 
     def EVT_MENU_LevelEditor(self, event):
         self.quit(states.EditChoice(self.screen))
