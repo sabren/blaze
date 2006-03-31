@@ -156,7 +156,7 @@ class game(eventnet.driver.Handler):
         #self.jkbx.load_song('sisters')
         self.jkbx.load_song('confedmarch')
         self.jkbx.play_song('confedmarch')
-        self.jkbx.play_random_song()
+        #self.jkbx.play_random_song()
         #self.jkbx.stop_song('confedmarch',100)
         #"""
         self.load_default_state()
