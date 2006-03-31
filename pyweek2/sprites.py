@@ -63,7 +63,34 @@ class hero(Sprite):
     '''
 
     HULL_IMAGE = pygame.image.load(os.path.join('data', 'hero', 'hull.png'))
-    TURRET_IMAGE = pygame.image.load(os.path.join('data', 'hero', 'turret(3).png'))
+    center = (HULL_IMAGE.get_width()/2, HULL_IMAGE.get_height()/2)
+    if HULL_IMAGE.get_width() > HULL_IMAGE.get_height():
+        img = pygame.Surface((HULL_IMAGE.get_width(),
+                              HULL_IMAGE.get_height()+10))
+    else:
+        img = pygame.Surface((HULL_IMAGE.get_height(),
+                              HULL_IMAGE.get_height()))
+    img.set_colorkey((0,0,0))
+    img.fill((0,0,0))
+    img.blit(HULL_IMAGE, ((img.get_width()/2)-center[0],
+                          (img.get_height()/2)-center[1]))
+    HULL_IMAGE = img
+
+    TURRET_IMAGE = pygame.image.load(os.path.join('data', 'hero',
+                                                  'turret.png'))
+    center = (TURRET_IMAGE.get_width()/2, TURRET_IMAGE.get_height()/2)
+    if TURRET_IMAGE.get_width() > TURRET_IMAGE.get_height():
+        img = pygame.Surface((TURRET_IMAGE.get_width(),
+                              TURRET_IMAGE.get_height()+10))
+    else:
+        img = pygame.Surface((TURRET_IMAGE.get_height(),
+                              TURRET_IMAGE.get_height()))
+    img.set_colorkey((255,255,255))
+    img.fill((255,255,255))
+    img.blit(TURRET_IMAGE, ((img.get_width()/2)-center[0],
+                            (img.get_height()/2)-center[1])
+             )
+    TURRET_IMAGE = img
     TURRET_POS = (
             (HULL_IMAGE.get_width()/2)-(TURRET_IMAGE.get_width()/2),
             (HULL_IMAGE.get_height()/2)-(TURRET_IMAGE.get_width()/2))
