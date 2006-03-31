@@ -20,11 +20,5 @@ def create_dummies():
     dummy_tile.fill((0,0,255))
     pygame.image.save(dummy_tile, os.path.join('tiles', 'blue.bmp'))
 
-    #cannon ball
-    shell = pygame.Surface((5,5))
-    shell.fill((255,255,255,0))
-    pygame.draw.circle(shell, (0,0,0), (3,3), 2)
-    pygame.image.save(shell, 'shell.bmp')
-
 if __name__=='__main__':
     create_dummies()
