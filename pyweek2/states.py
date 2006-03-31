@@ -1,5 +1,5 @@
 import pygame, eventnet.driver, os, sys, sprites, scrolling, level, glob
-import cPickle
+import cPickle, jukebox
 from string import digits, lowercase
 '''
 Store states here.
@@ -179,6 +179,7 @@ class LevelEditor(Menu):
 
     def __init__(self, screen, lvl, lvl_name):
         Menu.__init__(self, screen, ['Hero', 'Tiles', 'Enemies'], '')
+        reload(sprites)
         reload(level)
         self.lvl = lvl
         self.lvl_name = lvl_name
@@ -468,16 +469,16 @@ class NewLevel(Menu):
             else:
                 self.width += pygame.key.name(event.key)
         elif event.key == pygame.K_RETURN:
-            try:
-                x = int(self.width)/50
-                y = int(self.height)/50
-                if x == 0:
-                    x = 1
-                if y == 0:
-                    y = 1
-                self.quit(LevelEditor(self.screen, level.new(x,y), '__NEW__'))
-            except:
-                pass
+            #try:
+            x = int(self.width)/50
+            y = int(self.height)/50
+            if x == 0:
+                x = 1
+            if y == 0:
+                y = 1
+            self.quit(LevelEditor(self.screen, level.new(x,y), '__NEW__'))
+            #except:
+            #    pass
 
 class EditChoice(Menu):
     '''
@@ -503,22 +504,16 @@ class GameState(State):
 
     def __init__(self, screen, lvl=None):
         State.__init__(self, screen)
+        pygame.mixer.music.stop()
+        self.jkbx = jukebox.Jukebox()
+        self.jkbx.stop_song()
+        self.jkbx.load_song('sisters')
+        self.jkbx.load_song('confedmarch')
+        self.jkbx.set_song_volume(0.3)
+        self.jkbx.play_song('sisters', 10)
         pygame.mouse.set_visible(False)
-        self.cursor = pygame.Surface((20,20))
-        self.cursor.fill((255,255,255))
-        if self.cursor.set_colorkey((255,255,255)) == None:
-            self.cursor.set_alpha(155)
-        pygame.draw.circle(self.cursor, (255,0,0), (self.cursor.get_width()/2,
-                                                    self.cursor.get_height()/2),
-                           10, 1)
-        pygame.draw.line(self.cursor, (255,0,0), (
-            0, self.cursor.get_height()/2), (
-                self.cursor.get_width(),
-                self.cursor.get_height()/2))
-        pygame.draw.line(self.cursor, (255,0,0), (
-            self.cursor.get_width()/2, 0), (
-                self.cursor.get_width()/2,
-                self.cursor.get_height()))
+        self.cursor = pygame.image.load(os.path.join('data', 'crosshair.bmp'))
+        self.cursor.set_colorkey((0,0,0))
         if lvl != None:
             lvl = level.load(lvl)
         else:
@@ -564,6 +559,11 @@ class GameState(State):
         if event.key == pygame.K_ESCAPE:
             pygame.mouse.set_visible(True)
             self.quit()
+
+    def quit(self, next=None):
+        self.jkbx.stop_song()
+        self.jkbx.play_song('confedmarch')
+        State.quit(self, next)
 
 class Skirmish(Menu):
     '''

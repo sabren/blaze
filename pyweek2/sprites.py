@@ -106,21 +106,33 @@ class hero(Sprite):
                         pos=self.image.get_rect().topleft)
         self.rect = self.rect.move(pos)
         self.rect = self.hull.get_rect()
+        self.size = self.rect.size
         self.rudder = 0
         self.angle = 0
-        self.pos = pos #I know I said not to do this but oh well :p
+        self.engine = 0
 
     def update(self):
-        if self.rudder != 0:
-            self.angle += self.rudder
-            old_rect = self.rect
-            self.hull = pygame.transform.rotate(self.HULL_IMAGE, self.angle)
-            self.image = self.hull.copy()
-            self.image.blit(self.turret, (
-                (self.hull.get_width()/2)-(self.turret.get_width()/2),
-                (self.hull.get_height()/2)-(self.turret.get_width()/2)))
-            self.rect = self.hull.get_rect()
-            self.rect.center = old_rect.center
+        self.course = (-math.sin(math.radians(self.angle)),
+                       -math.cos(math.radians(self.angle)))
+        if self.engine != 0:
+            if self.engine == 1:
+                self.angle += self.rudder
+                self.rect = self.rect.move((self.course[0]*5,
+                                            self.course[1]*5))
+            else:
+                self.angle -= self.rudder
+                self.rect = self.rect.move((-self.course[0]*5,
+                                            -self.course[1]*5))
+                
+            if self.rudder != 0:
+                old_rect = self.rect
+                self.hull = pygame.transform.rotate(self.HULL_IMAGE, self.angle)
+                self.image = self.hull.copy()
+                self.image.blit(self.turret, (
+                    (self.hull.get_width()/2)-(self.turret.get_width()/2),
+                    (self.hull.get_height()/2)-(self.turret.get_width()/2)))
+                self.rect = self.hull.get_rect()
+                self.rect.center = old_rect.center
 
     def move(self, x, y):# x,y are from top left.
         self.rect.move_ip(x,y)
@@ -133,7 +145,7 @@ class hero(Sprite):
             x = 1
         if y == 0:
             y = 1
-        angle = math.atan(float(y)/float(x)) * 57.295779513082323
+        angle = math.degrees(math.atan(float(y)/float(x)))
         if x < 0:
             angle += 179
         if angle < 0:
@@ -147,20 +159,28 @@ class hero(Sprite):
             (self.hull.get_height()/2)-(self.turret.get_width()/2)))
 
     def EVT_KeyDown(self, event):
-        if event.key in [pygame.K_RIGHT, pygame.K_LEFT, pygame.K_RIGHT,
-                         pygame.K_DOWN]:
-            if event.key == pygame.K_RIGHT:
+        if event.key in [pygame.K_w, pygame.K_a, pygame.K_d,
+                         pygame.K_s]:
+            if event.key == pygame.K_d:
                 self.rudder = -1
-            elif event.key == pygame.K_LEFT:
+            elif event.key == pygame.K_a:
                 self.rudder = 1
+            elif event.key == pygame.K_w:
+                self.engine = 1
+            elif event.key == pygame.K_s:
+                self.engine = -1
 
     def EVT_KeyUp(self, event):
-        if event.key in [pygame.K_RIGHT, pygame.K_LEFT, pygame.K_RIGHT,
-                         pygame.K_DOWN]:
-            if event.key == pygame.K_RIGHT and self.rudder == -1:
+        if event.key in [pygame.K_w, pygame.K_a, pygame.K_d,
+                         pygame.K_s]:
+            if event.key == pygame.K_d and self.rudder == -1:
                 self.rudder = 0
-            elif event.key == pygame.K_LEFT and self.rudder == 1:
+            elif event.key == pygame.K_a and self.rudder == 1:
                 self.rudder = 0
+            elif event.key == pygame.K_w and self.engine == 1:
+                self.engine = 0
+            elif event.key == pygame.K_s and self.engine == -1:
+                self.engine = 0
 
     def _position_parts(self):
         """Position turret and hull relative to hero.rect"""
@@ -170,4 +190,4 @@ class hero(Sprite):
 #This is our "enemy", a triangle for now but to be replaced by a
 #howitzer and gunner
 enemies = [Sprite(
-    pygame.image.load(os.path.join('data', 'enemies', 'dummy.bmp')))]
+    pygame.image.load(os.path.join('data', 'enemies', 'howitzer.png')))]
