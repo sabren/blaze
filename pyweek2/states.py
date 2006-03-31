@@ -503,6 +503,22 @@ class GameState(State):
 
     def __init__(self, screen, lvl=None):
         State.__init__(self, screen)
+        pygame.mouse.set_visible(False)
+        self.cursor = pygame.Surface((20,20))
+        self.cursor.fill((255,255,255))
+        if self.cursor.set_colorkey((255,255,255)) == None:
+            self.cursor.set_alpha(155)
+        pygame.draw.circle(self.cursor, (255,0,0), (self.cursor.get_width()/2,
+                                                    self.cursor.get_height()/2),
+                           10, 1)
+        pygame.draw.line(self.cursor, (255,0,0), (
+            0, self.cursor.get_height()/2), (
+                self.cursor.get_width(),
+                self.cursor.get_height()/2))
+        pygame.draw.line(self.cursor, (255,0,0), (
+            self.cursor.get_width()/2, 0), (
+                self.cursor.get_width()/2,
+                self.cursor.get_height()))
         if lvl != None:
             lvl = level.load(lvl)
         else:
@@ -535,15 +551,22 @@ class GameState(State):
         self.sprites.draw(self.level)
         self.display.background = self.level
         self.display.pos = (
-            (self.hero.rect.centerx-(self.screen.get_width()/2),
-             self.hero.rect.centery-(self.screen.get_height())))
+            (self.hero.rect.centerx-(self.screen.get_width()/2)),
+            (self.hero.rect.centery-(self.screen.get_height()/2)))
         self.display.tick()
         self.screen.blit(self.game_window, (0,0))
+        self.screen.blit(self.cursor, (
+            pygame.mouse.get_pos()[0]-(self.cursor.get_width()/2),
+            pygame.mouse.get_pos()[1]-(self.cursor.get_height()/2)))
         pygame.display.update(self.screen.get_rect())
 
     def EVT_KeyDown(self, event):
         if event.key == pygame.K_ESCAPE:
+            pygame.mouse.set_visible(True)
             self.quit()
+
+    def EVT_MouseMotion(self, event):
+        self.hero.rotate_turret()
 
 class Skirmish(Menu):
     '''

@@ -1,4 +1,4 @@
-import pygame, eventnet.driver, os
+import pygame, eventnet.driver, os, math
 
 def check_collisions(sprite, groups):
     for group in groups:
@@ -63,44 +63,57 @@ class hero(Sprite):
     '''
 
     HULL_IMAGE = pygame.image.load(os.path.join('data', 'hero', 'hull.png'))
-    TURRET_IMAGE = pygame.image.load(os.path.join('data', 'hero', 'turret.png'))
-    #TURRET_POS = (HULL_IMAGE.get_width()/2, HULL_IMAGE.get_height()/3)
+    TURRET_IMAGE = pygame.image.load(os.path.join('data', 'hero', 'turret(3).png'))
+    TURRET_POS = (
+            (HULL_IMAGE.get_width()/2)-(TURRET_IMAGE.get_width()/2),
+            (HULL_IMAGE.get_height()/2)-(TURRET_IMAGE.get_width()/2))
 
     def __init__(self, pos, groups=[]):
-        Sprite.__init__(self, self.HULL_IMAGE, groups, pos)
-        self.turret = Sprite(self.TURRET_IMAGE)
-        self.turret.angle = 0
-        self.hull = Sprite(self.HULL_IMAGE)
-        self.hull.angle = 0
-        self.rect = pygame.Rect(0,0,800,600)
-        self._position_parts()
-        self.rect = pygame.Rect.union(self.hull.rect, self.turret.rect)
-        self.rect.move_ip(*pos)
-        self._position_parts()
+        self.turret = self.TURRET_IMAGE
+        self.turret_angle = 0
+        self.hull = self.HULL_IMAGE
+        self.hull_angle = 0
+        self.image = self.hull.copy()
+        self.image.blit(self.turret, self.TURRET_POS)
+        Sprite.__init__(self, self.image, groups,
+                        pos=self.image.get_rect().topleft)
+        self.rect = self.rect.move(pos)
+        self.rect = self.hull.get_rect()
 
     def update(self):
-        self.hull.update()
-        self.turret.update()
+        pass
 
     def move(self, x, y):# x,y are from top left.
         self.rect.move_ip(x,y)
         self._position_parts()
 
-    def rotate_turret(self, angle):
-        self.turret.angle += angle
-        old_center = self.turret.rect.center
-        self.turret.image = pygame.transform.rotate(
-            self.TURRET_IMAGE, self.turret.angle)
-        self.turret.rect = self.turret.image.get_rect()
-        self.turret.rect.center = old_center
+    def rotate_turret(self):
+        y = pygame.mouse.get_pos()[0] - pygame.display.get_surface().get_width()/2
+        x = pygame.mouse.get_pos()[1] - pygame.display.get_surface().get_height()/2
+        if x == 0:
+            x = 1
+        if y == 0:
+            y = 1
+        angle = math.atan(float(y)/float(x)) * 57.295779513082323
+        if x < 0:
+            angle += 179
+        if angle < 0:
+            angle += 360
+        angle += 180
+        self.turret = pygame.transform.rotate(self.TURRET_IMAGE, angle)
+
+        self.image = self.hull.copy()
+        self.image.blit(self.turret, (
+            (self.hull.get_width()/2)-(self.turret.get_width()/2),
+            (self.hull.get_height()/2)-(self.turret.get_width()/2)))
 
     def rotate_hull(self, angle):
-        self.hull.angle += angle
-        old_center = self.hull.rect.center
-        self.hull.image = pygame.transform.rotate(
-            self.HULL_IMAGE, self.hull.angle)
-        self.hull.rect = self.hull.image.get_rect()
-        self.hull.rect.center = old_center
+        self.hull.image = pygame.transform.rotate(self.HULL_IMAGE, angle)
+        self.image = self.hull.copy()
+        self.image.blit(self.turret, (
+            (self.hull.get_width()/2)-(self.turret.get_width()/2),
+            (self.hull.get_height()/2)-(self.turret.get_width()/2)))
+        self.rect = self.hull.get_rect()
 
     def _position_parts(self):
         """Position turret and hull relative to hero.rect"""
