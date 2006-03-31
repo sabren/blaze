@@ -123,7 +123,7 @@ class hero(Sprite):
                 self.angle -= self.rudder
                 self.rect = self.rect.move((-self.course[0]*5,
                                             -self.course[1]*5))
-                
+
             if self.rudder != 0:
                 old_rect = self.rect
                 self.hull = pygame.transform.rotate(self.HULL_IMAGE, self.angle)
@@ -133,10 +133,6 @@ class hero(Sprite):
                     (self.hull.get_height()/2)-(self.turret.get_width()/2)))
                 self.rect = self.hull.get_rect()
                 self.rect.center = old_rect.center
-
-    def move(self, x, y):# x,y are from top left.
-        self.rect.move_ip(x,y)
-        self._position_parts()
 
     def EVT_MouseMotion(self, event):
         y = event.pos[0] - pygame.display.get_surface().get_width()/2
