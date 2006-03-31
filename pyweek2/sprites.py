@@ -106,17 +106,29 @@ class hero(Sprite):
                         pos=self.image.get_rect().topleft)
         self.rect = self.rect.move(pos)
         self.rect = self.hull.get_rect()
+        self.rudder = 0
+        self.angle = 0
+        self.pos = pos #I know I said not to do this but oh well :p
 
     def update(self):
-        pass
+        if self.rudder != 0:
+            self.angle += self.rudder
+            old_rect = self.rect
+            self.hull = pygame.transform.rotate(self.HULL_IMAGE, self.angle)
+            self.image = self.hull.copy()
+            self.image.blit(self.turret, (
+                (self.hull.get_width()/2)-(self.turret.get_width()/2),
+                (self.hull.get_height()/2)-(self.turret.get_width()/2)))
+            self.rect = self.hull.get_rect()
+            self.rect.center = old_rect.center
 
     def move(self, x, y):# x,y are from top left.
         self.rect.move_ip(x,y)
         self._position_parts()
 
-    def rotate_turret(self):
-        y = pygame.mouse.get_pos()[0] - pygame.display.get_surface().get_width()/2
-        x = pygame.mouse.get_pos()[1] - pygame.display.get_surface().get_height()/2
+    def EVT_MouseMotion(self, event):
+        y = event.pos[0] - pygame.display.get_surface().get_width()/2
+        x = event.pos[1] - pygame.display.get_surface().get_height()/2
         if x == 0:
             x = 1
         if y == 0:
@@ -134,18 +146,28 @@ class hero(Sprite):
             (self.hull.get_width()/2)-(self.turret.get_width()/2),
             (self.hull.get_height()/2)-(self.turret.get_width()/2)))
 
-    def rotate_hull(self, angle):
-        self.hull.image = pygame.transform.rotate(self.HULL_IMAGE, angle)
-        self.image = self.hull.copy()
-        self.image.blit(self.turret, (
-            (self.hull.get_width()/2)-(self.turret.get_width()/2),
-            (self.hull.get_height()/2)-(self.turret.get_width()/2)))
-        self.rect = self.hull.get_rect()
+    def EVT_KeyDown(self, event):
+        if event.key in [pygame.K_RIGHT, pygame.K_LEFT, pygame.K_RIGHT,
+                         pygame.K_DOWN]:
+            if event.key == pygame.K_RIGHT:
+                self.rudder = -1
+            elif event.key == pygame.K_LEFT:
+                self.rudder = 1
+
+    def EVT_KeyUp(self, event):
+        if event.key in [pygame.K_RIGHT, pygame.K_LEFT, pygame.K_RIGHT,
+                         pygame.K_DOWN]:
+            if event.key == pygame.K_RIGHT and self.rudder == -1:
+                self.rudder = 0
+            elif event.key == pygame.K_LEFT and self.rudder == 1:
+                self.rudder = 0
 
     def _position_parts(self):
         """Position turret and hull relative to hero.rect"""
         self.turret.rect.midtop = self.rect.midtop
         self.hull.rect.midbottom = self.rect.midbottom
 
+#This is our "enemy", a triangle for now but to be replaced by a
+#howitzer and gunner
 enemies = [Sprite(
     pygame.image.load(os.path.join('data', 'enemies', 'dummy.bmp')))]

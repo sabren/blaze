@@ -558,15 +558,12 @@ class GameState(State):
         self.screen.blit(self.cursor, (
             pygame.mouse.get_pos()[0]-(self.cursor.get_width()/2),
             pygame.mouse.get_pos()[1]-(self.cursor.get_height()/2)))
-        pygame.display.update(self.screen.get_rect())
+        #pygame.display.update(self.screen.get_rect())
 
     def EVT_KeyDown(self, event):
         if event.key == pygame.K_ESCAPE:
             pygame.mouse.set_visible(True)
             self.quit()
-
-    def EVT_MouseMotion(self, event):
-        self.hero.rotate_turret()
 
 class Skirmish(Menu):
     '''
