@@ -54,8 +54,8 @@ class State(eventnet.driver.Handler):
         self.release() # stop listening
 
 class Menu(State):
-    def __init__(self, screen, options=['Single Player', 'Level Editor',
-                                        'Options', 'Quit'],
+    def __init__(self, screen, options=['Watch the Intro', 'Single Player',
+                                        'Level Editor', 'Options', 'Quit'],
                  title='Clad in Iron'):
         State.__init__(self, screen)
         self.selected = None
@@ -125,6 +125,9 @@ class Menu(State):
         if self.selected <> None: eventnet.driver.post(
             self.evt_prefix+''.join(self.selected.split()))
 
+    def EVT_MENU_WatchtheIntro(self, event):
+        self.quit(states.Story(self.screen))
+
     def EVT_MENU_Quit(self, event):
         eventnet.driver.post('Quit')
         self.quit()
@@ -153,7 +156,8 @@ class game(eventnet.driver.Handler):
         self.jkbx = Jukebox()
         self.jkbx.load_song('confedmarch')
         self.jkbx.play_song('confedmarch')
-        self.load_default_state()
+        self.state = states.Story(self.screen)
+        self.state.start()
 
     def tick(self):
         self.jkbx.set_song_volume(self.volume)

@@ -16,7 +16,7 @@
 #Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import pygame, eventnet.driver, os, sys, sprites, scrolling, level, glob
-import cPickle, jukebox, effects, random
+import cPickle, jukebox, effects, random, time
 from string import digits, lowercase
 '''
 Store states here.
@@ -55,7 +55,12 @@ class State(eventnet.driver.Handler):
         self.release() # stop listening
 
 class Story(State):
-    def start(self, colour=(0,255,0), size=18, story_path="story.txt"):
+    def __init__(self, screen):
+        State.__init__(self, screen)
+
+    def start(self, colour=(155,0,0), size=40,
+              story_path=os.path.join('data', "story.txt")):
+        State.start(self)
         try:
             import pygame.font
             pygame.font.init()
@@ -607,6 +612,18 @@ class HUD(Menu):
         self.screen.blit(self.background, (100, 5))
         pygame.display.update(self.background.get_rect())
 
+class InGameMenu(Menu):
+    def __init__(self, screen, game):
+        Menu.__init__(self, screen, ['Resume Game', 'Save Game', 'Quit Game'],
+                      'Game Paused')
+        self.game = game
+
+    def EVT_MENU_ResumeGame(self, event):
+        self.quit()
+
+    def EVT_MENU_QuitGame(self, event):
+        self.game.quit()
+
 class GameState(State):
     '''
     Our gamestate.
@@ -655,56 +672,61 @@ class GameState(State):
         self.FX = effects.Effects(self.screen, self.jkbx, self.background)
         self.tile_rects = [t.rect for t in self.tiles]
         self.HUD = HUD()
+        self.paused = False
 
     def tick(self):
-        collisions = self.hero.collide_rect.collidelistall(self.tile_rects)
-        if collisions != []:
-            for collide in self.tiles.sprites():
-                if collide.solid:
-                    collide = collide.rect
-                    if collide.collidepoint(
-                        self.hero.rect.centerx, self.hero.rect.top):
+        if not self.paused:
+            collisions = self.hero.collide_rect.collidelistall(self.tile_rects)
+            if collisions != []:
+                for collide in self.tiles.sprites():
+                    if collide.solid:
+                        collide = collide.rect
+                        if collide.collidepoint(
+                            self.hero.rect.centerx, self.hero.rect.top):
 
-                        self.hero.rect.top = collide.bottom
-                    if collide.collidepoint(
-                        self.hero.rect.left, self.hero.rect.centery):
+                            self.hero.rect.top = collide.bottom
+                        if collide.collidepoint(
+                            self.hero.rect.left, self.hero.rect.centery):
 
-                        self.hero.rect.left = collide.right
-                    if collide.collidepoint(
-                        self.hero.rect.centerx, self.hero.rect.bottom):
+                            self.hero.rect.left = collide.right
+                        if collide.collidepoint(
+                            self.hero.rect.centerx, self.hero.rect.bottom):
 
-                        self.hero.rect.bottom = collide.top
-                    if collide.collidepoint(
-                        self.hero.rect.right, self.hero.rect.centery):
+                            self.hero.rect.bottom = collide.top
+                        if collide.collidepoint(
+                            self.hero.rect.right, self.hero.rect.centery):
 
-                        self.hero.rect.right = collide.left
-        if self.hero.rect.left < 0:
-            self.hero.rect.left = 0
-        if self.hero.rect.right > self.level.get_width():
-            self.hero.rect.right = self.level.get_width()
-        if self.hero.rect.top < 0:
-            self.hero.rect.top = 0
-        if self.hero.rect.bottom > self.level.get_height():
-            self.hero.rect.bottom = self.level.get_height()
+                            self.hero.rect.right = collide.left
+            if self.hero.rect.left < 0:
+                self.hero.rect.left = 0
+            if self.hero.rect.right > self.level.get_width():
+                self.hero.rect.right = self.level.get_width()
+            if self.hero.rect.top < 0:
+                self.hero.rect.top = 0
+            if self.hero.rect.bottom > self.level.get_height():
+                self.hero.rect.bottom = self.level.get_height()
 
-        self.sprites.add(self.FX.sprites.sprites())
-        self.sprites.update()
-        self.sprites.clear(self.level, self.background)
-        self.sprites.draw(self.level)
-        self.HUD.health = self.hero.health
-        self.HUD.armor = self.hero.armor
-        self.HUD.tick()
-        self.FX.smoke_pos = self.hero.steam_vent
-        self.FX.tick()
-        self.display.background = self.level
-        self.display.pos = (
-            (self.hero.rect.centerx-(self.screen.get_width()/2)),
-            (self.hero.rect.centery-(self.screen.get_height()/2)))
-        self.display.tick()
-        self.screen.blit(self.game_window, (0,0))
-        self.screen.blit(self.cursor, (
-            pygame.mouse.get_pos()[0]-(self.cursor.get_width()/2),
-            pygame.mouse.get_pos()[1]-(self.cursor.get_height()/2)))
+            self.sprites.add(self.FX.sprites.sprites())
+            self.sprites.update()
+            self.sprites.clear(self.level, self.background)
+            self.sprites.draw(self.level)
+            self.HUD.health = self.hero.health
+            self.HUD.armor = self.hero.armor
+            self.HUD.tick()
+            self.FX.smoke_pos = self.hero.steam_vent
+            self.FX.tick()
+            self.display.background = self.level
+            self.display.pos = (
+                (self.hero.rect.centerx-(self.screen.get_width()/2)),
+                (self.hero.rect.centery-(self.screen.get_height()/2)))
+            self.display.tick()
+            self.screen.blit(self.game_window, (0,0))
+            self.screen.blit(self.cursor, (
+                pygame.mouse.get_pos()[0]-(self.cursor.get_width()/2),
+                pygame.mouse.get_pos()[1]-(self.cursor.get_height()/2)))
+
+        else:
+            menu = InGameMenu(self.screen)
 
     def EVT_MouseButtonDown(self, event):
         if event.button == 1:
@@ -713,7 +735,7 @@ class GameState(State):
                               (event.pos[0]+self.display.pos[0],
                                event.pos[1]+self.display.pos[1]))
                 self.hero.left_delay = 50
-        elif event.button == 3:
+        elif event.button == 3 or event.button == 2:
             if self.hero.right_delay == 0:
                 self.FX.shoot(self.hero.rect.center,
                               (event.pos[0]+self.display.pos[0],
@@ -722,8 +744,7 @@ class GameState(State):
 
     def EVT_KeyDown(self, event):
         if event.key == pygame.K_ESCAPE:
-            pygame.mouse.set_visible(True)
-            self.quit()
+            self.pause()
 
     def EVT_HeroDied(self, event):
         for sprite in self.enemies.sprites():
@@ -734,8 +755,10 @@ class GameState(State):
                    self.hero.rect.centery+random.randint(-50,50))
             self.FX.explosion(pos)
         self.FX.smoke_pos = (-1000,0)
+        self.lost_game = True
 
     def quit(self, next=None):
+        pygame.mouse.set_visible(True)
         self.jkbx.stop_song()
         self.jkbx.play_song('confedmarch')
         State.quit(self, next)
@@ -749,10 +772,20 @@ class Skirmish(Menu):
         Menu.__init__(self, screen, [os.path.splitext(
             os.path.split(lvl)[-1])[0]for lvl in glob.glob(os.path.join(
                 'data','levels', '*.lvl'))], 'Choose a Mission')
+        self.playing = False
+
+    def tick(self):
+        if not self.playing:
+            Menu.tick(self)
 
     def EVT_MouseButtonDown(self, event):
         if self.selected != None:
-            self.quit(GameState(self.screen, self.selected))
+            game = GameState(self.screen, self.selected)
+            while not game.done:
+                if not len(game.enemies.sprites()):
+                    msg = game.HUD.reg_font.render('You Win!')
+                game.tick()
+            self.quit()
 
 class SinglePlayerMenu(Menu):
     def __init__(self, screen):
