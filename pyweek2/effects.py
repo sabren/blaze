@@ -62,12 +62,14 @@ class smoke(pygame.sprite.Sprite):
             self.image.set_alpha(self.alpha)
             self.rect = self.rect.move(self.course)
 
-class Effects:
+class Effects(eventnet.driver.Handler):
     '''
     A class to handle smoke, explosions, and sounds.
     '''
 
     def __init__(self, screen, jkbx, background, smoke_pos=(-50, -50)):
+        eventnet.driver.Handler.__init__(self)
+        self.capture()
         self.screen = screen
         self.jkbx = jkbx
         self.background = background
@@ -177,6 +179,12 @@ class Effects:
             shot.course = (math.degrees(-math.sin(math.radians(angle))),
                            math.degrees(-math.cos(math.radians(angle))))
             shot.end_pos = end_pos
+
+    def EVT_Shot(self, event):
+        self.shoot(event.start_pos, event.end_pos)
+
+    def EVT_Boom(self, event):
+        self.explosion(event.pos)
 
 if __name__=='__main__':
     jkbx = jukebox.Jukebox()

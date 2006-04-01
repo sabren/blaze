@@ -548,7 +548,7 @@ class HUD(Menu):
                              (0,0))
         self.background.blit(self.reg_font.render('Armor: %s' % self.armor,
                                                   True, (100,100,100)),
-                             (450,0))
+                             (400,0))
         self.screen.blit(self.background, (100, 5))
         pygame.display.update(self.background.get_rect())
 
@@ -658,7 +658,7 @@ class GameState(State):
                               (event.pos[0]+self.display.pos[0],
                                event.pos[1]+self.display.pos[1]))
                 self.hero.left_delay = 50
-        elif event.button == 2:
+        elif event.button == 3:
             if self.hero.right_delay == 0:
                 self.FX.shoot(self.hero.rect.center,
                               (event.pos[0]+self.display.pos[0],

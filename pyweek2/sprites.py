@@ -128,8 +128,18 @@ class hero(Sprite):
         self.engine = 0
         self.steam_vent = self.rect.center
         self.collide_rect = self.rect
+        self.health = 100
+        self.armor = 100
+        self.right_delay = 0
+        self.left_delay = 0
 
     def update(self):
+        if self.health < 0:
+            eventnet.driver.post('HeroDied')
+        if self.left_delay > 0:
+            self.left_delay -= 1
+        if self.right_delay > 0:
+            self.right_delay -= 1
         old_pos = self.image.get_rect().center
         self.course = (math.degrees(-math.sin(math.radians(self.angle))),
                        math.degrees(-math.cos(math.radians(self.angle))))
@@ -188,6 +198,20 @@ class hero(Sprite):
             elif event.key == pygame.K_s:
                 self.engine = -1
 
+    def distance(self, pos):
+        a = self.rect.center
+        b = pos
+
+        if a[0] > b[0]:
+            x = a[0] - b[0]
+        else:
+            x = b[0] - a[0]
+        if a[1] > b[1]:
+            y = a[1] - b[1]
+        else:
+            y = b[1] - a[1]
+        return x+y
+
     def EVT_KeyUp(self, event):
         if event.key in [pygame.K_w, pygame.K_a, pygame.K_d,
                          pygame.K_s]:
@@ -199,6 +223,80 @@ class hero(Sprite):
                 self.engine = 0
             elif event.key == pygame.K_s and self.engine == -1:
                 self.engine = 0
+
+    def EVT_Explosion(self, event):
+        if self.rect.collidepoint(event.pos[0], event.pos[1]):
+            self.health -= 10
+            if self.armor > 0:
+                self.armor -= 10
+                self.health += (self.armor/10)
+
+class Howitzer(Sprite):
+    '''
+    An enemy to shoot and be shot at.
+    '''
+
+    IMAGE = pygame.image.load(os.path.join('data', 'enemies', 'howitzer.png'))
+    def __init__(self, groups=[]):
+        Sprite.__init__(self, self.IMAGE, groups,
+                        pos=self.IMAGE.get_rect().topleft)
+        self.image = self.IMAGE
+        self.rect = self.image.get_rect()
+        self.target = None
+        self.angle = 0
+        self.delay = 0
+
+    def distance(self, pos):
+        a = self.rect.center
+        b = pos
+
+        if a[0] > b[0]:
+            x = a[0] - b[0]
+        else:
+            x = b[0] - a[0]
+        if a[1] > b[1]:
+            y = a[1] - b[1]
+        else:
+            y = b[1] - a[1]
+        return x+y
+
+    def update(self):
+        if self.target != None and self.distance(self.target.center) < 500:
+            y = self.rect.centerx - self.target.rect.centerx
+            x = self.rect.centery - self.target.rect.centery
+            if x == 0:
+                x = 1
+            if y == 0:
+                y = 1
+            angle = math.degrees(math.atan(float(y)/float(x)))
+            if x < 0:
+                angle += 179
+            if angle < 0:
+                angle += 360
+
+            if self.angle > angle:
+                diff = self.angle - angle
+            else:
+                diff = angle - self.angle
+            if diff < 3:
+                if self.delay == 0:
+                    eventnet.driver.post('Shot', start_pos=self.rect.center,
+                                         end_pos=self.target.rect.center)
+                    self.delay = 50
+                else:
+                    self.delay -= 1
+            else:
+                if self.angle > angle:
+                    self.angle -= 5
+                else:
+                    self.angle += 5
+                pos = self.rect.center
+                self.image = pygame.transform.rotate(self.IMAGE, self.angle)
+                self.rect.center = pos
+
+    def EVT_Explosion(self, event):
+        if self.distance(event.pos) < 50:
+            self.kill()
 
 enemies = [Sprite(pygame.image.load(os.path.join('data', 'enemies',
                                                  'howitzer.png')))]
