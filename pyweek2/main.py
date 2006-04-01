@@ -55,7 +55,7 @@ class State(eventnet.driver.Handler):
 
 class Menu(State):
     def __init__(self, screen, options=['Watch the Intro', 'Single Player',
-                                        'Level Editor', 'Options', 'Quit'],
+                                        'Level Editor', 'Quit'],
                  title='Clad in Iron'):
         State.__init__(self, screen)
         self.selected = None

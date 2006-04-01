@@ -686,8 +686,34 @@ class GameState(State):
         self.tile_rects = [t.rect for t in self.tiles]
         self.HUD = HUD()
         self.paused = False
+        self.won = False
+        self.lost = False
+        self.lose_delay = -1
+        self.win_delay = -1
 
     def tick(self):
+        if self.lose_delay == 0:
+            self.lost = True
+        else:
+            self.lose_delay -= 1
+        if self.win_delay == 0:
+            self.won = True
+        else:
+            self.win_delay -= 1
+        if self.won and not self.paused:
+            msg = pygame.font.SysFont('Arial', 40).render(
+                'You Win!', True, (0,255,0))
+            self.screen.blit(msg, (
+                (self.screen.get_width()/2)-(msg.get_width()/2),
+                (self.screen.get_height()/2)-(msg.get_width()/2)))
+            pygame.display.update(msg.get_rect().move(self.screen.get_rect().center))
+        elif self.lost and not self.paused:
+            msg = pygame.font.SysFont('Arial', 40).render(
+                'You Lose', True, (255,0,0))
+            self.screen.blit(msg, (
+                (self.screen.get_width()/2)-(msg.get_width()/2),
+                (self.screen.get_height()/2)-(msg.get_width()/2)))
+            pygame.display.update(msg.get_rect().move(self.screen.get_rect().center))
         if not self.paused:
             collisions = self.hero.collide_rect.collidelistall(self.tile_rects)
             if collisions != []:
@@ -737,6 +763,8 @@ class GameState(State):
             self.screen.blit(self.cursor, (
                 pygame.mouse.get_pos()[0]-(self.cursor.get_width()/2),
                 pygame.mouse.get_pos()[1]-(self.cursor.get_height()/2)))
+            if len(self.enemies.sprites()) == 0:
+                self.win = True
 
         else:
             self.menu.tick()
@@ -753,7 +781,7 @@ class GameState(State):
                 self.FX.shoot(self.hero.rect.center,
                               (event.pos[0]+self.display.pos[0],
                                event.pos[1]+self.display.pos[1]))
-                self.hero.right_delay = 50
+                self.hero.right_delay = 100
 
     def EVT_KeyDown(self, event):
         if event.key == pygame.K_ESCAPE:
@@ -776,7 +804,7 @@ class GameState(State):
                    self.hero.rect.centery+random.randint(-50,50))
             self.FX.explosion(pos)
         self.FX.smoke_pos = (-1000,0)
-        self.lost_game = True
+        self.lose_delay = 50
 
     def quit(self, next=None):
         pygame.mouse.set_visible(True)
@@ -802,18 +830,14 @@ class Skirmish(Menu):
     def EVT_MouseButtonDown(self, event):
         if self.selected != None:
             self.quit(GameState(self.screen, self.selected))
-            #game = GameState(self.screen, self.selected)
-            #game.start()
-            #while not game.done:
-            #    if not len(game.enemies.sprites()):
-            #        msg = game.HUD.reg_font.render('You Win!')
-            #    game.tick()
-            #self.quit()
 
 class SinglePlayerMenu(Menu):
     def __init__(self, screen):
         Menu.__init__(self, screen, ['Campaign', 'Skirmish',
                                      'Load Game'], 'Single Player')
+
+    def start(self):
+        self.quit(Skirmish(self.screen))
 
     def EVT_MENU_Skirmish(self, event):
         self.quit(Skirmish(self.screen))
