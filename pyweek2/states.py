@@ -600,7 +600,8 @@ class GameState(State):
             self.hero.rect.top = 0
         if self.hero.collide_rect.bottom > self.level.get_height():
             self.hero.rect.bottom = self.level.get_height()
-            
+        print self.hero.rect.center
+
         self.sprites.add(self.FX.sprites.sprites())
         self.sprites.update()
         self.sprites.clear(self.level, self.background)

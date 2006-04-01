@@ -80,28 +80,34 @@ def save(name, lvl):
 
     for i in range(len(lvl['enemies'])):
         enemy = lvl['enemies'][i]
-        rect = enemy.rect
-        del(lvl['enemies'][i])
-        enemy = sprites.Sprite(enemy.image, pos=enemy.rect.topleft)
-        enemy.rect = rect
-        pygame.image.save(enemy.image, tmpfile)
-        enemy.image = open(tmpfile, 'rb').read()
-        enemy = (enemy.image, enemy.rect.topleft)
-        lvl['enemies'].insert(i, enemy)
+        try:
+            rect = enemy.rect
+            del(lvl['enemies'][i])
+            enemy = sprites.Sprite(enemy.image, pos=enemy.rect.topleft)
+            enemy.rect = rect
+            pygame.image.save(enemy.image, tmpfile)
+            enemy.image = open(tmpfile, 'rb').read()
+            enemy = (enemy.image, enemy.rect.topleft)
+            lvl['enemies'].insert(i, enemy)
+        except:
+            pass
 
     for index in range(len(lvl['tiles'])):
         row = lvl['tiles'][index]
         del(lvl['tiles'][index])
         for i in range(len(row)):
-            t = row[i]
-            rect = t.rect
-            del(row[i])
-            t = tile(t.image, t.solid)
-            t.rect = rect
-            pygame.image.save(t.image, tmpfile)
-            t.image = open(tmpfile, 'rb').read()
-            t = (t.image, t.solid)
-            row.insert(i, t)
+            try:
+                t = row[i]
+                rect = t.rect
+                del(row[i])
+                t = tile(t.image, t.solid)
+                t.rect = rect
+                pygame.image.save(t.image, tmpfile)
+                t.image = open(tmpfile, 'rb').read()
+                t = (t.image, t.solid)
+                row.insert(i, t)
+            except:
+                pass
         lvl['tiles'].insert(index, row)
 
     cPickle.dump(lvl, open(os.path.join('data', 'levels', name+'.lvl'), 'w'))
