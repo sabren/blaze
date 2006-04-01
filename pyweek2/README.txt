@@ -1,4 +1,4 @@
-####Clad in Iron 0.5####
+####Clad in Iron####
 
 Thank you for downloading!
 
@@ -10,10 +10,11 @@ Thank you for downloading!
 4. Future possibilities.
 5. Thanks
 
+See TODO.txt and LICENSE.txt for more information.
 
 ---Installing and Running---
 
-Clad in Iron requires
+CII requires
 
 python 2.4 or greater
 pygame 1.7 or greater
@@ -31,7 +32,7 @@ webmaster@blazeofglory.org .
 
 ---Playing the Game---
 
-Clad in Iron is a top-down shooter with a steam-powered
+CII is a top-down shooter with a steam-powered
 ironclad warship as the hero. The default controls are
 
 W		Move forward
@@ -64,11 +65,25 @@ things so keep watching on our website at
 http://BlazeOfGlory.org
 
 
----Thanks to---
+---A Special Thanks to---
+
+Danc Redmond (for the tileset)
+www.anyflag.com (for the flag icon)
+xroads.virginia.edu (for the toolbar background)
+kingportlandschools.org (for the menu background)
+
+and the entire trailblazer team:
+
+Micah (mcferrill) - Coding, research, webmaster, 
+	and team lead
+Todd (Nuclear Ghecko) - Graphics and research
+Adam (pyTM30) - Coding
+Vinko (Yango) - Coding
+Don (cooldmz) - Story advisor
+Andreas (DocTiger/elTigre) - Concept modeling
 
 
-
-On behalf of the entire trailblazer team, thank you.
+On behalf of myself and the rest of the team, thank you.
 
 Micah Ferrill
 Trailblazer Team Lead

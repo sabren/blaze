@@ -1,0 +1,5 @@
+1. Lots more comments and docstrings
+2. Code readability
+3. Program usability
+4. Multiplayer
+5. Better graphics(?)

@@ -1,4 +1,4 @@
-import pygame, jukebox, glob, os, random, math
+import pygame, jukebox, glob, os, random, math, eventnet.driver
 
 class Animation(pygame.sprite.Sprite):
     def __init__(self, images, pos, groups=[]):
@@ -51,7 +51,8 @@ class Effects:
     A class to handle smoke, explosions, and sounds.
     '''
 
-    def __init__(self, jkbx, background, smoke_pos=(-50, -50)):
+    def __init__(self, screen, jkbx, background, smoke_pos=(-50, -50)):
+        self.screen = screen
         self.jkbx = jkbx
         self.background = background
         self.water_sounds = glob.glob(os.path.join('data', 'sound',
@@ -79,6 +80,7 @@ class Effects:
             self.shot, self.engine]+self.random_sounds+self.explosion_sounds+self.water_sounds+self.splash_sounds
         for sound in self.all_sounds:
             self.jkbx.load_sound(sound)
+            self.jkbx.set_sound_volume(0.3, sound)
         self.explosion_seq = glob.glob(os.path.join('data', 'effects', 'exploBig',
                                                     '*.bmp'))
         self.explosion_seq.sort()
@@ -95,19 +97,21 @@ class Effects:
 
     def tick(self):
         for shot in self.shots.sprites():
-            x_diff = shot.rect.center[0] - shot.end_pos[0]
-            y_diff = shot.rect.center[1] - shot.end_pos[1]
+            if shot.rect.center[0] > shot.end_pos[0]:
+                x_diff = shot.rect.center[0] - shot.end_pos[0]
+            else:
+                x_diff = shot.end_pos[0] - shot.rect.center[0]
+            if shot.rect.center[1] > shot.end_pos[1]:
+                y_diff = shot.rect.center[1] - shot.end_pos[1]
+            else:
+                y_diff = shot.end_pos[1] - shot.rect.center[1]
             distance = x_diff + y_diff
-            if distance < 5 and distance > -5:
+            if distance < 40:
                 shot.kill()
                 self.explosion(shot.end_pos)
             else:
-                shot.rect.center = (shot.rect.center[0] + (shot.course[0]*20),
-                                    shot.rect.center[1] + (shot.course[1]*20))
-
-        self.sprites.update()
-        self.sprites.clear(pygame.display.get_surface(), self.background)
-        self.sprites.draw(pygame.display.get_surface())
+                shot.rect.center = (shot.rect.center[0] + (shot.course[0]/7),
+                                    shot.rect.center[1] + (shot.course[1]/7))
 
         self.sprites.add(smoke(self.smoke_pos, (
             random.randint(-1, 1), random.randint(-1, 1))))
@@ -115,34 +119,30 @@ class Effects:
     def explosion(self, pos):
         self.jkbx.play_sound(self.explosion_sounds[random.randint(
             0,len(self.explosion_sounds)-1)])
-        self.sprites.add(Animation(self.explosion_seq, pos))
+        self.sprites.add(Animation([img for img in self.explosion_seq], pos))
 
     def shoot(self, start_pos, end_pos):
         if start_pos != end_pos:
-            if start_pos[0] > end_pos[0]:
-                x_diff = start_pos[0] - end_pos[0]
-            else:
-                x_diff = end_pos[0] - start_pos[0]
-            if start_pos[1] > end_pos[1]:
-                y_diff = start_pos[1] - end_pos[1]
-            else:
-                y_diff = end_pos[1] - start_pos[1]
+            y = end_pos[0] - start_pos[0]
+            x = end_pos[1] - start_pos[1]
+            if x == 0:
+                x = 1
+            if y == 0:
+                y = 1
+            angle = math.degrees(math.atan(float(y)/float(x)))
+            if x < 0:
+                angle += 179
+            if angle < 0:
+                angle += 360
+            angle += 180
 
-            if y_diff == 0:
-                y_diff = 1
-            if x_diff == 0:
-                x_diff = 1
-            distance = y_diff + x_diff
-
-            shot_seq = []
-            angle = math.degrees(math.atan(float(x_diff)/float(y_diff)))
             shot = pygame.sprite.Sprite([self.shots, self.sprites])
             shot.image = self.cannon_ball
             shot.rect = shot.image.get_rect()
             shot.rect.center = start_pos
             self.jkbx.play_sound('howitzer')
-            shot.course = (math.sin(math.radians(angle)),
-                           math.cos(math.radians(angle)))
+            shot.course = (math.degrees(-math.sin(math.radians(angle))),
+                           math.degrees(-math.cos(math.radians(angle))))
             shot.end_pos = end_pos
 
 if __name__=='__main__':
@@ -151,12 +151,15 @@ if __name__=='__main__':
     screen.fill((255,255,255))
     background = pygame.Surface((800,600))
     background.fill((255,255,255))
-    fx = Effects(jkbx, background, (50,0))
-    #fx.explosion((400,300))
+    fx = Effects(screen, jkbx, background, (50,0))
     fx.shoot((700,100), (700, 500))
     while 1:
         pygame.display.flip()
         fx.smoke_pos = (50, fx.smoke_pos[1]+5)
+        fx.sprites.update()
+        fx.sprites.clear(screen, background)
+        fx.sprites.draw(screen)
+
         fx.tick()
         pygame.time.wait(75)
 

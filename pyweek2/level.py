@@ -13,7 +13,7 @@ class tile(sprites.Sprite):
         self.solid = solid
 
 default_tile = tile(pygame.image.load(os.path.join(
-    'data', 'tiles', 'water.bmp')))
+    'data', 'tiles', 'Crtr2Wtr22.bmp')))
 reg_tiles = [tile(pygame.image.load(x)) for x in glob.glob(
     os.path.join('data', 'tiles', '*.bmp'))]
 solid_tiles = [tile(pygame.image.load(x), True) for x in glob.glob(
@@ -109,8 +109,8 @@ class level:
     def __init__(self, source=empty_level):
         self.tiles = sprites.Group()
         self.sprites = sprites.Group(source['enemies'])
-        self.background = pygame.Surface((len(source['tiles'])*50,
-                                          len(source['tiles'][0])*50))
+        self.background = pygame.Surface((len(source['tiles'])*20,
+                                          len(source['tiles'][0])*20))
         y = 0
         for row in source['tiles']:
             x = 0
@@ -118,8 +118,8 @@ class level:
                 tile.rect = tile.rect.move((x,y))
                 self.background.blit(tile.image, (x,y))
                 self.tiles.add(tile)
-                x += 50
-            y += 50
+                x += 20
+            y += 20
         self.tiles.draw(self.background)
         self.hero = sprites.hero(source['hero'], [self.sprites])
         self.level = self.background.copy()

@@ -112,17 +112,17 @@ class hero(Sprite):
         self.engine = 0
 
     def update(self):
-        self.course = (-math.sin(math.radians(self.angle)),
-                       -math.cos(math.radians(self.angle)))
+        self.course = (math.degrees(-math.sin(math.radians(self.angle))),
+                       math.degrees(-math.cos(math.radians(self.angle))))
         if self.engine != 0:
             if self.engine == 1:
                 self.angle += self.rudder
-                self.rect = self.rect.move((self.course[0]*5,
-                                            self.course[1]*5))
+                self.rect = self.rect.move((self.course[0]/15,
+                                            self.course[1]/15))
             else:
                 self.angle -= self.rudder
-                self.rect = self.rect.move((-self.course[0]*5,
-                                            -self.course[1]*5))
+                self.rect = self.rect.move((-self.course[0]/15,
+                                            -self.course[1]/15))
 
             if self.rudder != 0:
                 old_rect = self.rect
@@ -178,12 +178,5 @@ class hero(Sprite):
             elif event.key == pygame.K_s and self.engine == -1:
                 self.engine = 0
 
-    def _position_parts(self):
-        """Position turret and hull relative to hero.rect"""
-        self.turret.rect.midtop = self.rect.midtop
-        self.hull.rect.midbottom = self.rect.midbottom
-
-#This is our "enemy", a triangle for now but to be replaced by a
-#howitzer and gunner
 enemies = [Sprite(
     pygame.image.load(os.path.join('data', 'enemies', 'howitzer.png')))]

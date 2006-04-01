@@ -37,8 +37,8 @@ class State(eventnet.driver.Handler):
         self.release() # stop listening
 
 class Menu(State):
-    def __init__(self, screen, options=['Single Player', 'Multiplayer',
-                                        'Level Editor', 'Options', 'Quit'],
+    def __init__(self, screen, options=['Single Player', 'Level Editor',
+                                        'Options', 'Quit'],
                  title='Clad in Iron'):
         State.__init__(self, screen)
         self.selected = None
@@ -134,31 +134,9 @@ class game(eventnet.driver.Handler):
         self.screen = pygame.display.set_mode((800, 600)) #windowed for now
         self.volume = 0.7
         self.jkbx = Jukebox()
-        vinko = """
-        self.jkbx.load_song('bg','.mp3')
-        self.jkbx.play_song()        
-        self.jkbx.stop_song('bg',150)
-        self.jkbx.load_sound('background007')
-        self.jkbx.load_sound('battle003')
-        self.jkbx.load_sound('battle035')
-        self.jkbx.load_sound('nautical047')
-        self.jkbx.play_sound('battle003',5)
-        self.jkbx.set_sound_volume('battle003',0.1)
-        self.jkbx.play_sound('battle035',6)
-        self.jkbx.set_sound_volume('battle035',0.5)
-        self.jkbx.play_sound('nautical047',7)
-        self.jkbx.set_sound_volume('nautical047',0.3)
-        """
-        #micah = """
-        self.jkbx.load_sound('explosion')
-        self.jkbx.load_sound('water')
-        self.jkbx.load_sound('howitzer')
-        #self.jkbx.load_song('sisters')
         self.jkbx.load_song('confedmarch')
+        self.jkbx.set_song_volume(0.3)
         self.jkbx.play_song('confedmarch')
-        #self.jkbx.play_random_song()
-        #self.jkbx.stop_song('confedmarch',100)
-        #"""
         self.load_default_state()
 
     def tick(self):
