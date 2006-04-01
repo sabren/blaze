@@ -1,3 +1,20 @@
+#Clad in Iron 0.5 a top-down shooter.
+#Copyright (C) 2006 Team Trailblazer
+#
+#This program is free software; you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation; either version 2 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program; if not, write to the Free Software
+#Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
 import pygame, eventnet.driver, os, sys, sprites, scrolling, level, glob
 import cPickle, jukebox, effects
 from string import digits, lowercase
@@ -225,13 +242,11 @@ class LevelEditor(Menu):
              50))
         if self.lvl_name == '__NEW__':
             self.hero = sprites.hero((-1000,0))
+            self.hero.rect.center = (-1000,0)
         else:
             self.hero = sprites.hero(lvl['hero'])
-        self.hero.update()
-        self.h = sprites.Sprite(
-            self.hero.image, [self.toolbar_items],
-            ((self.toolbar.get_width()/2)-(self.hero.image.get_width()/2),
-             self.labels[0].get_rect().bottom+55))
+            self.hero.rect.center = lvl['hero']
+        self.h = sprites.Sprite(self.hero.image, [self.toolbar_items])
         self.hero.release()
         self.h.release()
         self.toolbar.blit(
