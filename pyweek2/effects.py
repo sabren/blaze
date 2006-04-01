@@ -1,4 +1,4 @@
-#Clad in Iron 0.5 a top-down shooter.
+#Clad in Iron 0.5
 #Copyright (C) 2006 Team Trailblazer
 #
 #This program is free software; you can redistribute it and/or modify

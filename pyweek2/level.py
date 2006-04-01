@@ -1,4 +1,4 @@
-#Clad in Iron 0.5 a top-down shooter.
+#Clad in Iron 0.5
 #Copyright (C) 2006 Team Trailblazer
 #
 #This program is free software; you can redistribute it and/or modify
@@ -54,7 +54,9 @@ def load(name):
         f = open(tmpfile, 'wb')
         f.write(enemy[0])
         f.close()
-        enemy = sprites.Sprite(pygame.image.load(tmpfile), pos=enemy[1])
+        img = pygame.image.load(tmpfile)
+        img.set_colorkey((0,0,0,255))
+        enemy = sprites.Sprite(img, pos=enemy[1])
         lvl['enemies'].insert(i, enemy)
     for index in range(len(lvl['tiles'])):
         row = lvl['tiles'][index]
@@ -110,9 +112,8 @@ def new(width, height):
         y = row
         row = []
         for Tile in range(width):
-            random.shuffle(reg_tiles, random.random)
             x = Tile
-            Tile = tile(reg_tiles[0].image, False)
+            Tile = tile(default_tile.image, False)
             Tile.rect = Tile.rect.move((x,y))
             row += [Tile]
         tiles += [row]

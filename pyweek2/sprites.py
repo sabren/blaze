@@ -1,4 +1,4 @@
-#Clad in Iron 0.5 a top-down shooter.
+#Clad in Iron 0.5
 #Copyright (C) 2006 Team Trailblazer
 #
 #This program is free software; you can redistribute it and/or modify
@@ -127,6 +127,7 @@ class hero(Sprite):
         self.angle = 0
         self.engine = 0
         self.steam_vent = self.rect.center
+        self.collide_rect = self.rect
 
     def update(self):
         old_pos = self.image.get_rect().center
@@ -199,5 +200,5 @@ class hero(Sprite):
             elif event.key == pygame.K_s and self.engine == -1:
                 self.engine = 0
 
-enemies = [Sprite(
-    pygame.image.load(os.path.join('data', 'enemies', 'howitzer.png')))]
+enemies = [Sprite(pygame.image.load(os.path.join('data', 'enemies',
+                                                 'howitzer.png')))]

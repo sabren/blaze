@@ -1,4 +1,4 @@
-#Clad in Iron 0.5 a top-down shooter.
+#Clad in Iron 0.5
 #Copyright (C) 2006 Team Trailblazer
 #
 #This program is free software; you can redistribute it and/or modify
@@ -246,7 +246,10 @@ class LevelEditor(Menu):
         else:
             self.hero = sprites.hero(lvl['hero'])
             self.hero.rect.center = lvl['hero']
-        self.h = sprites.Sprite(self.hero.image, [self.toolbar_items])
+        self.h = sprites.Sprite(
+            self.hero.image, [self.toolbar_items],
+            ((self.toolbar.get_width()/2)-(self.hero.image.get_width()/2),
+             self.labels[0].get_rect().bottom+55))
         self.hero.release()
         self.h.release()
         self.toolbar.blit(
@@ -346,8 +349,8 @@ class LevelEditor(Menu):
                     self.quit(SaveLevel(self.screen, self.lvl, self.lvl_name))
                 else:
                     for item in self.toolbar_items.sprites():
-                        item.rect.top += self.toolbar_pos[1]
-                        if self.over_image(item.image, item.rect.topleft):
+                        if self.over_image(item.image, (
+                            item.rect.left, item.rect.top+self.toolbar_pos[1])):
                             if isinstance(item, level.tile):
                                 self.selected = level.tile(item.image, item.solid)
                             elif isinstance(item, sprites.hero):
@@ -546,7 +549,6 @@ class GameState(State):
             lvl = lvl.new(5,5)
         self.background = pygame.Surface((len(lvl['tiles'])*20,
                                           len(lvl['tiles'][0])*20))
-        self.level = self.background.copy()
         self.game_window = pygame.Surface((800,600))
         self.tiles = sprites.Group()
         y = 0
@@ -558,7 +560,7 @@ class GameState(State):
                 x += 20
             y += 20
         self.tiles.draw(self.background)
-        self.level.blit(self.background, (0,0))
+        self.level = self.background.copy()
         self.hero = sprites.hero(lvl['hero'])
         self.hero.rect = pygame.Rect(lvl['hero'], self.hero.rect.size)
         self.sprites = sprites.Group()
@@ -566,8 +568,39 @@ class GameState(State):
         self.display = scrolling.scrolling_display(self.level,
                                                    self.game_window, (0,0))
         self.FX = effects.Effects(self.screen, self.jkbx, self.background)
+        self.tile_rects = [t.rect for t in self.tiles]
 
     def tick(self):
+        collisions = self.hero.collide_rect.collidelistall(self.tile_rects)
+        if collisions != []:
+            for collide in self.tiles.sprites():
+                if collide.solid:
+                    collide = collide.rect
+                    if collide.collidepoint(
+                        self.hero.rect.centerx, self.hero.rect.top):
+
+                        self.hero.rect.top = collide.bottom
+                    if collide.collidepoint(
+                        self.hero.rect.left, self.hero.rect.centery):
+
+                        self.hero.rect.left = collide.right
+                    if collide.collidepoint(
+                        self.hero.rect.centerx, self.hero.rect.bottom):
+
+                        self.hero.rect.bottom = collide.top
+                    if collide.collidepoint(
+                        self.hero.rect.right, self.hero.rect.centery):
+
+                        self.hero.rect.right = collide.left
+        if self.hero.collide_rect.left < 0:
+            self.hero.rect.left = 0
+        if self.hero.collide_rect.left < 0:
+            self.hero.rect.left = 0
+        if self.hero.collide_rect.left < 0:
+            self.hero.rect.left = 0
+        if self.hero.collide_rect.left < 0:
+            self.hero.rect.left = 0
+            
         self.sprites.add(self.FX.sprites.sprites())
         self.sprites.update()
         self.sprites.clear(self.level, self.background)
