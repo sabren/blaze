@@ -3,3 +3,4 @@
 3. Program usability
 4. Multiplayer
 5. Better graphics(?)
+6. Finish the todo list :p

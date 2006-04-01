@@ -43,9 +43,9 @@ Mouse		Aim cannons
 MouseButton1	Fire left cannon
 MouseButton2	Fire right cannon
 Escape		In-game menu/pause
+F9		Take a screenshot
 
-These controls can be modified via the options section
-in the main menu. Enemies for now are shore-based 
+Enemies for now are shore-based 
 artillery. These will not move but their weapons will
 eventually destroy your ship if you give them time.
 

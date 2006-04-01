@@ -151,7 +151,8 @@ class game(eventnet.driver.Handler):
             os.path.join('data', 'flag.jpg')))
         self.capture()
         self.done = False
-        self.screen = pygame.display.set_mode((800, 600)) #windowed for now
+        self.screen = pygame.display.set_mode((800, 600),
+                                              pygame.FULLSCREEN)
         self.volume = 0.2
         self.jkbx = Jukebox()
         self.jkbx.load_song('confedmarch')
