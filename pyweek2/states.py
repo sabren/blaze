@@ -594,12 +594,12 @@ class GameState(State):
                         self.hero.rect.right = collide.left
         if self.hero.collide_rect.left < 0:
             self.hero.rect.left = 0
-        if self.hero.collide_rect.left < 0:
-            self.hero.rect.left = 0
-        if self.hero.collide_rect.left < 0:
-            self.hero.rect.left = 0
-        if self.hero.collide_rect.left < 0:
-            self.hero.rect.left = 0
+        if self.hero.collide_rect.right > self.level.get_width():
+            self.hero.rect.right = self.level.get_width()
+        if self.hero.collide_rect.top < 0:
+            self.hero.rect.top = 0
+        if self.hero.collide_rect.bottom > self.level.get_height():
+            self.hero.rect.bottom = self.level.get_height()
             
         self.sprites.add(self.FX.sprites.sprites())
         self.sprites.update()
