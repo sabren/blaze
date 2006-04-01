@@ -103,7 +103,7 @@ class Jukebox:
         else:
             self.soundlist[name].stop()
 
-    def stop_song(self,fade=True,time=1.0):
+    def stop_song(self,fade=False,time=1.0):
         """
         If fade, the song will fadeout instead of stopping abruptly, time is how many seconds the
         fade will last

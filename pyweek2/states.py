@@ -61,12 +61,12 @@ class Story(State):
     def start(self, colour=(155,0,0), size=40,
               story_path=os.path.join('data', "story.txt")):
         State.start(self)
-        try:
-            import pygame.font
-            pygame.font.init()
-        except ImportError:
-            print "pygame.font is missing you'll have to read story.txt"
-            return
+        #try:
+        #    import pygame.font
+        #    pygame.font.init()
+        #except ImportError:
+        #    print "pygame.font is missing you'll have to read story.txt"
+        #    return
         self.colour = colour
         self.size = size
         self.capture()
@@ -81,7 +81,7 @@ class Story(State):
 
     def render_story(self, story_file):
         """Create a list of rendered text from story_file"""
-        font = pygame.font.Font(None, self.size)
+        font = pygame.font.SysFont('Arial', self.size)
         story = []
         rect_list = []
         height = 600
@@ -613,13 +613,26 @@ class HUD(Menu):
         pygame.display.update(self.background.get_rect())
 
 class InGameMenu(Menu):
-    def __init__(self, screen, game):
-        Menu.__init__(self, screen, ['Resume Game', 'Save Game', 'Quit Game'],
+    def __init__(self, screen):
+        Menu.__init__(self, screen, ['Resume Game', 'Quit Game'],
                       'Game Paused')
-        self.game = game
 
-    def EVT_MENU_ResumeGame(self, event):
-        self.quit()
+    def start(self, game):
+        self.game = game
+        Menu.start(self)
+
+    def EVT_MouseButtonDown(self, event):
+        if self.selected == 'Resume Game':
+            for sprite in self.game.sprites.sprites():
+                if sprite not in self.game.FX.sprites.sprites():
+                    sprite.capture()
+            self.game.jkbx.resume_all_sounds()
+            self.game.paused = False
+            self.game.capture()
+            self.quit()
+        elif self.selected == 'Quit Game':
+            self.game.quit()
+            self.quit()
 
     def EVT_MENU_QuitGame(self, event):
         self.game.quit()
@@ -726,7 +739,7 @@ class GameState(State):
                 pygame.mouse.get_pos()[1]-(self.cursor.get_height()/2)))
 
         else:
-            menu = InGameMenu(self.screen)
+            self.menu.tick()
 
     def EVT_MouseButtonDown(self, event):
         if event.button == 1:
@@ -744,7 +757,15 @@ class GameState(State):
 
     def EVT_KeyDown(self, event):
         if event.key == pygame.K_ESCAPE:
-            self.pause()
+            self.paused = True
+            self.menu = InGameMenu(self.screen)
+            self.menu.start(self)
+            pygame.mouse.set_visible(True)
+            for sprite in self.sprites.sprites()+self.enemies.sprites():
+                if sprite not in self.FX.sprites.sprites():
+                    sprite.release()
+            self.release()
+            self.jkbx.pause_all_sounds()
 
     def EVT_HeroDied(self, event):
         for sprite in self.enemies.sprites():
@@ -780,12 +801,14 @@ class Skirmish(Menu):
 
     def EVT_MouseButtonDown(self, event):
         if self.selected != None:
-            game = GameState(self.screen, self.selected)
-            while not game.done:
-                if not len(game.enemies.sprites()):
-                    msg = game.HUD.reg_font.render('You Win!')
-                game.tick()
-            self.quit()
+            self.quit(GameState(self.screen, self.selected))
+            #game = GameState(self.screen, self.selected)
+            #game.start()
+            #while not game.done:
+            #    if not len(game.enemies.sprites()):
+            #        msg = game.HUD.reg_font.render('You Win!')
+            #    game.tick()
+            #self.quit()
 
 class SinglePlayerMenu(Menu):
     def __init__(self, screen):
