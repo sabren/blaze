@@ -16,7 +16,7 @@
 #Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import pygame, eventnet.driver, os, sys, sprites, scrolling, level, glob
-import cPickle, jukebox, effects
+import cPickle, jukebox, effects, random
 from string import digits, lowercase
 '''
 Store states here.
@@ -527,6 +527,31 @@ class EditChoice(Menu):
             self.quit(LevelEditor(self.screen, level.load(self.selected),
                                   self.selected))
 
+class HUD(Menu):
+    def __init__(self):
+        Menu.__init__(self, pygame.display.get_surface(), [], '')
+        self.background = pygame.Surface((600, 50))
+        self.background.fill((255,255,255))
+        self.background.set_alpha(100)
+        self.health = 0
+        self.armor = 0
+        self.kills = 0
+
+    def tick(self):
+        if self.health < 0:
+            self.health = 0
+        if self.armor < 0:
+            self.armor = 0
+        self.background.fill((255,255,255))
+        self.background.blit(self.reg_font.render('Health: %s' % self.health,
+                                                  True, (0,255,0)),
+                             (0,0))
+        self.background.blit(self.reg_font.render('Armor: %s' % self.armor,
+                                                  True, (100,100,100)),
+                             (450,0))
+        self.screen.blit(self.background, (100, 5))
+        pygame.display.update(self.background.get_rect())
+
 class GameState(State):
     '''
     Our gamestate.
@@ -561,14 +586,20 @@ class GameState(State):
             y += 20
         self.tiles.draw(self.background)
         self.level = self.background.copy()
-        self.hero = sprites.hero(lvl['hero'])
-        self.hero.rect = pygame.Rect(lvl['hero'], self.hero.rect.size)
         self.sprites = sprites.Group()
-        self.sprites.add(lvl['enemies'], self.hero)
+        self.hero = sprites.hero(lvl['hero'], self.sprites)
+        self.hero.rect = pygame.Rect(lvl['hero'], self.hero.rect.size)
+        self.enemies = pygame.sprite.Group()
+        for enemy in lvl['enemies']:
+            pos = enemy.pos
+            enemy = sprites.Howitzer([self.sprites, self.enemies])
+            enemy.rect.center = pos
+            enemy.target = self.hero
         self.display = scrolling.scrolling_display(self.level,
                                                    self.game_window, (0,0))
         self.FX = effects.Effects(self.screen, self.jkbx, self.background)
         self.tile_rects = [t.rect for t in self.tiles]
+        self.HUD = HUD()
 
     def tick(self):
         collisions = self.hero.collide_rect.collidelistall(self.tile_rects)
@@ -605,6 +636,9 @@ class GameState(State):
         self.sprites.update()
         self.sprites.clear(self.level, self.background)
         self.sprites.draw(self.level)
+        self.HUD.health = self.hero.health
+        self.HUD.armor = self.hero.armor
+        self.HUD.tick()
         self.FX.smoke_pos = self.hero.steam_vent
         self.FX.tick()
         self.display.background = self.level
@@ -618,14 +652,33 @@ class GameState(State):
             pygame.mouse.get_pos()[1]-(self.cursor.get_height()/2)))
 
     def EVT_MouseButtonDown(self, event):
-        self.FX.shoot(self.hero.rect.center,
-                      (pygame.mouse.get_pos()[0]+self.display.pos[0],
-                       pygame.mouse.get_pos()[1]+self.display.pos[1]))
+        if event.button == 1:
+            if self.hero.left_delay == 0:
+                self.FX.shoot(self.hero.rect.center,
+                              (event.pos[0]+self.display.pos[0],
+                               event.pos[1]+self.display.pos[1]))
+                self.hero.left_delay = 50
+        elif event.button == 2:
+            if self.hero.right_delay == 0:
+                self.FX.shoot(self.hero.rect.center,
+                              (event.pos[0]+self.display.pos[0],
+                               event.pos[1]+self.display.pos[1]))
+                self.hero.right_delay = 50
 
     def EVT_KeyDown(self, event):
         if event.key == pygame.K_ESCAPE:
             pygame.mouse.set_visible(True)
             self.quit()
+
+    def EVT_HeroDied(self, event):
+        for sprite in self.enemies.sprites():
+            sprite.kill()
+        self.hero.kill()
+        for x in range(100):
+            pos = (self.hero.rect.centerx+random.randint(-50,50),
+                   self.hero.rect.centery+random.randint(-50,50))
+            self.FX.explosion(pos)
+        self.FX.smoke_pos = (-1000,0)
 
     def quit(self, next=None):
         self.jkbx.stop_song()
