@@ -58,8 +58,7 @@ class Sprite(pygame.sprite.Sprite, eventnet.driver.Handler):
 
 class hero(Sprite):
     '''
-    Class to manage the hero.
-    INCOMPLETE
+    Our little steamboat.
     '''
 
     HULL_IMAGE = pygame.image.load(os.path.join('data', 'hero', 'hull.png'))
@@ -110,11 +109,14 @@ class hero(Sprite):
         self.rudder = 0
         self.angle = 0
         self.engine = 0
+        self.steam_vent = self.rect.center
 
     def update(self):
+        old_pos = self.image.get_rect().center
         self.course = (math.degrees(-math.sin(math.radians(self.angle))),
                        math.degrees(-math.cos(math.radians(self.angle))))
         if self.engine != 0:
+            self.old_pos = self.rect.center
             if self.engine == 1:
                 self.angle += self.rudder
                 self.rect = self.rect.move((self.course[0]/15,
@@ -133,6 +135,8 @@ class hero(Sprite):
                     (self.hull.get_height()/2)-(self.turret.get_width()/2)))
                 self.rect = self.hull.get_rect()
                 self.rect.center = old_rect.center
+        self.steam_vent = (self.rect.left+(old_pos[0]-self.course[0]/3),
+                           self.rect.top+(old_pos[1]-self.course[1]/3))
 
     def EVT_MouseMotion(self, event):
         y = event.pos[0] - pygame.display.get_surface().get_width()/2

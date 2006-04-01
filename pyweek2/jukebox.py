@@ -67,6 +67,11 @@ class Jukebox:
         Here the name is not optional, as I think sounds shouldn't be played by load ordering or randomly
         loops = -1 means infinite loop
         """
+        if self.current_sound != None:
+            pygame.mixer.set_num_channels(self.channels+1)
+            self.channels = pygame.mixer.get_num_channels()
+            pygame.mixer.Channel(self.channels-1).play(self.soundlist[name],
+                                                       loops, maxtime)
         self.soundlist[name].play(loops,maxtime)
         self.current_sound = name
 
@@ -114,7 +119,7 @@ class Jukebox:
         
     def is_sound_playing(self,name):
         return self.current_sound == name and pygame.mixer.get_busy()
-        
+
     def get_sound_playing(self):
         """Returns a Sound() instance of the sound playing"""
         return self.soundlist[self.current_song]

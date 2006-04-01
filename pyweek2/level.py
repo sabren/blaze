@@ -1,4 +1,4 @@
-import pygame, eventnet.driver, sprites, cPickle, os, glob
+import pygame, eventnet.driver, sprites, cPickle, os, glob, random
 
 try:
     tmpfile = os.path.join(os.environ['TMP'], 'temp.bmp')
@@ -93,42 +93,10 @@ def new(width, height):
         y = row
         row = []
         for Tile in range(width):
+            random.shuffle(reg_tiles, random.random)
             x = Tile
-            Tile = tile(default_tile.image, default_tile.solid)
+            Tile = tile(reg_tiles[0].image, False)
             Tile.rect = Tile.rect.move((x,y))
             row += [Tile]
         tiles += [row]
     return {'enemies': [], 'hero': (-100,0), 'tiles': tiles}
-
-class level:
-    '''
-    A class to manage levels. Prob'ly should have (and pyob'ly will) do
-    all this in gamestate.
-    '''
-
-    def __init__(self, source=empty_level):
-        self.tiles = sprites.Group()
-        self.sprites = sprites.Group(source['enemies'])
-        self.background = pygame.Surface((len(source['tiles'])*20,
-                                          len(source['tiles'][0])*20))
-        y = 0
-        for row in source['tiles']:
-            x = 0
-            for tile in row:
-                tile.rect = tile.rect.move((x,y))
-                self.background.blit(tile.image, (x,y))
-                self.tiles.add(tile)
-                x += 20
-            y += 20
-        self.tiles.draw(self.background)
-        self.hero = sprites.hero(source['hero'], [self.sprites])
-        self.level = self.background.copy()
-
-    def tick(self):
-        self.sprites.update()
-        self.sprites.draw(self.level)
-        self.sprites.clear(self.level, self.background)
-
-if __name__=='__main__':
-    for row in new(2,5)['tiles']:
-        print row

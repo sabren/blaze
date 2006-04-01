@@ -132,10 +132,9 @@ class game(eventnet.driver.Handler):
         self.capture()
         self.done = False
         self.screen = pygame.display.set_mode((800, 600)) #windowed for now
-        self.volume = 0.7
+        self.volume = 0.2
         self.jkbx = Jukebox()
         self.jkbx.load_song('confedmarch')
-        self.jkbx.set_song_volume(0.3)
         self.jkbx.play_song('confedmarch')
         self.load_default_state()
 

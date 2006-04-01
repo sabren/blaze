@@ -27,23 +27,22 @@ class smoke(pygame.sprite.Sprite):
         self.image.set_colorkey((60,0,60))
         self.rect = self.image.get_rect()
         self.rect.center = pos
-        self.color = (0,0,0)
-        self.radius = 10
-        pygame.draw.circle(self.image, self.color, (self.rect.width/2,
-                                                    self.rect.height/2),
+        self.alpha = 255
+        self.radius = 3
+        pygame.draw.circle(self.image, (100,100,100), (self.rect.width/2,
+                                                       self.rect.height/2),
                            self.radius)
 
     def update(self):
-        if self.color[0] > 254:
+        if self.alpha < 0:
             self.kill()
         else:
-            self.color = (self.color[0]+15,
-                          self.color[1]+15,
-                          self.color[2]+15)
+            self.alpha -= 15
             self.radius += 1
-            pygame.draw.circle(self.image, self.color, (self.rect.width/2,
-                                                        self.rect.height/2),
+            pygame.draw.circle(self.image, (100,100,100), (self.rect.width/2,
+                                                           self.rect.height/2),
                                self.radius)
+            self.image.set_alpha(self.alpha)
             self.rect = self.rect.move(self.course)
 
 class Effects:
@@ -60,6 +59,8 @@ class Effects:
             'data', 'sound', 'water.wav')]
         self.water_sounds = [os.path.splitext(os.path.split(snd)[-1])[0]
                         for snd in self.water_sounds]
+        random.shuffle(self.water_sounds, random.random)
+        self.water_sound = self.water_sounds[0]
         self.explosion_sounds = glob.glob(
             os.path.join('data', 'sound', 'expl*'))+glob.glob(
                 os.path.join('data', 'sound', 'mortar_explode*'))
@@ -81,6 +82,8 @@ class Effects:
         for sound in self.all_sounds:
             self.jkbx.load_sound(sound)
             self.jkbx.set_sound_volume(0.3, sound)
+        self.jkbx.set_sound_volume(0.7, self.engine)
+        self.jkbx.play_sound(self.engine, -1)
         self.explosion_seq = glob.glob(os.path.join('data', 'effects', 'exploBig',
                                                     '*.bmp'))
         self.explosion_seq.sort()
@@ -96,6 +99,18 @@ class Effects:
         self.shots = pygame.sprite.Group()
 
     def tick(self):
+        if not self.jkbx.is_sound_playing(self.water_sound):
+            random.shuffle(self.water_sounds, random.random)
+            self.water_sound = self.water_sounds[0]
+            self.jkbx.set_sound_volume(0.05, self.water_sound)
+            self.jkbx.play_sound(self.water_sound)
+
+        if not self.jkbx.is_sound_playing(self.random_sounds[0]):
+            if random.randint(0, 4) == 0:
+                random.shuffle(self.random_sounds, random.random)
+                self.jkbx.set_sound_volume(0.05, self.random_sounds[0])
+                self.jkbx.play_sound(self.random_sounds[0])
+
         for shot in self.shots.sprites():
             if shot.rect.center[0] > shot.end_pos[0]:
                 x_diff = shot.rect.center[0] - shot.end_pos[0]
@@ -120,6 +135,7 @@ class Effects:
         self.jkbx.play_sound(self.explosion_sounds[random.randint(
             0,len(self.explosion_sounds)-1)])
         self.sprites.add(Animation([img for img in self.explosion_seq], pos))
+        eventnet.driver.post('Explosion', pos=pos)
 
     def shoot(self, start_pos, end_pos):
         if start_pos != end_pos:

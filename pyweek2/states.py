@@ -553,11 +553,12 @@ class GameState(State):
         self.FX = effects.Effects(self.screen, self.jkbx, self.background)
 
     def tick(self):
-        self.FX.tick()
         self.sprites.add(self.FX.sprites.sprites())
         self.sprites.update()
         self.sprites.clear(self.level, self.background)
         self.sprites.draw(self.level)
+        self.FX.smoke_pos = self.hero.steam_vent
+        self.FX.tick()
         self.display.background = self.level
         self.display.pos = (
             (self.hero.rect.centerx-(self.screen.get_width()/2)),
