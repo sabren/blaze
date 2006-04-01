@@ -54,6 +54,61 @@ class State(eventnet.driver.Handler):
         self.next = next
         self.release() # stop listening
 
+class Story(State):
+    def start(self, colour=(0,255,0), size=18, story_path="story.txt"):
+        try:
+            import pygame.font
+            pygame.font.init()
+        except ImportError:
+            print "pygame.font is missing you'll have to read story.txt"
+            return
+        self.colour = colour
+        self.size = size
+        self.capture()
+        self.render_story(open(story_path))
+
+    def position_lines(self):
+        mid_top = list(self.story_rect.midtop)
+        for render, rect in self.story:
+            rect.midtop = mid_top
+            self.screen.blit(render, rect)
+            mid_top[1] += self.height
+
+    def render_story(self, story_file):
+        """Create a list of rendered text from story_file"""
+        font = pygame.font.Font(None, self.size)
+        story = []
+        rect_list = []
+        height = 600
+        center = self.screen.get_width()/2
+        for line in story_file:
+            line = line.strip()
+            render = font.render(line, True, self.colour)
+            render_rect = render.get_rect(top=height)
+            render_rect.center = center, render_rect.center[1]
+            rect_list.append(render_rect)
+            story.append((render, render_rect))
+            height += font.size(line)[1]
+        self.height = font.size(line)[1] # Gap between lines in position_lines
+        # The last rect is used in the call so shouldn't be in the list
+        del(rect_list[-1])
+        self.story = story
+        # rect for entire story, lines are position realative to this
+        self.story_rect = render_rect.unionall(rect_list)
+
+    def tick(self):
+        if self.story_rect.bottom < 0:
+            self.quit()
+        self.position_lines()
+        pygame.display.flip()
+        time.sleep(.1)
+        self.screen.fill((0,0,0))
+        self.story_rect.move_ip(0,-3)
+
+    def EVT_KeyDown(self, event):
+        if event.key == pygame.K_ESCAPE:
+            self.quit()
+
 class Menu(State):
     def __init__(self, screen, options=['New Game', 'Load Game', 'Level Editor',
                                         'Highscores', 'Help', 'Quit'],
@@ -481,7 +536,7 @@ class NewLevel(Menu):
                 self.height = self.height[:-1]
             elif len(self.width) > 0:
                 self.width = self.width[:-1]
-            
+
         elif event.key == pygame.K_TAB:
             if self.selected == 'height':
                 self.selected = 'width'
