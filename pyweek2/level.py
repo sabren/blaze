@@ -30,7 +30,7 @@ class tile(sprites.Sprite):
         self.solid = solid
 
 default_tile = tile(pygame.image.load(os.path.join(
-    'data', 'tiles', 'Crtr2Wtr22.bmp')))
+    'data', 'tiles', 'Grs2Watr22.bmp')))
 reg_tiles = [tile(pygame.image.load(x)) for x in glob.glob(
     os.path.join('data', 'tiles', '*.bmp'))]
 solid_tiles = [tile(pygame.image.load(x), True) for x in glob.glob(
@@ -81,6 +81,7 @@ def save(name, lvl):
     '''
 
     for i in range(len(lvl['enemies'])):
+        print i
         enemy = lvl['enemies'][i]
         try:
             rect = enemy.rect
