@@ -81,7 +81,7 @@ class Story(State):
 
     def render_story(self, story_file):
         """Create a list of rendered text from story_file"""
-        font = pygame.font.SysFont('Arial', self.size)
+        font = pygame.font.SysFont('Verdana', self.size)
         story = []
         rect_list = []
         height = 600
@@ -120,12 +120,12 @@ class Menu(State):
                  title='Main Menu'):
         State.__init__(self, screen)
         self.selected = None
-        title_font = pygame.font.SysFont('Arial', 50, bold=True)
+        title_font = pygame.font.SysFont('Verdana', 50, bold=True)
         title_font.set_underline(True)
         self.title = title_font.render(title, True, (0,0,0))
         self.title_pos = ((screen.get_width()/2)-(self.title.get_width()/2),
                           100)
-        self.reg_font = pygame.font.SysFont('Arial', 40)
+        self.reg_font = pygame.font.SysFont('Verdana', 40)
         self.screen = screen
         self.options = options
         self.evt_prefix = 'MENU_'
@@ -291,7 +291,7 @@ class LevelEditor(Menu):
         self.toolbar.blit(self.toolbar_background, (0,600))
         self.toolbar.blit(self.toolbar_background, (0,1200))
         self.toolbar_items = sprites.Group()
-        self.font = pygame.font.SysFont('Arial', 30)
+        self.font = pygame.font.SysFont('Verdana', 30)
         self.font.set_underline(True)
         self.labels = [self.font.render(option, True, (0,0,0))
                        for option in self.options]
@@ -362,6 +362,7 @@ class LevelEditor(Menu):
         self.display.background = self.background
 
     def tick(self):
+        
         self.toolbar_pos = (self.toolbar_pos[0],
                             self.toolbar_pos[1]+self.toolbar_scrolling)
         if self.toolbar_pos[1] > 0:
@@ -701,14 +702,14 @@ class GameState(State):
         else:
             self.win_delay -= 1
         if self.won and not self.paused:
-            msg = pygame.font.SysFont('Arial', 40).render(
+            msg = pygame.font.SysFont('Verdana', 40).render(
                 'You Win!', True, (0,255,0))
             self.screen.blit(msg, (
                 (self.screen.get_width()/2)-(msg.get_width()/2),
                 (self.screen.get_height()/2)-(msg.get_width()/2)))
             pygame.display.update(msg.get_rect().move(self.screen.get_rect().center))
         elif self.lost and not self.paused:
-            msg = pygame.font.SysFont('Arial', 40).render(
+            msg = pygame.font.SysFont('Verdana', 40).render(
                 'You Lose', True, (255,0,0))
             self.screen.blit(msg, (
                 (self.screen.get_width()/2)-(msg.get_width()/2),

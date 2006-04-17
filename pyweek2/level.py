@@ -51,10 +51,11 @@ def load(name):
     for i in range(len(lvl['enemies'])):
         enemy = lvl['enemies'][i]
         del(lvl['enemies'][i])
-        f = open(tmpfile, 'wb')
-        f.write(enemy[0])
-        f.close()
-        img = pygame.image.load(tmpfile)
+        #f = open(tmpfile, 'wb')
+        #f.write(enemy[0])
+        #f.close()
+        #img = pygame.image.load(tmpfile)
+        img = pygame.image.fromstring(enemy[0], enemy[2], 'RGB')
         img.set_colorkey((0,0,0,255))
         enemy = sprites.Sprite(img, pos=enemy[1])
         lvl['enemies'].insert(i, enemy)
@@ -64,10 +65,11 @@ def load(name):
         for i in range(len(row)):
             t = row[i]
             del(row[i])
-            f = open(tmpfile, 'wb')
-            f.write(t[0])
-            f.close()
-            t = tile(pygame.image.load(tmpfile), t[1])
+            #f = open(tmpfile, 'wb')
+            #f.write(t[0])
+            #f.close()
+            img = pygame.image.fromstring(t[0], t[2], 'RGB')
+            t = tile(img, t[1])
             row.insert(i, t)
         lvl['tiles'].insert(index, row)
 
@@ -85,9 +87,10 @@ def save(name, lvl):
             del(lvl['enemies'][i])
             enemy = sprites.Sprite(enemy.image, pos=enemy.rect.topleft)
             enemy.rect = rect
-            pygame.image.save(enemy.image, tmpfile)
-            enemy.image = open(tmpfile, 'rb').read()
-            enemy = (enemy.image, enemy.rect.topleft)
+            #pygame.image.save(enemy.image, tmpfile)
+            #enemy.image = open(tmpfile, 'rb').read()
+            enemy.image = pygame.image.tostring(enemy[0], 'RGB')
+            enemy = (enemy.image, enemy.rect.topleft, enemy.rect.size)
             lvl['enemies'].insert(i, enemy)
         except:
             pass
@@ -102,9 +105,10 @@ def save(name, lvl):
                 del(row[i])
                 t = tile(t.image, t.solid)
                 t.rect = rect
-                pygame.image.save(t.image, tmpfile)
-                t.image = open(tmpfile, 'rb').read()
-                t = (t.image, t.solid)
+                #pygame.image.save(t.image, tmpfile)
+                #t.image = open(tmpfile, 'rb').read()
+                t.image = pygame.image.tostring(t.image, 'RGB')
+                t = (t.image, t.solid, t.rect.size)
                 row.insert(i, t)
             except:
                 pass

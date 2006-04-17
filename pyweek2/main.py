@@ -59,12 +59,12 @@ class Menu(State):
                  title='Clad in Iron'):
         State.__init__(self, screen)
         self.selected = None
-        title_font = pygame.font.SysFont('Arial', 50, bold=True)
+        title_font = pygame.font.SysFont('Verdana', 50, bold=True)
         title_font.set_underline(True)
         self.title = title_font.render(title, True, (0,0,0))
         self.title_pos = ((screen.get_width()/2)-(self.title.get_width()/2),
                           100)
-        self.reg_font = pygame.font.SysFont('Arial', 40)
+        self.reg_font = pygame.font.SysFont('Verdana', 40)
         self.screen = screen
         self.options = options
         self.evt_prefix = 'MENU_'
@@ -151,8 +151,7 @@ class game(eventnet.driver.Handler):
             os.path.join('data', 'flag.jpg')))
         self.capture()
         self.done = False
-        self.screen = pygame.display.set_mode((800, 600),
-                                              pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((800, 600)) #windowed again
         self.volume = 0.2
         self.jkbx = Jukebox()
         self.jkbx.load_song('confedmarch')

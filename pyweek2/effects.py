@@ -112,6 +112,7 @@ class Effects(eventnet.driver.Handler):
             img.set_colorkey((0,0,0))
         self.cannon_ball = pygame.image.load(os.path.join(
             'data', 'effects', 'shell.bmp'))
+        self.cannon_ball.set_colorkey((255,255,255,255))
         self.smoke_pos = smoke_pos
         self.sprites = pygame.sprite.Group()
 
