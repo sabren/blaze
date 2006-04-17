@@ -609,7 +609,7 @@ class HUD(Menu):
                              (0,0))
         self.background.blit(self.reg_font.render('Armor: %s' % self.armor,
                                                   True, (100,100,100)),
-                             (400,0))
+                             (350,0))
         self.screen.blit(self.background, (100, 5))
         pygame.display.update(self.background.get_rect())
 
@@ -691,8 +691,13 @@ class GameState(State):
         self.lost = False
         self.lose_delay = -1
         self.win_delay = -1
+        self.old_time = pygame.time.get_ticks()
 
     def tick(self):
+        t = pygame.time.get_ticks()
+        if t - self.old_time < 50:
+            return
+        self.old_time = t
         if self.lose_delay == 0:
             self.lost = True
         else:
