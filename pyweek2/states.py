@@ -243,7 +243,7 @@ class SaveLevel(Menu):
                 self.name += pygame.key.name(event.key)
         elif event.key in [pygame.K_RSHIFT, pygame.K_LSHIFT]:
             self.shift = True
-        elif event.key == pygame.K_RETURN and self.name != '':
+        elif event.key in [pygame.K_RETURN, 271] and self.name != '':
             level.save(self.name, self.lvl)
             self.quit()
 
@@ -559,7 +559,7 @@ class NewLevel(Menu):
                 self.height += pygame.key.name(event.key)
             else:
                 self.width += pygame.key.name(event.key)
-        elif event.key == pygame.K_RETURN:
+        elif event.key in [pygame.K_RETURN, 271]:
             try:
                 x = int(self.width)/20
                 y = int(self.height)/20
@@ -769,9 +769,9 @@ class GameState(State):
             self.screen.blit(self.cursor, (
                 pygame.mouse.get_pos()[0]-(self.cursor.get_width()/2),
                 pygame.mouse.get_pos()[1]-(self.cursor.get_height()/2)))
-            if len(self.enemies.sprites()) == 0:
+            if len(self.enemies.sprites()) < 0:
+                print 'you win!'
                 self.win = True
-
         else:
             self.menu.tick()
 
@@ -842,8 +842,8 @@ class SinglePlayerMenu(Menu):
         Menu.__init__(self, screen, ['Campaign', 'Skirmish',
                                      'Load Game'], 'Single Player')
 
-    def start(self):
-        self.quit(Skirmish(self.screen))
+    #def start(self):
+    #    self.quit(Skirmish(self.screen))
 
     def EVT_MENU_Skirmish(self, event):
         self.quit(Skirmish(self.screen))

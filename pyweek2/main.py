@@ -209,6 +209,7 @@ def main():
             eventnet.driver.post(pygame.event.event_name(event.type),
                                  **event.dict)
         g.tick()
+    print 'bye'
     pygame.quit()
         
 if __name__=='__main__':

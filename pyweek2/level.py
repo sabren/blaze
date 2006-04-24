@@ -81,7 +81,7 @@ def save(name, lvl):
     '''
 
     for i in range(len(lvl['enemies'])):
-        print i
+        print range(len(lvl['enemies']))
         enemy = lvl['enemies'][i]
         try:
             rect = enemy.rect
