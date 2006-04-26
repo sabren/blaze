@@ -90,11 +90,11 @@ def save(name, lvl):
             enemy.rect = rect
             #pygame.image.save(enemy.image, tmpfile)
             #enemy.image = open(tmpfile, 'rb').read()
-            enemy.image = pygame.image.tostring(enemy[0], 'RGB')
+            enemy.image = pygame.image.tostring(enemy.image, 'RGB')
             enemy = (enemy.image, enemy.rect.topleft, enemy.rect.size)
             lvl['enemies'].insert(i, enemy)
-        except:
-            pass
+        except Exception, e:
+            print e
 
     for index in range(len(lvl['tiles'])):
         row = lvl['tiles'][index]

@@ -180,6 +180,7 @@ class game(eventnet.driver.Handler):
         self.state.start()
 
     def EVT_Quit(self, event):
+        print 'done?'
         self.release()
         self.done = True
 
