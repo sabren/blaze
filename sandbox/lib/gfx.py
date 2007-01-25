@@ -75,7 +75,7 @@ if __name__=='__main__':
     print len(seq)
     seq = [[pygame.image.load(img) for img in seq[:7]],
            [pygame.image.load(img) for img in seq[8:]]]
-    saveGrid(map,'temp.bmp')
+    saveGrid(seq,'temp.bmp')
     seq = loadGrid('temp.bmp',(40,40))
     saveGrid(seq,'hmm.bmp')
     ani = seq[0]
