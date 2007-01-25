@@ -2,8 +2,7 @@ import pygame
 
 def saveGrid(map,filename):
     '''
-    Tiles a 2d map of pygame surfaces into a single image using a common
-    colorkey.
+    Saves a series of images into a single file (like frames in an animation).
     '''
 
     height = map[0][0].get_height()
@@ -24,8 +23,7 @@ def saveGrid(map,filename):
 
 def loadGrid(image,size=(20,20),colorkey=None):
     '''
-    Load smaller images tiled inside a larger one. Optionally sets a universal
-    colorkey.
+    Inverse of saveGrid.
     '''
 
     if type(image) == type('<string>'):
