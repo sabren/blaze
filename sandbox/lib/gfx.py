@@ -35,7 +35,8 @@ def loadGrid(image,size=(20,20),colorkey=None):
         row = []
         x = 0
         for img in range(image.get_width()/size[0]):
-            img = pygame.transform.chop(image,pygame.rect.Rect((x,y),size))
+            img = pygame.Surface(size)
+            img.blit(image,(-x,-y))
             row.append(img)
             x += size[0]
         map.append(row)
@@ -70,12 +71,10 @@ if __name__=='__main__':
     pygame.init()
     import glob
     seq = glob.glob('exploBig/*.bmp')
-    print len(seq)
     seq = [[pygame.image.load(img) for img in seq[:7]],
            [pygame.image.load(img) for img in seq[8:]]]
     saveGrid(seq,'temp.bmp')
     seq = loadGrid('temp.bmp',(40,40))
-    saveGrid(seq,'hmm.bmp')
     ani = seq[0]
     ani.extend(seq[1])
     ani = Animation(ani,loop=True)
