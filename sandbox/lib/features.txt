@@ -1,0 +1,15 @@
+
+Files:
+	engine.py - basic engine
+	state.py - State (and eventually Menu) class[es]
+	gfx.py - animations
+	eventnet - event handling
+
+Features:
+	Simple engine and state system
+	2d Animations
+	Sterio audio system
+	Pixel-perfect collision detection - sprites.py
+	2d physics engine
+	Event handling
+	Network (simply pass eventnet data through a python socket)
