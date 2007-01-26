@@ -11,7 +11,7 @@ class Engine(eventnet.driver.Handler):
 
     DEFAULT = state.State()
 
-    def __init__(self,fps=40):
+    def __init__(self,fps=20):
         eventnet.driver.Handler.__init__(self)
         self.state = None
         self.size = (800,600)
