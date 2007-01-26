@@ -36,6 +36,7 @@ def loadGrid(image,size=(20,20),colorkey=None):
         x = 0
         for img in range(image.get_width()/size[0]):
             img = pygame.Surface(size)
+            img.set_colorkey((0,0,0))
             img.blit(image,(-x,-y))
             row.append(img)
             x += size[0]
@@ -55,21 +56,21 @@ class Animation(pygame.Surface):
                 seq[seq.index(image)] = pygame.image.load(image)
 
         self.index = 0
-        self.loop = False
+        self.loop = loop
         self.seq = seq
         self.surf = seq[0]
 
     def tick(self):
         if self.index == (len(self.seq)-1):
             if self.loop:
+                self.index = 0
                 self.surf = self.seq[0]
         else:
             self.index += 1
             self.surf = self.seq[self.index]
 
 if __name__=='__main__':
-    pygame.init()
-    import glob
+    import glob,engine,state
     seq = glob.glob('exploBig/*.bmp')
     seq = [[pygame.image.load(img) for img in seq[:7]],
            [pygame.image.load(img) for img in seq[8:]]]
@@ -78,17 +79,14 @@ if __name__=='__main__':
     ani = seq[0]
     ani.extend(seq[1])
     ani = Animation(ani,loop=True)
-    screen = pygame.display.set_mode((300,200))
-    pygame.display.set_caption('')
-    screen.blit(ani.surf,(0,0))
-    pygame.display.flip()
-    print 'PRESS ENTER TO TICK, CTRL-C TO QUIT'
-    while 1:
-        try:
-            raw_input()
-            ani.tick()
-            screen.blit(ani.surf,(0,0))
-            pygame.display.flip()
-        except KeyboardInterrupt:
-            pygame.quit()
-            break
+    s = state.State()
+    def tick():
+        ani.tick()
+        pygame.display.get_surface().fill((0,0,0))
+        pygame.display.get_surface().blit(ani.surf,(0,0))
+        pygame.display.flip()
+    s.tick = tick
+    e = engine.Engine(20)
+    e.DEFAULT = s
+    e.size = (300,200)
+    e.run()

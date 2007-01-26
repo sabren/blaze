@@ -11,11 +11,13 @@ class Engine(eventnet.driver.Handler):
 
     DEFAULT = state.State()
 
-    def __init__(self):
+    def __init__(self,fps=40):
         eventnet.driver.Handler.__init__(self)
         self.state = None
         self.size = (800,600)
         self.fullscreen = False
+        self.fps = fps
+        self.clock = pygame.time.Clock()
         self.capture()
 
     def loadDefaultState(self):
@@ -32,6 +34,7 @@ class Engine(eventnet.driver.Handler):
 
         #mainloop
         while 1:
+            self.clock.tick(self.fps)
             for event in pygame.event.get():
                 eventnet.driver.post(pygame.event.event_name(event.type),
                                      **event.dict)
@@ -43,7 +46,7 @@ class Engine(eventnet.driver.Handler):
             else:
                 self.state.tick()
 
-    def EVT_Quit(self):
+    def EVT_Quit(self,event):
         import sys
         sys.exit(0)
 
