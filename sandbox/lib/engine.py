@@ -50,9 +50,6 @@ class Engine(eventnet.driver.Handler):
         import sys
         sys.exit(0)
 
-def main():
+if __name__=='__main__':
     e = Engine()
     e.run()
-
-if __name__=='__main__':
-    main()
