@@ -9,7 +9,7 @@ class Engine(eventnet.driver.Handler):
     Toplevel control object.
     '''
 
-    DEFAULT = state.State()
+    DEFAULT = state.Menu()
 
     def __init__(self,fps=20):
         eventnet.driver.Handler.__init__(self)
@@ -34,7 +34,6 @@ class Engine(eventnet.driver.Handler):
 
         #mainloop
         while 1:
-            self.clock.tick(self.fps)
             for event in pygame.event.get():
                 eventnet.driver.post(pygame.event.event_name(event.type),
                                      **event.dict)
@@ -44,6 +43,7 @@ class Engine(eventnet.driver.Handler):
             elif self.state.done and not self.state.next:
                 self.loadDefaultState()
             else:
+                self.clock.tick(self.fps)
                 self.state.tick()
 
     def EVT_Quit(self,event):
