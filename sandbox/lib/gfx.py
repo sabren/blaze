@@ -36,7 +36,8 @@ def loadGrid(image,size=(20,20),colorkey=None):
         x = 0
         for img in range(image.get_width()/size[0]):
             img = pygame.Surface(size)
-            img.set_colorkey((0,0,0))
+            if colorkey:
+                img.set_colorkey((0,0,0))
             img.blit(image,(-x,-y))
             row.append(img)
             x += size[0]
@@ -44,7 +45,7 @@ def loadGrid(image,size=(20,20),colorkey=None):
         y += size[1]
     return map
 
-class Animation(pygame.Surface):
+class Animation(object):
     '''
     A sequence of images matching the FPS rate of the game to simulate
     an animation.
@@ -75,7 +76,7 @@ if __name__=='__main__':
     seq = [[pygame.image.load(img) for img in seq[:7]],
            [pygame.image.load(img) for img in seq[8:]]]
     saveGrid(seq,'temp.bmp')
-    seq = loadGrid('temp.bmp',(40,40))
+    seq = loadGrid('temp.bmp',(40,40),(0,0,0))
     ani = seq[0]
     ani.extend(seq[1])
     ani = Animation(ani,loop=True)
