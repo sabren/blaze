@@ -1,18 +1,18 @@
 
 Files:
 	engine.py - basic engine
-	state.py - State (and eventually Menu) class[es]
+	state.py - State and Menu classes
 	gfx.py - animations
 	eventnet - event handling
 	sprite.py - sprites and animated sprites
 
 Features:
-	Simple engine and state system
-	Working menus
+	Basic state engine
+	Simple menus
 	2d Animations
-	Event handling
+	Event handling (eventnet)
 
 Todo:
-	Sterio audio system
+	Audio system
 	2d physics engine
 	Network (simply pass eventnet data through a python socket)

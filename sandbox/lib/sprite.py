@@ -21,19 +21,16 @@ class Sprite(pygame.sprite.Sprite,eventnet.driver.Handler):
 
     def calcMap(self):
         '''
-        If using pixel perfect (usePP) you need to have a colorkey set.
+        Maps out points elegible for collisions and adds them to Sprite.points.
         '''
 
         self.points = []
         if self.usePP:
-            if self.image.get_colorkey():
-                for y in range(self.image.get_height()):
-                    for x in range(self.image.get_width()):
-                        if self.image.get_at((x,y))[3] > 0:
-                            point = (self.rect.x+x, self.rect.y+y)
-                            self.points.append(point)
-            else:
-                raise AttributeError, 'Sprite.image needs a colorkey for this operation!'
+            for y in range(self.image.get_height()):
+                for x in range(self.image.get_width()):
+                    if self.image.get_at((x,y))[3] > 0:
+                        point = (self.rect.x+x, self.rect.y+y)
+                        self.points.append(point)
         else:
             #just add all pixels
             for y in range(self.image.get_height()):
