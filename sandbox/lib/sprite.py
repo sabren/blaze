@@ -98,7 +98,6 @@ if __name__=='__main__':
     s.EVT_MouseMotion = motion
 
     s.tick = tick
-    #s = s()
     e = engine.Engine()
     e.DEFAULT = s
     e.size = (300,200)
