@@ -11,9 +11,9 @@ Features:
 	Simple menus
 	2d Animations
 	Event handling (eventnet)
+	Audio system (with distance falloff)
 
 Todo:
-	Audio system
 	Simple tile-based level editor (isometric eventually?)
-	2d physics engine
+	2d physics engine(?)
 	Network (simply pass eventnet data through a python socket)
