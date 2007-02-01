@@ -69,11 +69,24 @@ class AnimatedSprite(Sprite):
         self.image = self.anim.surf
         Sprite.__init__(self)
 
+    def start(self):
+        pass
+
     def update(self):
         self.anim.tick()
+        if self.anim.surf == self.anim.seq[-1]:
+            self.onEnd()
+        self.image = self.anim.surf
+
+    def onEnd(self):
+        '''
+        Called when the animation ends.
+        '''
+
+        pass
 
 if __name__=='__main__':
-    import engine,state
+    import engine
 
     Sprite.image = pygame.image.load('howitzer.png')
     Sprite.image.set_colorkey((255,255,255))
@@ -81,8 +94,9 @@ if __name__=='__main__':
     sprite = Sprite()
     sprite.rect.topleft = (50,50)
 
-    s = state.State()
-    def tick():
+    s = engine.State()
+
+    def tick(event):
         disp = pygame.display.get_surface()
         disp.fill((0,0,0))
         disp.blit(sprite.image,sprite.rect)
@@ -94,7 +108,7 @@ if __name__=='__main__':
 
     s.EVT_MouseMotion = motion
 
-    s.tick = tick
+    s.EVT_tick = tick
     e = engine.Engine()
     e.DEFAULT = s
     e.size = (300,200)

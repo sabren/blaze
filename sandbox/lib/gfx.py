@@ -71,22 +71,26 @@ class Animation(object):
             self.surf = self.seq[self.index]
 
 if __name__=='__main__':
-    import glob,engine,state
+    import glob,engine,sprite
     seq = glob.glob('exploBig/*.bmp')
     seq = [[pygame.image.load(img) for img in seq[:7]],
            [pygame.image.load(img) for img in seq[8:]]]
     saveGrid(seq,'temp.bmp')
     seq = loadGrid('temp.bmp',(40,40),(0,0,0))
-    ani = seq[0]
+    ani = seq [0]
     ani.extend(seq[1])
     ani = Animation(ani,loop=True)
-    s = state.State()
-    def tick():
-        ani.tick()
+
+    sprite.AnimatedSprite.anim = ani
+    sprite = sprite.AnimatedSprite()
+
+    s = engine.State()
+    def tick(event):
+        sprite.update()
         pygame.display.get_surface().fill((0,0,0))
-        pygame.display.get_surface().blit(ani.surf,(0,0))
+        pygame.display.get_surface().blit(sprite.image,sprite.rect)
         pygame.display.flip()
-    s.tick = tick
+    s.EVT_tick = tick
     e = engine.Engine(20)
     e.DEFAULT = s
     e.size = (300,200)

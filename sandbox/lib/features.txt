@@ -7,12 +7,13 @@ Files:
 	sprite.py - sprites and animated sprites
 
 Features:
-	Basic state engine
+	State engine
 	Simple menus
 	2d Animations
 	Event handling (eventnet)
 
 Todo:
 	Audio system
+	Simple tile-based level editor (isometric eventually?)
 	2d physics engine
 	Network (simply pass eventnet data through a python socket)
