@@ -115,8 +115,8 @@ if __name__=='__main__':
     sprite.AnimatedSprite.anim = ani
     sprite = sprite.AnimatedSprite()
 
-    s = engine.State()
-    def tick(event):
+    s = engine.State
+    def tick(self,event):
         sprite.update()
         pygame.display.get_surface().fill((0,0,0))
         pygame.display.get_surface().blit(sprite.image,sprite.rect)

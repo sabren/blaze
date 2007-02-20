@@ -150,15 +150,15 @@ if __name__=='__main__':
     sprite = Sprite()
     sprite.rect.topleft = (50,50)
 
-    s = engine.State()
+    s = engine.State
 
-    def tick(event):
+    def tick(self,event):
         disp = pygame.display.get_surface()
         disp.fill((0,0,0))
         disp.blit(sprite.image,sprite.rect)
         pygame.display.flip()
 
-    def motion(event):
+    def motion(self,event):
         if sprite.collidePoint(event.pos):
             print 'COLLISION!!!!'
 
