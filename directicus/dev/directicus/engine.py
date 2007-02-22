@@ -198,7 +198,3 @@ class Engine(eventnet.driver.Handler):
         pygame.quit()
         import sys
         sys.exit(0)
-
-if __name__=='__main__':
-    e = Engine()
-    e.run()

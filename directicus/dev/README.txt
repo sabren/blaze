@@ -12,7 +12,7 @@
 	
 		Directicus is latin for "simple", pointing to its purpose - to be a simple,
 
-	flexable, and easy to use code library. It builds on pygame (http://pygame.org) and 
+	flexible, and easy to use code library. It builds on pygame (http://pygame.org) and 
 
 	adds a few simple yet useful components like pixel-perfect collision detection, 
 
