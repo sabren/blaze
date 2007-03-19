@@ -20,6 +20,9 @@ import menus,pygame
 
 class Game(Engine):
 
+    def run(self):
+        Engine.run(self)
+
     def EVT_KeyDown(self,event):
         key = pygame.key.name(event.key)
         if key.lower() == 'f12':

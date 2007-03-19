@@ -20,11 +20,12 @@ from level import grass,load
 
 class Menu(directicus.engine.Menu):
 
-    hover = (200,200,200)
+    color = (0,0,0)
+    hover = (100,100,100)
 
-    def __init__(self):
-        self.cursor = pygame.image.load('data/cursors/arrow.bmp')
-        self.cursor.set_colorkey((14,56,102))
+    #def __init__(self):
+    #    self.cursor = pygame.image.load('data/cursors/arrow.bmp')
+    #    self.cursor.set_colorkey((14,56,102))
 
     #def EVT_tick(self,event):
     #    directicus.engine.Menu.EVT_tick(self,event)
@@ -38,17 +39,12 @@ class Menu(directicus.engine.Menu):
     #    pygame.display.update(rect)
 
     def start(self):
+        self.background = pygame.image.load('data/menu.png')
+        pygame.display.get_surface().blit(self.background,(0,0))
         icon = pygame.image.load('data/cursors/sword.bmp')
         icon.set_colorkey((14,56,102))
         pygame.display.set_caption('Forest Patrol')
         pygame.display.set_icon(icon)
-
-        self.background = pygame.display.get_surface().copy()
-        for y in range((self.background.get_size()[1]/grass.get_height())+1):
-            for x in range((self.background.get_size()[0]/grass.get_width())+1):
-                self.background.blit(grass,(x*grass.get_width(),y*grass.get_height()))
-                x += grass.get_width()
-            y += grass.get_height()
 
         directicus.engine.Menu.__init__(self)
         directicus.engine.Menu.start(self)
