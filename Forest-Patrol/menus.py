@@ -43,13 +43,13 @@ class Menu(directicus.engine.Menu):
     #    pygame.display.update(rect)
 
     def start(self):
-        self.background = pygame.image.load('data/menu.jpg')
+        self.background = pygame.image.load('data/menu.png')
         self.audio = Audio()
         self.music = Music()
         self.audio.volume = 0.3
         self.music.volume = 0.5
         pygame.display.get_surface().blit(self.background,(0,0))
-        icon = pygame.image.load('data/cursors/sword.bmp')
+        icon = pygame.image.load('data/cursors/sword.png')
         icon.set_colorkey((14,56,102))
         pygame.display.set_caption('Forest Patrol')
         pygame.display.set_icon(icon)

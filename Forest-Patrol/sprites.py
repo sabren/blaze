@@ -24,7 +24,7 @@ class Castle(directicus.sprite.Sprite):
     usePP = True
 
 class Tree(directicus.sprite.Sprite):
-    image = pygame.image.load('data/tree.bmp')
+    image = pygame.image.load('data/tree.png')
     image.set_colorkey((14,56,102))
     usePP = True
     old = image.get_rect()
@@ -35,7 +35,7 @@ class Tree(directicus.sprite.Sprite):
     del(old)
 
 class Ranger(directicus.sprite.Sprite):
-    image = pygame.image.load('data/ranger.bmp')
+    image = pygame.image.load('data/ranger.png')
     image.set_colorkey((14,56,102))
     usePP = True
     old = image.get_rect()
@@ -50,7 +50,7 @@ class ActiveRanger(directicus.sprite.AnimatedSprite,Ranger):
     path = []
     level = None
     speed = 5
-    walk = loadGrid('data/animations/walk.bmp',(50,70))
+    walk = loadGrid('data/animations/walk.png',(50,70))
     anims = {'0':   Animation(walk[0],True),
              '45':  Animation(walk[1],True),
              '90':  Animation(walk[2],True),

@@ -18,7 +18,7 @@
 import pygame,cPickle
 from sprites import Tree,Ranger,ActiveRanger,Castle
 
-grass = pygame.image.load('data/grass.bmp')
+grass = pygame.image.load('data/grass.png')
 
 class Level(object):
 
