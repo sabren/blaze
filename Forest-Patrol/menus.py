@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import directicus.engine, pygame, editor, os, game
+import directicus.engine, pygame, editor, os, game, eventnet.driver
 from level import grass,load
 
 class Menu(directicus.engine.Menu):
@@ -39,7 +39,7 @@ class Menu(directicus.engine.Menu):
     #    pygame.display.update(rect)
 
     def start(self):
-        self.background = pygame.image.load('data/menu.png')
+        self.background = pygame.image.load('data/menu.jpg')
         pygame.display.get_surface().blit(self.background,(0,0))
         icon = pygame.image.load('data/cursors/sword.bmp')
         icon.set_colorkey((14,56,102))
@@ -68,6 +68,12 @@ class MainMenu(Menu):
 
     def EVT_Menu_LevelEditor(self,event):
         self.quit(editor.LevelEditor())
+
+    def quit(self,next=None):
+        if not next:
+            eventnet.driver.post('Quit')
+        else:
+            Menu.quit(self,next)
 
 class editChoice(Menu):
     
