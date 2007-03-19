@@ -22,6 +22,9 @@ class Menu(directicus.engine.Menu):
 
     color = (0,0,0)
     hover = (100,100,100)
+    headerFont = pygame.font.Font('data/font.ttf',50)
+    headerFont.set_underline(True)
+    regularFont = pygame.font.Font('data/font.ttf',30)
 
     #def __init__(self):
     #    self.cursor = pygame.image.load('data/cursors/arrow.bmp')
