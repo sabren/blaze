@@ -30,11 +30,15 @@ class LevelEditor(directicus.engine.State):
         self.rangerBtn = sprites.Ranger()
         self.rangerBtn.image = pygame.image.load('data/ranger.bmp')
         self.rangerBtn.rect.topleft = (5,self.treeBtn.rect.bottom + 5)
+        self.castleBtn = sprites.Castle()
+        self.castleBtn.image = pygame.image.load('data/castle-small.png')
+        self.castleBtn.rect = self.castleBtn.image.get_rect()
+        self.castleBtn.rect.topleft = (5,self.rangerBtn.rect.bottom + 5)
         self.save = pygame.sprite.Sprite()
         self.save.image = menus.MainMenu.regularFont.render('Save',True,(255,255,255))
         self.save.rect = self.save.image.get_rect()
-        self.save.rect.topleft = (5,self.rangerBtn.rect.bottom+5)
-        self.btns = pygame.sprite.Group(self.rangerBtn,self.treeBtn,self.save)
+        self.save.rect.topleft = (5,self.castleBtn.rect.bottom+5)
+        self.btns = pygame.sprite.Group(self.rangerBtn,self.treeBtn,self.castleBtn,self.save)
         self.all = pygame.sprite.Group()
         self.pos = [0,0]
         self.keys = [0,0,0,0] #up,down,right,left
@@ -78,13 +82,14 @@ class LevelEditor(directicus.engine.State):
             self.keys[1] = 0
 
     def EVT_MouseButtonDown(self,event):
-        #if self.mini.rect.collidepoint(event.pos):
-        #    relPos = self.mini.grow(
-        #        (event.pos[0]-self.mini.rect.centerx,
-        #         event.pos[1]-self.mini.rect.centery))
-        #    s = pygame.display.get_surface().get_size()
-        #    self.pos = (-relPos[0],-relPos[1])
-        if self.save.rect.collidepoint(event.pos):
+        if self.mini.rect.collidepoint(event.pos):
+            relPos = self.mini.grow(
+                (event.pos[0]-self.mini.rect.centerx,
+                 event.pos[1]-self.mini.rect.centery))
+            s = pygame.display.get_surface().get_size()
+            self.sprite.rect.center = (-relPos[0]+s[0]/2,
+                                       -relPos[1]+s[1]/2)
+        elif self.save.rect.collidepoint(event.pos):
             level.save(self.level,self.level.filename)
             self.level = None
             self.quit()
@@ -92,6 +97,8 @@ class LevelEditor(directicus.engine.State):
             self.selected = self.treeBtn
         elif self.rangerBtn.rect.collidepoint(event.pos):
             self.selected = self.rangerBtn
+        elif self.castleBtn.rect.collidepoint(event.pos):
+            self.selected = self.castleBtn
         elif event.button == 1:
             event.pos = (event.pos[0]-self.pos[0],
                          event.pos[1]-self.pos[1])
@@ -105,6 +112,11 @@ class LevelEditor(directicus.engine.State):
                 ranger.rect.center = event.pos
                 self.level.rangers.add(ranger)
                 self.level.sprites.add(ranger)
+            elif self.selected == self.castleBtn:
+                castle = sprites.Castle()
+                castle.rect.center = event.pos
+                self.level.castles.add(castle)
+                self.level.sprites.add(castle)
         else:
             event.pos = (event.pos[0]-self.pos[0],
                          event.pos[1]-self.pos[1])
@@ -114,6 +126,10 @@ class LevelEditor(directicus.engine.State):
                         sprite.kill()
             elif self.selected == self.treeBtn:
                 for sprite in self.level.trees:
+                    if sprite.rect.collidepoint(event.pos) and sprite.collidePoint(event.pos):
+                        sprite.kill()
+            elif self.selected == self.castleBtn:
+                for sprite in self.level.castles:
                     if sprite.rect.collidepoint(event.pos) and sprite.collidePoint(event.pos):
                         sprite.kill()
 

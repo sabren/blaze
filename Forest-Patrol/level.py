@@ -16,7 +16,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import pygame,cPickle
-from sprites import Tree,Ranger,ActiveRanger
+from sprites import Tree,Ranger,ActiveRanger,Castle
 
 grass = pygame.image.load('data/grass.bmp')
 
@@ -26,6 +26,7 @@ class Level(object):
     trees = pygame.sprite.Group()
     rangers = pygame.sprite.Group()
     sprites = pygame.sprite.Group()
+    castles = pygame.sprite.Group()
     collideRects = None
     filename = ''
 
@@ -75,11 +76,13 @@ def save(level,filename):
     size = level.size
     trees = [tree.rect.center for tree in level.trees.sprites()]
     rangers = [ranger.rect.center for ranger in level.rangers.sprites()]
+    castles = [castle.rect.center for castle in level.castles.sprites()]
 
     f = open(filename,'w')
     cPickle.dump(size,f)
     cPickle.dump(trees,f)
     cPickle.dump(rangers,f)
+    cPickle.dump(castles,f)
     f.close()
 
 def load(filename):
@@ -87,6 +90,7 @@ def load(filename):
     size = cPickle.load(f)
     trees = cPickle.load(f)
     rangers = cPickle.load(f)
+    castles = cPickle.load(f)
     f.close()
     lvl = Level()
     lvl.size = size
@@ -99,6 +103,11 @@ def load(filename):
         s = Ranger()
         s.rect.center = ranger
         lvl.rangers.add(s)
+        lvl.sprites.add(s)
+    for castle in castles:
+        s = Castle()
+        s.rect.center = castle
+        lvl.castles.add(s)
         lvl.sprites.add(s)
     lvl.filename = filename
     return lvl

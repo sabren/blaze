@@ -18,8 +18,15 @@
 from directicus.engine import Engine
 import menus,pygame
 
+class Game(Engine):
+
+    def EVT_KeyDown(self,event):
+        key = pygame.key.name(event.key)
+        if key.lower() == 'f12':
+            pygame.image.save(pygame.display.get_surface(),'screenshot.bmp')
+
 if __name__=='__main__':
-    e = Engine(20)
+    e = Game(20)
     e.DEFAULT = menus.MainMenu
     #e.size = (1024,768)
     #e.fullscreen = True

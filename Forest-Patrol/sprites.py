@@ -18,6 +18,11 @@
 import pygame,directicus.sprite
 from directicus.gfx import Animation,loadGrid
 
+class Castle(directicus.sprite.Sprite):
+    image = pygame.image.load('data/castle.png')
+    image.set_colorkey((14,56,102))
+    usePP = True
+
 class Tree(directicus.sprite.Sprite):
     image = pygame.image.load('data/tree.bmp')
     image.set_colorkey((14,56,102))
