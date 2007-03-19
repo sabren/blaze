@@ -16,6 +16,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import directicus.engine, pygame, editor, os, game, eventnet.driver
+from directicus.sfx import Music,Audio
 from level import grass,load
 
 class Menu(directicus.engine.Menu):
@@ -43,6 +44,10 @@ class Menu(directicus.engine.Menu):
 
     def start(self):
         self.background = pygame.image.load('data/menu.jpg')
+        self.audio = Audio()
+        self.music = Music()
+        self.audio.volume = 0.3
+        self.music.volume = 0.5
         pygame.display.get_surface().blit(self.background,(0,0))
         icon = pygame.image.load('data/cursors/sword.bmp')
         icon.set_colorkey((14,56,102))
@@ -52,6 +57,11 @@ class Menu(directicus.engine.Menu):
         directicus.engine.Menu.__init__(self)
         directicus.engine.Menu.start(self)
         #pygame.mouse.set_visible(False)
+
+    def EVT_MouseButtonDown(self,event):
+        if self.selected:
+            self.audio.play('data/sounds/sword-draw.wav')
+        directicus.engine.Menu.EVT_MouseButtonDown(self,event)
 
     def EVT_KeyDown(self,event):
         if pygame.key.name(event.key) == 'escape':
@@ -65,6 +75,11 @@ class MainMenu(Menu):
 
     title = 'Forest Patrol'
     options = ['New Game','Level Editor','Quit']
+
+    def start(self):
+        Menu.start(self)
+        if not pygame.mixer.music.get_busy():
+            self.music.play('data/music/menu.mp3',-1)
 
     def EVT_Menu_NewGame(self,event):
         self.quit(game.Game())
