@@ -18,13 +18,16 @@
 import pygame,directicus.sprite
 from directicus.gfx import Animation,loadGrid
 
+if not pygame.display.get_init():
+    pygame.display.set_mode((800,600),pygame.HWSURFACE)
+
 class Castle(directicus.sprite.Sprite):
-    image = pygame.image.load('data/castle.png')
+    image = pygame.image.load('data/castle.png').convert()
     image.set_colorkey((14,56,102))
     usePP = True
 
 class Tree(directicus.sprite.Sprite):
-    image = pygame.image.load('data/tree.png')
+    image = pygame.image.load('data/tree.png').convert()
     image.set_colorkey((14,56,102))
     usePP = True
     old = image.get_rect()
@@ -35,7 +38,7 @@ class Tree(directicus.sprite.Sprite):
     del(old)
 
 class Ranger(directicus.sprite.Sprite):
-    image = pygame.image.load('data/ranger.png')
+    image = pygame.image.load('data/ranger.png').convert()
     image.set_colorkey((14,56,102))
     usePP = True
     old = image.get_rect()

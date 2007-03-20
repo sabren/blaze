@@ -78,6 +78,7 @@ class MainMenu(Menu):
 
     def start(self):
         Menu.start(self)
+        pygame.display.set_mode((800,600),pygame.HWSURFACE)
         if not pygame.mixer.music.get_busy():
             self.music.play('data/music/menu.mp3',-1)
 
@@ -99,6 +100,7 @@ class editChoice(Menu):
     options = []
 
     def __init__(self):
+        self.options = list()
         for lvl in os.listdir('data/levels'):
             if not os.path.isdir(lvl):
                 self.options.append(os.path.split(lvl)[1])

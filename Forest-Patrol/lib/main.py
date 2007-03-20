@@ -31,6 +31,4 @@ class Game(Engine):
 def run():
     e = Game(20)
     e.DEFAULT = menus.MainMenu
-    #e.size = (1024,768)
-    #e.fullscreen = True
     e.run()
