@@ -16,6 +16,7 @@ except ImportError:
 setup(windows=['Forest-Patrol.py'],
       app=['Forest-Patrol.py'],
       data_files=[
+          ('',['README.txt','LICENSE.txt']),
           ('data',glob.glob('data/*.png')+['data/font.ttf']),
           ('data/music',glob.glob('data/music/*.mp3')+glob.glob('data/music/*.wav')),
           ('data/sounds',glob.glob('data/sounds/*.wav')),
