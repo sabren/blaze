@@ -16,6 +16,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import directicus.engine,pygame,level,sprites
+from directicus.sfx import Audio,Music
 
 class Game(directicus.engine.State):
 
@@ -23,6 +24,10 @@ class Game(directicus.engine.State):
 
     def __init__(self):
         directicus.engine.State.__init__(self)
+        self.audio = Audio()
+        self.music = Music()
+        self.audio.volume = 0.7
+        self.music.volume = 0.5
         self.level.render()
         self.selected = []
         self.sprite = pygame.sprite.Sprite()
@@ -36,9 +41,15 @@ class Game(directicus.engine.State):
 
     def start(self):
         directicus.engine.State.start(self)
+        self.music.play('data/music/battle.mp3',-1)
         self.level.game()
         self.mini = sprites.MiniMap()
         self.mini.level = self.level
+
+    def quit(self,next=None):
+        self.music.stop(500)
+        self.music.play('data/music/menu.mp3')
+        directicus.engine.State.quit(self,next)
 
     def EVT_tick(self,event):
         self.level.clear()

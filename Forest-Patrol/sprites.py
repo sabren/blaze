@@ -50,7 +50,7 @@ class ActiveRanger(directicus.sprite.AnimatedSprite,Ranger):
     path = []
     level = None
     speed = 5
-    walk = loadGrid('data/animations/walk.png',(50,70))
+    walk = loadGrid('data/animations/walk.png',(35,60))
     anims = {'0':   Animation(walk[0],True),
              '45':  Animation(walk[1],True),
              '90':  Animation(walk[2],True),
