@@ -57,7 +57,7 @@ class Game(directicus.engine.State):
         self.level.collideRects = list()
         for sprite in self.level.sprites:
             if hasattr(sprite,'baseRect'):
-                self.level.collideRects += sprite.baseRect
+                self.level.collideRects.append(sprite.baseRect)
 
         for sprite in self.interface:
             sprite.kill()

@@ -7,12 +7,6 @@ try:
 except ImportError:
     pass
 
-# Same for py2app
-try:
-    import py2app
-except ImportError:
-    pass
-
 setup(windows=['Forest-Patrol.py'],
       app=['Forest-Patrol.py'],
       data_files=[
@@ -34,4 +28,5 @@ setup(windows=['Forest-Patrol.py'],
       keywords='pygame,RTS',
       install_requires=['pygame>=1.7.1','directicus>=0.1'],
       download_url='http://blazeofglory.org/projects/fp',
+      zipfile=None,
       )

@@ -15,10 +15,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import pygame,cPickle
+import pygame,cPickle,resources
 from sprites import Tree,Ranger,ActiveRanger,Castle
 
-grass = pygame.image.load('data/grass.png')
+grass = resources.Grass.still #pygame.image.load('data/grass.png')
 
 class Level(object):
 
@@ -27,7 +27,7 @@ class Level(object):
     rangers = pygame.sprite.Group()
     sprites = pygame.sprite.Group()
     castles = pygame.sprite.Group()
-    collideRects = None
+    collideRects = list()
     filename = ''
 
     def game(self):
@@ -41,9 +41,11 @@ class Level(object):
             g.add(new)
             self.sprites.add(g)
             new.rect.center = old.rect.center
-            new.baseRect.midbottom = new.rect.midbottom
             old.kill()
         self.rangers = g
+        for sprite in self.sprites:
+            if hasattr(sprite,'baseRect'):
+                sprite.baseRect.midbottom = sprite.rect.midbottom
 
     def render(self):
         #draw background

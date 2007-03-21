@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import directicus.engine, pygame, editor, os, game, eventnet.driver
+import directicus.engine, pygame, editor, os, game, eventnet.driver, resources
 from directicus.sfx import Music,Audio
 from level import grass,load
 
@@ -49,7 +49,7 @@ class Menu(directicus.engine.Menu):
         self.audio.volume = 0.3
         self.music.volume = 0.5
         pygame.display.get_surface().blit(self.background,(0,0))
-        icon = pygame.image.load('data/cursors/sword.png')
+        icon = resources.Cursor.sword #pygame.image.load('data/cursors/sword.png')
         icon.set_colorkey((14,56,102))
         pygame.display.set_caption('Forest Patrol')
         pygame.display.set_icon(icon)
@@ -90,7 +90,7 @@ class MainMenu(Menu):
 
     def quit(self,next=None):
         if not next:
-            eventnet.driver.post('Quit')
+            self.quit(ConfirmExit())
         else:
             Menu.quit(self,next)
 
@@ -111,3 +111,14 @@ class editChoice(Menu):
         lvl = load(os.path.join('data/levels',self.selected))
         editor.LevelEditor.level = lvl
         self.quit(editor.LevelEditor())
+
+class ConfirmExit(Menu):
+    title = 'Are you sure you want to exit?'
+    options = ['Yes','No']
+
+    def EVT_Menu_Yes(self,event):
+        pygame.quit()
+        eventnet.driver.post('Quit')
+
+    def EVT_Menu_No(self,event):
+        self.quit()

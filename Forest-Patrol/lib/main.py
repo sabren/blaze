@@ -18,13 +18,6 @@
 from directicus.engine import Engine
 import menus,pygame
 
-try:
-    import psyco
-    psyco.profile()
-except ImportError:
-    print 'psyco not found! If your game runs slowly try installing it from \
-http://psyco.sourceforge.net.'
-
 class Game(Engine):
 
     def run(self):
@@ -36,6 +29,12 @@ class Game(Engine):
             pygame.image.save(pygame.display.get_surface(),'screenshot.bmp')
 
 def run():
+    #try:
+    #    import psyco
+    #    psyco.profile()
+    #except ImportError:
+    #    print 'psyco not found! If your game runs slowly try installing \
+    #it from http://psyco.sourceforge.net.'
     e = Game(40)
     e.DEFAULT = menus.MainMenu
     e.run()

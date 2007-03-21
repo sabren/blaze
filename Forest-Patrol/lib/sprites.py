@@ -17,28 +17,30 @@
 
 import pygame,directicus.sprite
 from directicus.gfx import Animation,loadGrid
+import resources
 
-if not pygame.display.get_init():
-    pygame.display.set_mode((800,600),pygame.HWSURFACE)
+#if not pygame.display.get_init():
+#    pygame.display.set_mode((800,600),pygame.HWSURFACE)
 
 class Castle(directicus.sprite.Sprite):
-    image = pygame.image.load('data/castle.png').convert()
+    image = resources.Castle.still #pygame.image.load('data/castle.png').convert()
     image.set_colorkey((14,56,102))
     usePP = True
+    baseRect = image.get_rect()
 
 class Tree(directicus.sprite.Sprite):
-    image = pygame.image.load('data/tree.png').convert()
+    image = resources.Tree.still #pygame.image.load('data/tree.png').convert()
     image.set_colorkey((14,56,102))
     usePP = True
-    old = image.get_rect()
-    baseRect = pygame.Rect(old)
-    baseRect.width = old.width/2
-    baseRect.height = old.height/4
-    baseRect.midbottom = old.midbottom
-    del(old)
+    #old = image.get_rect()
+    #baseRect = pygame.Rect(old)
+    #baseRect.width = old.width/2
+    #baseRect.height = old.height/4
+    #baseRect.midbottom = old.midbottom
+    #del(old)
 
 class Ranger(directicus.sprite.Sprite):
-    image = pygame.image.load('data/ranger.png').convert()
+    image = resources.Ranger.still #pygame.image.load('data/ranger.png').convert()
     image.set_colorkey((14,56,102))
     usePP = True
     old = image.get_rect()
@@ -53,15 +55,16 @@ class ActiveRanger(directicus.sprite.AnimatedSprite,Ranger):
     path = []
     level = None
     speed = 5
-    walk = loadGrid('data/animations/walk.png',(35,60))
-    anims = {'0':   Animation(walk[0],True),
-             '45':  Animation(walk[1],True),
-             '90':  Animation(walk[2],True),
-             '135': Animation(walk[3],True),
-             '180': Animation(walk[4],True),
-             '245': Animation(walk[5],True),
-             '290': Animation(walk[6],True),
-             '335': Animation(walk[7],True)}
+    #walk = loadGrid('data/animations/walk.png',(35,60))
+    anims = resources.Ranger.walk
+    #{'0':   Animation(walk[0],True),
+    #         '45':  Animation(walk[1],True),
+    #         '90':  Animation(walk[2],True),
+    #         '135': Animation(walk[3],True),
+    #         '180': Animation(walk[4],True),
+    #         '245': Animation(walk[5],True),
+    #         '290': Animation(walk[6],True),
+    #         '335': Animation(walk[7],True)}
     anim = anims['180']
 
     def __init__(self):
@@ -89,16 +92,16 @@ class ActiveRanger(directicus.sprite.AnimatedSprite,Ranger):
             elif new[0] == self.rect.centerx and new[1] > self.rect.centery:
                 self.anim = self.anims['180']
             elif new[0] < self.rect.centerx and new[1] > self.rect.centery:
-                self.anim = self.anims['245']
+                self.anim = self.anims['225']
             elif new[0] < self.rect.centerx and new[1] == self.rect.centery:
-                self.anim = self.anims['290']
+                self.anim = self.anims['270']
             elif new[0] < self.rect.centerx and new[1] < self.rect.centery:
                 self.anim = self.anims['335']
             self.anim.index = i
             self.path.reverse()
             directicus.sprite.AnimatedSprite.update(self)
             self.rect.center = new
-            #if len(self.collide(level.rangers.sprites())) > 1:
+            #if len(self.collide(level.collideRects)) > 1:
             #    self.path.insert(0,new)
             #    self.rect.center = old
         else:
@@ -109,7 +112,7 @@ class ActiveRanger(directicus.sprite.AnimatedSprite,Ranger):
     def collide(self,group):
         collisions = list()
         for sprite in group:
-            if self.baseRect.colliderect(sprite.baseRect):
+            if self.baseRect.colliderect(sprite): #.baseRect):
                 collisions.append(sprite)
         return collisions
 
