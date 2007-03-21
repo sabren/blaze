@@ -20,7 +20,7 @@ from directicus.sfx import Audio,Music
 
 class Game(directicus.engine.State):
 
-    level = level.load('data/levels/test')
+    level = level.load('data/levels/test.lvl')
 
     def __init__(self):
         directicus.engine.State.__init__(self)

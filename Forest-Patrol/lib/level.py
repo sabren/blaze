@@ -18,6 +18,7 @@
 import pygame,cPickle,resources
 from sprites import Tree,Ranger,ActiveRanger,Castle
 
+resources = resources.ResourceManager()
 grass = resources.Grass.still #pygame.image.load('data/grass.png')
 
 class Level(object):

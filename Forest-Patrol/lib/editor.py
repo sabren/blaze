@@ -82,14 +82,14 @@ class LevelEditor(directicus.engine.State):
             self.keys[1] = 0
 
     def EVT_MouseButtonDown(self,event):
-        if self.mini.rect.collidepoint(event.pos):
-            relPos = self.mini.grow(
-                (event.pos[0]-self.mini.rect.centerx,
-                 event.pos[1]-self.mini.rect.centery))
-            s = pygame.display.get_surface().get_size()
-            self.sprite.rect.center = (-relPos[0]+s[0]/2,
-                                       -relPos[1]+s[1]/2)
-        elif self.save.rect.collidepoint(event.pos):
+        #if self.mini.rect.collidepoint(event.pos):
+        #    relPos = self.mini.grow(
+        #        (event.pos[0]-self.mini.rect.centerx,
+        #         event.pos[1]-self.mini.rect.centery))
+        #    s = pygame.display.get_surface().get_size()
+        #    self.sprite.rect.center = (-relPos[0]+s[0]/2,
+        #                               -relPos[1]+s[1]/2)
+        if self.save.rect.collidepoint(event.pos):
             level.save(self.level,self.level.filename)
             self.level = None
             self.quit()
