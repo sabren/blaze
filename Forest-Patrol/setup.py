@@ -34,5 +34,4 @@ setup(windows=['Forest-Patrol.py'],
       keywords='pygame,RTS',
       install_requires=['pygame>=1.7.1','directicus>=0.1'],
       download_url='http://blazeofglory.org/projects/fp',
-      zipfile=None,
       )
