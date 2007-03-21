@@ -116,7 +116,7 @@ class editChoice(Menu):
         self.quit(editor.LevelEditor())
 
 class ConfirmExit(Menu):
-    title = 'Are you sure you want to exit?'
+    title = 'Exit to system?'
     options = ['Yes','No']
 
     def EVT_Menu_Yes(self,event):
