@@ -74,7 +74,7 @@ class Menu(directicus.engine.Menu):
 class MainMenu(Menu):
 
     title = 'Forest Patrol'
-    options = ['New Game','Level Editor','Quit']
+    options = ['New Game','Level Editor','Exit to System']
 
     def start(self):
         Menu.start(self)
@@ -87,6 +87,9 @@ class MainMenu(Menu):
 
     def EVT_Menu_LevelEditor(self,event):
         self.quit(editor.LevelEditor())
+
+    def EVT_Menu_ExittoSystem(self,event):
+        self.quit()
 
     def quit(self,next=None):
         if not next:
