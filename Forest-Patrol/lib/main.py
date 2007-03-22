@@ -35,6 +35,6 @@ def run():
     #except ImportError:
     #    print 'psyco not found! If your game runs slowly try installing \
     #it from http://psyco.sourceforge.net.'
-    e = Game(40)
+    e = Game(20)
     e.DEFAULT = menus.MainMenu
     e.run()
