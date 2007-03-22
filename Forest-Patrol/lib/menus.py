@@ -78,7 +78,8 @@ class MainMenu(Menu):
 
     def start(self):
         Menu.start(self)
-        pygame.display.set_mode((800,600),pygame.HWSURFACE)
+        pygame.display.set_mode((800,600))
+        pygame.mouse.set_visible(True)
         if not pygame.mixer.music.get_busy():
             self.music.play('data/music/menu.mp3',-1)
 
