@@ -41,6 +41,7 @@ class Game(directicus.engine.State):
 
     def start(self):
         directicus.engine.State.start(self)
+        self.music.stop(500)
         self.music.play('data/music/battle.mp3',-1)
         self.level.game()
         self.mini = sprites.MiniMap()

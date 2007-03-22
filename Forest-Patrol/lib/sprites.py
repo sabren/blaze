@@ -101,9 +101,11 @@ class ActiveRanger(directicus.sprite.AnimatedSprite,Ranger):
             self.path.reverse()
             directicus.sprite.AnimatedSprite.update(self)
             self.rect.center = new
-            #if len(self.collide(level.collideRects)) > 1:
-            #    self.path.insert(0,new)
-            #    self.rect.center = old
+            #print self.collide(level.collideRects)
+            if len(self.collide(level.collideRects)) > 1:
+                print len(self.collide(level.collideRects))
+                self.path.insert(0,new)
+                self.rect.center = old
         else:
             self.anim.index = 0
         self.baseRect.midbottom = self.rect.midbottom
@@ -111,9 +113,12 @@ class ActiveRanger(directicus.sprite.AnimatedSprite,Ranger):
 
     def collide(self,group):
         collisions = list()
-        for sprite in group:
-            if self.baseRect.colliderect(sprite): #.baseRect):
-                collisions.append(sprite)
+        for rect in group:
+            print self.baseRect
+            if rect == self.baseRect:
+                continue
+            if self.baseRect.colliderect(rect):
+                collisions.append(rect)
         return collisions
 
     def _plot(self,dest):
