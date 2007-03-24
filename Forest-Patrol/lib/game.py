@@ -137,7 +137,7 @@ class Game(directicus.engine.State):
             if event.button == 1:
                 self.mouse = event.pos
                 self.selected = []
-                for ranger in self.level.rangers:
+                for ranger in self.level.player.rangers:
                     if ranger.rect.collidepoint(pos) and ranger.collidePoint(pos):
                         self.selected.append(ranger)
             elif self.selected:
@@ -167,7 +167,7 @@ class Game(directicus.engine.State):
             r.left -= self.sprite.rect.left
             r.top -= self.sprite.rect.top
 
-            for ranger in self.level.rangers:
+            for ranger in self.level.player.rangers:
                 if ranger.rect.colliderect(r):
                     self.selected.append(ranger)
             self.mouse = None
