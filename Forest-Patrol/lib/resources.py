@@ -13,6 +13,9 @@ class ResourceManager(object):
         for angle in angles:
             walk[angle] = Animation(walkMap[angles.index(angle)],True)
 
+    class Arrow:
+        still = pygame.image.load('data/arrow.png').convert()
+
     class Tree:
         still = pygame.image.load('data/tree.png').convert()
 
@@ -48,3 +51,6 @@ class Grass:
 
 class Cursor:
     sword = pygame.image.load('data/cursors/sword.png').convert()
+
+class Arrow:
+    images = loadGrid(pygame.image.load('data/arrow.png').convert(),(30,30))

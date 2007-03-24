@@ -16,7 +16,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import pygame,cPickle,resources,random
-from sprites import Tree,Ranger,ActiveRanger,Castle,Army,Enemy
+from sprites import Tree,Ranger,ActiveRanger,Castle,Army,Enemy,Player
 
 resources = resources.ResourceManager()
 grass = resources.Grass.still
@@ -87,19 +87,20 @@ def create(size=(3000,3000),trees=30,enemies=1,rangers=10):
     elif size == (7000,7000):
         trees = 100
     level.rangersPerArmy = rangers
-    for army in range(enemies):
+    for enemy in range(enemies):
         pos = [random.randint(0,size[0]-353),
                random.randint(0,size[1]-315)]
         castle = Castle()
         castle.rect.topleft = pos
         army = Army(castle,level)
         level.armies.append(army)
-        level.enemies.append(army)
+        enemy = Enemy([army])
+        level.enemies.append(enemy)
     pos = [random.randint(0,size[0]-353),
            random.randint(0,size[1]-315)]
     castle = Castle()
     castle.rect.topleft = pos
-    level.player = Army(castle,level)
+    level.player = Player([Army(castle,level)])
     castles = [army.castle for army in level.armies]+[castle]
     for castle in castles:
         level.sprites.add(castle)
