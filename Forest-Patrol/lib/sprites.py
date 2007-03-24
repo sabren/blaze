@@ -25,11 +25,11 @@ class Army(object):
     rangers = pygame.sprite.Group()
     castle = None
 
-    def __init__(self,castle,level,rangers=5):
+    def __init__(self,castle,level):
         object.__init__(self)
         self.level = level
         self.castle = castle
-        self.deployTroops(rangers)
+        self.deployTroops(level.rangersPerArmy)
 
     def deployTroops(self,count):
         pos = [self.castle.rect.left,

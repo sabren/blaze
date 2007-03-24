@@ -47,8 +47,6 @@ class Level(object):
             new.rect.center = old.rect.center
             old.kill()
         self.rangers = g
-        for castle in self.castles:
-            self.armies.append(Army(castle,self,self.rangersPerArmy))
 
     def render(self):
         #draw background
@@ -86,12 +84,12 @@ def create(size=(3000,3000),trees=30,enemies=1,rangers=7):
                random.randint(0,size[1]-315)]
         castle = Castle()
         castle.rect.topleft = pos
-        level.armies.append(Army(castle,level,level.rangersPerArmy))
+        level.armies.append(Army(castle,level))
     pos = [random.randint(0,size[0]-353),
            random.randint(0,size[1]-315)]
     castle = Castle()
     castle.rect.topleft = pos
-    level.player = Army(castle,level,level.rangersPerArmy)
+    level.player = Army(castle,level)
     castles = [army.castle for army in level.armies]+[castle]
     for castle in castles:
         level.sprites.add(castle)
