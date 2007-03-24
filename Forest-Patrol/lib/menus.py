@@ -74,7 +74,7 @@ class Menu(directicus.engine.Menu):
 class MainMenu(Menu):
 
     title = 'Forest Patrol'
-    options = ['New Game','Level Editor','Exit to System']
+    options = ['New Game','Exit to System']
 
     def start(self):
         Menu.start(self)

@@ -16,32 +16,48 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import pygame,directicus.sprite
+from eventnet.driver import Handler
 from directicus.gfx import Animation,loadGrid
 import resources
 
-#if not pygame.display.get_init():
-#    pygame.display.set_mode((800,600),pygame.HWSURFACE)
+class Army(object):
+    level = None
+    rangers = pygame.sprite.Group()
+    castle = None
+
+    def __init__(self,castle,level,rangers=5):
+        object.__init__(self)
+        self.level = level
+        self.castle = castle
+        self.deployTroops(rangers)
+
+    def deployTroops(self,count):
+        pos = [self.castle.rect.left,
+               self.castle.rect.bottom+5]
+        for ranger in range(count):
+            ranger = ActiveRanger()
+            ranger.rect.midtop = pos
+            self.level.rangers.add(ranger)
+            self.level.sprites.add(ranger)
+            self.rangers.add(ranger)
+            pos[0] += ranger.rect.width+1
+
+class Enemy(Army):
+    pass
 
 class Castle(directicus.sprite.Sprite):
-    image = resources.Castle.still #pygame.image.load('data/castle.png').convert()
-    image.set_colorkey((14,56,102))
+    image = resources.Castle.still
+    image.set_colorkey((24,102,14))
     usePP = True
     baseRect = image.get_rect()
 
 class Tree(directicus.sprite.Sprite):
-    image = resources.Tree.still #pygame.image.load('data/tree.png').convert()
-    image.set_colorkey((14,56,102))
+    image = resources.Tree.still
+    image.set_colorkey((20,102,14))
     usePP = True
-    #old = image.get_rect()
-    #baseRect = pygame.Rect(old)
-    #baseRect.width = old.width/2
-    #baseRect.height = old.height/4
-    #baseRect.midbottom = old.midbottom
-    #del(old)
 
 class Ranger(directicus.sprite.Sprite):
-    image = resources.Ranger.still #pygame.image.load('data/ranger.png').convert()
-    image.set_colorkey((14,56,102))
+    image = resources.Ranger.still
     usePP = True
     old = image.get_rect()
     baseRect = pygame.Rect(old)
@@ -55,16 +71,7 @@ class ActiveRanger(directicus.sprite.AnimatedSprite,Ranger):
     path = []
     level = None
     speed = 5
-    #walk = loadGrid('data/animations/walk.png',(35,60))
     anims = resources.Ranger.walk
-    #{'0':   Animation(walk[0],True),
-    #         '45':  Animation(walk[1],True),
-    #         '90':  Animation(walk[2],True),
-    #         '135': Animation(walk[3],True),
-    #         '180': Animation(walk[4],True),
-    #         '245': Animation(walk[5],True),
-    #         '290': Animation(walk[6],True),
-    #         '335': Animation(walk[7],True)}
     anim = anims['180']
 
     def __init__(self):
@@ -99,27 +106,26 @@ class ActiveRanger(directicus.sprite.AnimatedSprite,Ranger):
                 self.anim = self.anims['335']
             self.anim.index = i
             self.path.reverse()
-            directicus.sprite.AnimatedSprite.update(self)
             self.rect.center = new
-            #print self.collide(level.collideRects)
-            if len(self.collide(level.collideRects)) > 1:
-                print len(self.collide(level.collideRects))
+            if self.collide(level.rangers):
                 self.path.insert(0,new)
                 self.rect.center = old
+            else:
+                directicus.sprite.AnimatedSprite.update(self)
         else:
             self.anim.index = 0
+            directicus.sprite.AnimatedSprite.update(self)
         self.baseRect.midbottom = self.rect.midbottom
         self.image.set_colorkey(self.image.get_at((0,0)))
 
     def collide(self,group):
         collisions = list()
-        for rect in group:
-            print self.baseRect
-            if rect == self.baseRect:
+        for sprite in group:
+            if sprite == self:
                 continue
-            if self.baseRect.colliderect(rect):
-                collisions.append(rect)
-        return collisions
+            if self._diff(self.rect.center,sprite.rect.center) < self.rect.width:
+                return True
+        return False
 
     def _plot(self,dest):
         '''

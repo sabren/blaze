@@ -15,11 +15,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import pygame,cPickle,resources
-from sprites import Tree,Ranger,ActiveRanger,Castle
+import pygame,cPickle,resources,random
+from sprites import Tree,Ranger,ActiveRanger,Castle,Army,Enemy
 
 resources = resources.ResourceManager()
-grass = resources.Grass.still #pygame.image.load('data/grass.png')
+grass = resources.Grass.still
 
 class Level(object):
 
@@ -29,6 +29,9 @@ class Level(object):
     sprites = pygame.sprite.Group()
     castles = pygame.sprite.Group()
     collideRects = list()
+    armies = list()
+    player = None
+    rangersPerArmy = 5
     filename = ''
 
     def game(self):
@@ -44,9 +47,8 @@ class Level(object):
             new.rect.center = old.rect.center
             old.kill()
         self.rangers = g
-        for sprite in self.sprites:
-            if hasattr(sprite,'baseRect'):
-                sprite.baseRect.midbottom = sprite.rect.midbottom
+        for castle in self.castles:
+            self.armies.append(Army(castle,self,self.rangersPerArmy))
 
     def render(self):
         #draw background
@@ -74,6 +76,38 @@ class Level(object):
             group.add(sprite)
         group.draw(self.surface)
         self.sprites = group
+
+def create(size=(3000,3000),trees=30,enemies=1,rangers=7):
+    level = Level()
+    level.size = size
+    level.rangersPerArmy = rangers
+    for army in range(enemies):
+        pos = [random.randint(0,size[0]-353),
+               random.randint(0,size[1]-315)]
+        castle = Castle()
+        castle.rect.topleft = pos
+        level.armies.append(Army(castle,level,level.rangersPerArmy))
+    pos = [random.randint(0,size[0]-353),
+           random.randint(0,size[1]-315)]
+    castle = Castle()
+    castle.rect.topleft = pos
+    level.player = Army(castle,level,level.rangersPerArmy)
+    castles = [army.castle for army in level.armies]+[castle]
+    for castle in castles:
+        level.sprites.add(castle)
+        level.castles.add(castle)
+    for tree in range(trees):
+        tree = Tree()
+        pos = [random.randint(0,size[0]),
+               random.randint(0,size[1])]
+        tree.rect.center = pos
+        while tree.rect.collidelist(castles+level.trees.sprites()) != -1:
+            pos = [random.randint(0,size[0]),
+                   random.randint(0,size[1])]
+            tree.rect.center = pos
+        level.sprites.add(tree)
+        level.trees.add(tree)
+    return level
 
 def save(level,filename):
     size = level.size
@@ -114,15 +148,3 @@ def load(filename):
         lvl.sprites.add(s)
     lvl.filename = filename
     return lvl
-
-if __name__=='__main__':
-    Level.trees = [(100,100),(150,100),(200,200)]
-    Level.rangers = [(400,300)]
-    
-    pygame.init()
-    lvl = Level()
-    disp = pygame.display.set_mode((800,600),pygame.NOFRAME)
-    disp.blit(lvl.background,(0,0))
-    lvl.sprites.draw(disp)
-    pygame.display.flip()
-    raw_input()

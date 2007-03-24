@@ -20,7 +20,7 @@ from directicus.sfx import Audio,Music
 
 class Game(directicus.engine.State):
 
-    level = level.load('data/levels/test.lvl')
+    level = level.create() #load('data/levels/test.lvl')
 
     def __init__(self):
         directicus.engine.State.__init__(self)
@@ -55,10 +55,6 @@ class Game(directicus.engine.State):
     def EVT_tick(self,event):
         self.level.clear()
         self.level.rangers.update(self.level)
-        self.level.collideRects = list()
-        for sprite in self.level.sprites:
-            if hasattr(sprite,'baseRect'):
-                self.level.collideRects.append(sprite.baseRect)
 
         for sprite in self.interface:
             sprite.kill()
