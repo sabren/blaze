@@ -26,6 +26,7 @@ class Level(object):
     size = (800,600) #in pixels
     trees = pygame.sprite.Group()
     rangers = pygame.sprite.Group()
+    enemies = list()
     sprites = pygame.sprite.Group()
     castles = pygame.sprite.Group()
     collideRects = list()
@@ -39,14 +40,15 @@ class Level(object):
         Convert rangers to active rangers for a game.
         '''
 
-        g = pygame.sprite.Group()
-        for old in self.rangers.sprites():
-            new = ActiveRanger()
-            g.add(new)
-            self.sprites.add(g)
-            new.rect.center = old.rect.center
-            old.kill()
-        self.rangers = g
+        #g = pygame.sprite.Group()
+        #for old in self.rangers.sprites():
+        #    new = ActiveRanger()
+        #    g.add(new)
+        #    self.sprites.add(g)
+        #    new.rect.center = old.rect.center
+        #    old.kill()
+        #self.rangers = g
+        pass
 
     def render(self):
         #draw background
@@ -75,16 +77,24 @@ class Level(object):
         group.draw(self.surface)
         self.sprites = group
 
-def create(size=(3000,3000),trees=30,enemies=1,rangers=7):
+def create(size=(3000,3000),trees=30,enemies=1,rangers=10):
     level = Level()
     level.size = size
+    if size == (3000,3000):
+        trees = 50
+    elif size == (5000,5000):
+        trees = 70
+    elif size == (7000,7000):
+        trees = 100
     level.rangersPerArmy = rangers
     for army in range(enemies):
         pos = [random.randint(0,size[0]-353),
                random.randint(0,size[1]-315)]
         castle = Castle()
         castle.rect.topleft = pos
-        level.armies.append(Army(castle,level))
+        army = Army(castle,level)
+        level.armies.append(army)
+        level.enemies.append(army)
     pos = [random.randint(0,size[0]-353),
            random.randint(0,size[1]-315)]
     castle = Castle()
@@ -99,50 +109,10 @@ def create(size=(3000,3000),trees=30,enemies=1,rangers=7):
         pos = [random.randint(0,size[0]),
                random.randint(0,size[1])]
         tree.rect.center = pos
-        while tree.rect.collidelist(castles+level.trees.sprites()) != -1:
+        while tree.rect.collidelist(level.sprites.sprites()) != -1:
             pos = [random.randint(0,size[0]),
                    random.randint(0,size[1])]
             tree.rect.center = pos
         level.sprites.add(tree)
         level.trees.add(tree)
     return level
-
-def save(level,filename):
-    size = level.size
-    trees = [tree.rect.center for tree in level.trees.sprites()]
-    rangers = [ranger.rect.center for ranger in level.rangers.sprites()]
-    castles = [castle.rect.center for castle in level.castles.sprites()]
-
-    f = open(filename,'w')
-    cPickle.dump(size,f)
-    cPickle.dump(trees,f)
-    cPickle.dump(rangers,f)
-    cPickle.dump(castles,f)
-    f.close()
-
-def load(filename):
-    f = open(filename,'r')
-    size = cPickle.load(f)
-    trees = cPickle.load(f)
-    rangers = cPickle.load(f)
-    castles = cPickle.load(f)
-    f.close()
-    lvl = Level()
-    lvl.size = size
-    for tree in trees:
-        s = Tree()
-        s.rect.center = tree
-        lvl.trees.add(s)
-        lvl.sprites.add(s)
-    for ranger in rangers:
-        s = Ranger()
-        s.rect.center = ranger
-        lvl.rangers.add(s)
-        lvl.sprites.add(s)
-    for castle in castles:
-        s = Castle()
-        s.rect.center = castle
-        lvl.castles.add(s)
-        lvl.sprites.add(s)
-    lvl.filename = filename
-    return lvl

@@ -20,10 +20,10 @@ from directicus.sfx import Audio,Music
 
 class Game(directicus.engine.State):
 
-    level = level.create() #load('data/levels/test.lvl')
-
-    def __init__(self):
+    def __init__(self,enemies=1,size=(3000,3000)):
         directicus.engine.State.__init__(self)
+        reload(level)
+        self.level = level.create(size,enemies=enemies)
         self.audio = Audio()
         self.music = Music()
         self.audio.volume = 0.7

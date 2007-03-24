@@ -17,7 +17,7 @@
 
 import directicus.engine, pygame, editor, os, game, eventnet.driver, resources
 from directicus.sfx import Music,Audio
-from level import grass,load
+from level import grass
 
 class Menu(directicus.engine.Menu):
 
@@ -84,7 +84,8 @@ class MainMenu(Menu):
             self.music.play('data/music/menu.mp3',-1)
 
     def EVT_Menu_NewGame(self,event):
-        self.quit(game.Game())
+        self.quit(GameSize())
+        #self.quit(game.Game())
 
     def EVT_Menu_LevelEditor(self,event):
         self.quit(editor.LevelEditor())
@@ -126,3 +127,39 @@ class ConfirmExit(Menu):
 
     def EVT_Menu_No(self,event):
         self.quit()
+
+class GameSize(Menu):
+    title = 'Level Size'
+    options = ['Small','Medium','Big']
+
+    def EVT_Menu_Small(self,event):
+        self.quit(EnemyCount((3000,3000)))
+
+    def EVT_Menu_Medium(self,event):
+        self.quit(EnemyCount((5000,5000)))
+
+    def EVT_Menu_Big(self,event):
+        self.quit(EnemyCount((7000,7000)))
+
+class EnemyCount(Menu):
+    title = 'How Many Enemy Armies?'
+    options = ['One',
+               'Two',
+               'Three',
+               'Four']
+
+    def __init__(self,size=(3000,3000)):
+        Menu.__init__(self)
+        self.size = size
+
+    def EVT_Menu_One(self,event):
+        self.quit(game.Game(1,self.size))
+
+    def EVT_Menu_Two(self,event):
+        self.quit(game.Game(2,self.size))
+
+    def EVT_Menu_Three(self,event):
+        self.quit(game.Game(3,self.size))
+
+    def EVT_Menu_Four(self,event):
+        self.quit(game.Game(4,self.size))

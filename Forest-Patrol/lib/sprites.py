@@ -22,12 +22,12 @@ import resources
 
 class Army(object):
     level = None
-    rangers = pygame.sprite.Group()
     castle = None
 
     def __init__(self,castle,level):
         object.__init__(self)
         self.level = level
+        self.rangers = pygame.sprite.Group()
         self.castle = castle
         self.deployTroops(level.rangersPerArmy)
 
@@ -50,6 +50,10 @@ class Castle(directicus.sprite.Sprite):
     image.set_colorkey((24,102,14))
     usePP = True
     baseRect = image.get_rect()
+
+    def __init__(self):
+        directicus.sprite.Sprite.__init__(self)
+        self.rect.clamp(pygame.display.get_surface().get_rect())
 
 class Tree(directicus.sprite.Sprite):
     image = resources.Tree.still
@@ -110,6 +114,7 @@ class ActiveRanger(directicus.sprite.AnimatedSprite,Ranger):
             if self.collide(level.rangers):
                 self.path.insert(0,new)
                 self.rect.center = old
+                self.path = self._plot(self.dest)
             else:
                 directicus.sprite.AnimatedSprite.update(self)
         else:
@@ -160,8 +165,12 @@ class MiniMap(directicus.sprite.Sprite):
     image = pygame.Surface((1,1))
     enemy = pygame.Surface((2,2))
     enemy.fill((255,0,0))
-    tree = enemy.copy()
+    ally = enemy.copy()
+    ally.fill((0,255,0))
+    tree = pygame.Surface((5,5))
     tree.fill((0,50,0))
+    castle = pygame.Surface((10,10))
+    castle.fill((100,100,100))
     pos = None
 
     def tick(self):
@@ -171,8 +180,15 @@ class MiniMap(directicus.sprite.Sprite):
             self.image.fill((0,175,0))
             for tree in self.level.trees.sprites():
                 self.image.blit(self.tree,self.shrink(tree.rect.center))
-            for ranger in self.level.rangers.sprites():
+            for castle in self.level.castles.sprites():
+                self.image.blit(self.castle,self.shrink(castle.rect.center))
+            enemies = list()
+            for army in self.level.enemies:
+                enemies.extend(army.rangers.sprites())
+            for ranger in enemies:
                 self.image.blit(self.enemy,self.shrink(ranger.rect.center))
+            for ranger in self.level.player.rangers.sprites():
+                self.image.blit(self.ally,self.shrink(ranger.rect.center))
             if self.pos:
                 img = pygame.Surface(self.shrink(pygame.display.get_surface().get_size()))
                 img.fill((255,0,0))
