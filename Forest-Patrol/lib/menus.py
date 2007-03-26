@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import directicus.engine, pygame, editor, os, game, eventnet.driver, resources
+import directicus.engine, pygame, os, game, eventnet.driver, resources
 from directicus.sfx import Music,Audio
 from level import grass
 
