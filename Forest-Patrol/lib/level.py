@@ -27,6 +27,7 @@ class Level(object):
     trees = pygame.sprite.Group()
     rangers = pygame.sprite.Group()
     enemies = list()
+    arrows = pygame.sprite.Group()
     sprites = pygame.sprite.Group()
     castles = pygame.sprite.Group()
     collideRects = list()
@@ -77,7 +78,7 @@ class Level(object):
         group.draw(self.surface)
         self.sprites = group
 
-def create(size=(3000,3000),trees=30,enemies=1,rangers=10):
+def create(size=(3000,3000),trees=30,enemies=1,rangers=15):
     level = Level()
     level.size = size
     if size == (3000,3000):

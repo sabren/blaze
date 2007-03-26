@@ -18,13 +18,14 @@
 import pygame,directicus.sprite
 from eventnet.driver import Handler
 from directicus.gfx import Animation,loadGrid
+from directicus.sfx import Audio
 import resources
 
 class Arrow(directicus.sprite.Sprite):
     speed = 10
 
     def __init__(self,pos,target):
-        grid = resources.arrow.still
+        surf = resources.Arrow.images
         if target[0] < pos[0]:
             if target[1] > pos[1]:
                 self.image = surf[3]
@@ -39,24 +40,25 @@ class Arrow(directicus.sprite.Sprite):
                 self.image = surf[0]
         elif target[0] > pos[0]:
             if target[1] > pos[1]:
-                self.image = grid[5]
+                self.image = surf[5]
             elif target[1] == pos[1]:
-                self.image = grid[6]
+                self.image = surf[6]
             else: # target[1] < pos[1]
-                self.image = grid[7]
+                self.image = surf[7]
         directicus.sprite.Sprite.__init__(self)
         self.target = target
         self.rect.center = pos
         self.path = self._plot(target)
 
     def update(self,level):
+        self.image.set_colorkey(self.image.get_at((0,0)))
         if len(self.path):
             self.path.reverse()
             new = self.path.pop()
             self.path.reverse()
             self.rect.center = new
         else:
-            for dead in pygame.sprite.spritecollide(self,level.rangers):
+            for dead in pygame.sprite.spritecollide(self,level.rangers,False):
                 dead.kill()
             self.kill()
 
@@ -110,22 +112,32 @@ class Army(object):
             self.rangers.add(ranger)
             pos[0] += ranger.rect.width+1
 
-class Player(object):
-
+class Player(Handler):
     def __init__(self,armies=list()):
-        object.__init__(self)
+        Handler.__init__(self)
         self.armies = armies
+        self.level = self.armies[0].level
 
-class Enemy(Player,Handler):
+    def EVT_tick(self,event):
+        for army in self.armies:
+            if not len(army.rangers):
+                self.armies.remove(army)
+
+class Enemy(Player):
     def __init__(self,armies=list()):
         Player.__init__(self,armies)
-        Handler.__init__(self)
         self.capture()
 
     def EVT_tick(self,event):
         for army in self.armies:
+            if not len(army.rangers):
+                self.armies.remove(army)
+                continue
             for ranger in army.rangers:
-                ranger.target(self.armies[0].level.player.armies[0].rangers.sprites()[0])
+                if len(self.level.player.armies[0].rangers):
+                    ranger.target(self.armies[0].level.player.armies[0].rangers.sprites()[0])
+        if not len(self.armies):
+            del(self)
 
 class Castle(directicus.sprite.Sprite):
     image = resources.Castle.still
@@ -157,11 +169,15 @@ class ActiveRanger(directicus.sprite.AnimatedSprite,Ranger):
     path = []
     level = None
     speed = 5
-    range = 50
-    anims = resources.Ranger.walk
-    anim = anims['180']
+    range = 400
+    audio = Audio()
+    audio.volume = 0.5
 
     def __init__(self,army):
+        self.walk = resources.Ranger.getWalk()
+        self.shoot = resources.Ranger.getShot()
+        self.anims = self.walk
+        self.anim = self.anims['180']
         directicus.sprite.AnimatedSprite.__init__(self)
         self.baseRect.midbottom = self.rect.midbottom
         self.army = army
@@ -174,6 +190,18 @@ class ActiveRanger(directicus.sprite.AnimatedSprite,Ranger):
             pass
 
     def update(self,level=None):
+        self.level = level
+        if isinstance(self.dest,ActiveRanger) and self.dest.groups():
+            if self._diff(self.rect.center,self.dest.rect.center) < self.range:
+                self.attack()
+                self.path = list()
+            else:
+                self.anims = self.walk
+            if not self.path:
+                self.path = self._plot(self.dest.rect.center)
+                return
+        else:
+            self.anims = self.walk
         if self.path:
             old = self.rect.center
             self.path.reverse()
@@ -210,19 +238,41 @@ class ActiveRanger(directicus.sprite.AnimatedSprite,Ranger):
                     self.path = self._plot(self.dest)
             else:
                 directicus.sprite.AnimatedSprite.update(self)
-        elif isinstance(self.dest,ActiveRanger):
-            if self._diff(self.rect.center,self.dest.rect.center) < self.range:
-                self.attack()
-            else:
-                self.path = self._plot(self.dest.rect.center)
         else:
             self.anim.index = 0
             directicus.sprite.AnimatedSprite.update(self)
         self.baseRect.midbottom = self.rect.midbottom
         self.image.set_colorkey(self.image.get_at((0,0)))
 
+    def fire(self):
+        self.audio.play('data/sounds/arrow.wav')
+        arr = Arrow(self.rect.center,self.dest.rect.center)
+        self.level.sprites.add(arr)
+        self.level.arrows.add(arr)
+
     def attack(self):
-        print 'ATTACK!!!'
+        self.anims = self.shoot
+        new = self.dest.rect.center
+        if new[0] == self.rect.centerx and new[1] < self.rect.centery:
+            self.anim = self.anims['0']
+        elif new[0] > self.rect.centerx and new[1] < self.rect.centery:
+            self.anim = self.anims['45']
+        elif new[0] > self.rect.centerx and new[1] == self.rect.centery:
+            self.anim = self.anims['90']
+        elif new[0] > self.rect.centerx and new[1] > self.rect.centery:
+            self.anim = self.anims['135']
+        elif new[0] == self.rect.centerx and new[1] > self.rect.centery:
+            self.anim = self.anims['180']
+        elif new[0] < self.rect.centerx and new[1] > self.rect.centery:
+            self.anim = self.anims['225']
+        elif new[0] < self.rect.centerx and new[1] == self.rect.centery:
+            self.anim = self.anims['270']
+        elif new[0] < self.rect.centerx and new[1] < self.rect.centery:
+            self.anim = self.anims['335']
+        if self.anim.index == len(self.anim.seq)-1:
+            self.fire()
+        directicus.sprite.AnimatedSprite.update(self)
+        self.image.set_colorkey(self.image.get_at((0,0)))
 
     def collide(self,group):
         collisions = list()
@@ -270,11 +320,9 @@ class MiniMap(directicus.sprite.Sprite):
     ally.fill((0,255,0))
     tree = pygame.Surface((5,5))
     tree.fill((0,50,0))
-    castle = pygame.Surface((10,10))
-    castle.fill((100,100,100))
-    red = tree.copy()
+    red = pygame.Surface((10,10))
     red.fill((255,0,0))
-    green = tree.copy()
+    green = red.copy()
     green.fill((0,255,0))
     pos = None
 
@@ -287,11 +335,9 @@ class MiniMap(directicus.sprite.Sprite):
                 self.image.blit(self.tree,self.shrink(tree.rect.center))
             for army in self.level.armies:
                 for castle in army.castles:
-                    self.image.blit(self.castle,self.shrink(castle.rect.midtop))
                     self.image.blit(self.red,self.shrink(castle.rect.midtop))
             for army in self.level.player.armies:
                 for castle in army.castles:
-                    self.image.blit(self.castle,self.shrink(castle.rect.midtop))
                     self.image.blit(self.green,self.shrink(castle.rect.midtop))
             enemies = list()
             for enemy in self.level.enemies:

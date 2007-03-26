@@ -55,11 +55,30 @@ class Game(directicus.engine.State):
     def EVT_tick(self,event):
         self.level.clear()
         self.level.rangers.update(self.level)
+        self.level.arrows.update(self.level)
+
+        allies = list()
+        for army in self.level.player.armies:
+            allies.extend(army.rangers)
+        if not allies:
+            self.quit(Lose())
+            return
+        else:
+            enemies = list()
+            for enemy in self.level.enemies:
+                for army in enemy.armies:
+                    enemies.extend(army.rangers)
+            if not enemies:
+                self.quit(Win())
+                return
 
         for sprite in self.interface:
             sprite.kill()
 
         for sprite in self.selected:
+            if not sprite.groups(): # ranger has died
+                self.selected.remove(sprite)
+                continue
             base = pygame.sprite.Sprite(self.level.sprites,self.interface)
             base.rect = pygame.rect.Rect(sprite)
             base.rect.height = sprite.rect.height/2
@@ -144,9 +163,19 @@ class Game(directicus.engine.State):
                     if ranger.rect.collidepoint(pos) and ranger.collidePoint(pos):
                         self.selected.append(ranger)
             elif self.selected:
+                target = None
+                for enemy in self.level.enemies:
+                    for army in enemy.armies:
+                        for ranger in army.rangers.sprites():
+                            if ranger.rect.collidepoint(pos):
+                                target = ranger
+                                self.audio.play('data/sounds/sword-draw.wav')
+                                break
+                if not target:
+                    target = (event.pos[0]-self.sprite.rect.left,
+                              event.pos[1]-self.sprite.rect.top)
                 for r in self.selected:
-                    r.target((event.pos[0]-self.sprite.rect.left,
-                              event.pos[1]-self.sprite.rect.top))
+                    r.target(target)
 
     def EVT_MouseButtonUp(self,event):
         if event.button == 1 and self.mouse:
@@ -190,3 +219,45 @@ class Game(directicus.engine.State):
             self.keys[1] = 1
         elif key == 'escape':
             self.quit()
+
+class Ending(directicus.engine.State):
+    def __init__(self):
+        directicus.engine.State.__init__(self)
+        self.music = Music()
+        self.audio = Audio()
+        self.music.volume = 0.5
+        self.audio.volume = 0.7
+
+class Lose(Ending):
+    def start(self):
+        directicus.engine.State.start(self)
+        self.music.stop(500)
+        self.audio.play('data/music/loser.wav')
+        fnt = pygame.font.Font('data/font.ttf',40)
+        msg = fnt.render('Defeat',True,(200,0,0))
+        r = msg.get_rect()
+        disp = pygame.display.get_surface()
+        r.center = (disp.get_width()/2,
+                    disp.get_height()/2)
+        disp.blit(msg,r)
+        pygame.display.flip()
+        pygame.time.wait(5000)
+        self.audio.stop(500)
+        self.quit()
+
+class Win(Ending):
+    def start(self):
+        directicus.engine.State.start(self)
+        self.music.stop(500)
+        self.audio.play('data/music/winner.wav')
+        fnt = pygame.font.Font('data/font.ttf',40)
+        msg = fnt.render('Victory',True,(0,200,0))
+        r = msg.get_rect()
+        disp = pygame.display.get_surface()
+        r.center = (disp.get_width()/2,
+                    disp.get_height()/2)
+        disp.blit(msg,r)
+        pygame.display.flip()
+        pygame.time.wait(5000)
+        self.audio.stop(500)
+        self.quit()

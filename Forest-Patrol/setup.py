@@ -7,14 +7,19 @@ try:
 except ImportError:
     pass
 
+# Same for py2app
+try:
+    import py2app
+except ImportError:
+    pass
+
 setup(windows=['Forest-Patrol.py'],
-      app=['Forest-Patrol.py'],
+      app=['Forest-Patrol.pyw'],
       data_files=[
           ('',['README.txt','LICENSE.txt']),
           ('data',glob.glob('data/*.png')+['data/font.ttf']),
           ('data/music',glob.glob('data/music/*.mp3')+glob.glob('data/music/*.wav')),
           ('data/sounds',glob.glob('data/sounds/*.wav')),
-          ('data/levels',glob.glob('data/levels/*.lvl')),
           ('data/cursors',glob.glob('data/cursors/*.png')),
           ('data/animations',glob.glob('data/animations/*.png')),
       ],
