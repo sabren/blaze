@@ -15,16 +15,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from directicus.engine import Engine
-import menus
+import pygame
 
-class Game(Engine):
+class Level(object):
     '''
-    Our customized master object.
+    Our simple level object.
     '''
 
-    DEFAULT = menus.MainMenu
-
-def main():
-    e = Game()
-    e.run()
+    def __init__(self,event):
+        self.all = pygame.sprite.Group()
+        self.enemies = pygame.sprite.Group()
+        self.objects = pygame.sprite.Group()

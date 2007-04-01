@@ -15,16 +15,16 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from directicus.engine import Engine
-import menus
+from directicus.engine import Menu
 
-class Game(Engine):
+class GameMenu(Menu):
     '''
-    Our customized master object.
+    Game-specific menu class, nothing for now.
     '''
 
-    DEFAULT = menus.MainMenu
+    pass
 
-def main():
-    e = Game()
-    e.run()
+class MainMenu(GameMenu):
+    title = 'Trailblazer' # will be replaced with actual name
+    options = ['Start Game',
+               'Quit']

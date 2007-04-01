@@ -15,16 +15,18 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from directicus.engine import Engine
-import menus
+import directicus.gfx
 
-class Game(Engine):
+class Object(directicus.gfx.Sprite):
     '''
-    Our customized master object.
+    An interactive object.
     '''
 
-    DEFAULT = menus.MainMenu
+    pass
 
-def main():
-    e = Game()
-    e.run()
+class Enemy(directicus.gfx.AnimatedSprite):
+    '''
+    An armed enemy.
+    '''
+
+    pass
