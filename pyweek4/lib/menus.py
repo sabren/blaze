@@ -1,4 +1,4 @@
-# To Be Named PyWeek Entry
+# Ascent of Justice
 # Copyright (C) 2007 Team Trailblazer
 
 # This program is free software; you can redistribute it and/or modify

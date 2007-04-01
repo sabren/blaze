@@ -1,4 +1,4 @@
-# To Be Named PyWeek Entry
+# Ascent of Justice
 # Copyright (C) 2007 Team Trailblazer
 
 # This program is free software; you can redistribute it and/or modify
@@ -18,3 +18,16 @@
 '''
 Centralized data source
 '''
+
+from directicus.gfx import Animation,loadGrid
+
+class Hero:
+    def walk_left(self):
+        return Animation(loadGrid('data/animations/walk-left.png',(35,50)),True)
+
+    walk_left = property(walk_left)
+
+    def walk_right(self):
+        return Animation(loadGrid('data/animations/walk-right.png',(35,50)),True)
+
+    walk_left = property(walk_right)
