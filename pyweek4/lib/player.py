@@ -96,9 +96,9 @@ class Player(AnimatedSprite,Handler):
 
     def recover(self):
         self.attacking = False
-        if self.anim == Hero.kick_left:
+        if self.anim.seq in [Hero.kick_left,Hero.punch_left]:
             self.anim = Hero.walk_left
-        elif self.anim == Hero.kick_right:
+        elif self.anim.seq in [Hero.kick_right,Hero.punch_right]:
             self.anim = Hero.walk_right
 
     def EVT_KeyDown(self,event):
