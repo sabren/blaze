@@ -15,8 +15,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import pygame
+pygame.display.set_mode((800,600)) # this is for our .convert()s
+
 from directicus.engine import Engine
-import menus
+import menus,data
 
 class Game(Engine):
     '''
@@ -24,7 +27,21 @@ class Game(Engine):
     '''
 
     DEFAULT = menus.MainMenu
+    size = (800,600)
+
+    def __init__(self,fps=40):
+        Engine.__init__(self,fps)
+        pygame.display.set_caption('Ascent of Justice')
+        pygame.display.set_icon(data.icon)
+
+    def EVT_KeyDown(self,event):
+        if event.key == pygame.K_F9:
+            pygame.image.save(pygame.display.get_surface(),'screenshot.bmp')
+
+    #def EVT_pause(self,event):
+    #    event.game.release()
+    #    self.state = menus.Paused(event.game)
 
 def main():
-    e = Game()
+    e = Game(40)
     e.run()

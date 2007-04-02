@@ -15,14 +15,24 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import pygame
+import pygame,player,data
 
 class Level(object):
-    '''
-    Our simple level object.
-    '''
 
-    def __init__(self,event):
+    def __init__(self,size=(800,600)):
         self.all = pygame.sprite.Group()
-        self.enemies = pygame.sprite.Group()
-        self.objects = pygame.sprite.Group()
+        self.player = player.Player()
+        self.all.add(self.player)
+        self.s = pygame.sprite.Sprite()
+        self.s.image = data.texture('data/textures/brick.jpg',size).convert()
+        self.s.rect = self.s.image.get_rect()
+        self.background = self.s.image.copy()
+
+    def clear(self):
+        self.all.clear(self.s.image,self.background)
+
+    def update(self):
+        self.player.update(self)
+
+    def draw(self):
+        self.all.draw(self.s.image)

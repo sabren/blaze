@@ -20,14 +20,21 @@ Centralized data source
 '''
 
 from directicus.gfx import Animation,loadGrid
+import pygame
 
 class Hero:
-    def walk_left(self):
-        return Animation(loadGrid('data/animations/walk-left.png',(35,50)),True)
+    walk_left = Animation(loadGrid('data/animations/walk-left.png',(35,50))[0],True)
+    walk_right = Animation(loadGrid('data/animations/walk-right.png',(35,50))[0],True)
 
-    walk_left = property(walk_left)
+def texture(filename,size=(20,20)):
+    surf = pygame.Surface(size)
+    img = pygame.image.load(filename)
+    for y in range(size[1]/img.get_height()+1):
+        y = y*img.get_height()
+        for x in range(size[0]/img.get_width()+1):
+            x = x*img.get_width()
+            surf.blit(img,(x,y))
+    return surf
 
-    def walk_right(self):
-        return Animation(loadGrid('data/animations/walk-right.png',(35,50)),True)
-
-    walk_left = property(walk_right)
+icon = pygame.image.load('data/icon.jpg').convert()
+icon.set_colorkey(icon.get_at((0,0)))

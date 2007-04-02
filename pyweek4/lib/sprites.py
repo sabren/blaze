@@ -15,18 +15,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import directicus.gfx
+from directicus.sprite import Sprite
+import data
 
-class Object(directicus.gfx.Sprite):
-    '''
-    An interactive object.
-    '''
+class Wall(Sprite):
 
-    pass
-
-class Enemy(directicus.gfx.AnimatedSprite):
-    '''
-    An armed enemy.
-    '''
-
-    pass
+    def __init__(self,length=100,pos=(0,0)):
+        self.image = data.texture('data/wall.png',(15,length))
+        Sprite.__init__(self)
+        self.rect.topleft = pos

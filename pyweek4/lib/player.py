@@ -15,11 +15,21 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import directicus.gfx
+from directicus.sprite import AnimatedSprite
+from data import Hero
+import pygame
 
-class Player(directicus.gfx.AnimatedSprite):
+class Player(AnimatedSprite):
     '''
     Our hero.
     '''
 
-    pass
+    anim = Hero.walk_right
+    level = None
+
+    def __init__(self):
+        AnimatedSprite.__init__(self)
+        self.rect.topleft = (0,0)
+
+    def update(self,level):
+        self.level = level
