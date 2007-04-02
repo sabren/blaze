@@ -108,7 +108,7 @@ class Player(AnimatedSprite,Handler):
             self.vx = self.speed
         elif event.key == pygame.K_LEFT:
             self.vx = -self.speed
-        elif event.key == pygame.K_SPACE:
+        elif event.key == pygame.K_SPACE and self.vy = 0.1:
             self.vy = -2
         elif event.key == pygame.K_LCTRL:
             self.kick()
