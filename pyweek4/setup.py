@@ -22,6 +22,7 @@ setup(data_files=[
           ('',['README.txt','LICENSE.txt']),
           ('data',glob.glob('data/*.png')),
           ('data/animations',glob.glob('data/animations/*.png')),
+          ('data/levels',glob.glob('data/levels/*.lvl')),
       ],
       name='Ascent of Justice',
       version='0.1',

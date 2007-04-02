@@ -23,7 +23,7 @@ class GameState(State):
     def __init__(self,lvl=None):
         State.__init__(self)
         if lvl == None:
-            self.level = level.load('test.lvl')
+            self.level = level.load('data/levels/test.lvl')
         else:
             self.level = lvl
         self.bg = pygame.sprite.Group(self.level.s)

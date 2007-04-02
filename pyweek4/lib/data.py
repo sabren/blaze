@@ -40,5 +40,5 @@ def texture(filename,size=(20,20)):
             surf.blit(img,(x,y))
     return surf
 
-icon = pygame.image.load('data/icon.jpg').convert()
+icon = pygame.image.load('data/icon.png').convert()
 icon.set_colorkey(icon.get_at((0,0)))
