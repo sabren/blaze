@@ -20,21 +20,23 @@ import level,pygame,eventnet.driver
 
 class GameState(State):
 
-    def __init__(self,level=level.Level()):
+    def __init__(self,lvl=None):
         State.__init__(self)
-        self.level = level
+        if lvl == None:
+            self.level = level.load('test.lvl')
+        else:
+            self.level = lvl
         self.bg = pygame.sprite.Group(self.level.s)
-
-    def start(self):
-        State.start(self)
-        pygame.display.get_surface().blit(self.level.background,(0,0))
-        pygame.display.flip()
+        self.selected = None
 
     def EVT_tick(self,event):
         disp = pygame.display.get_surface()
+        disp.fill((0,0,0))
         self.level.clear()
         self.level.update()
         self.level.draw()
+        self.level.s.rect.left = -self.level.player.rect.left + self.level.s.rect.width/2
+        self.level.s.rect.top = -self.level.player.rect.top + self.level.s.rect.height/2
         self.bg.clear(disp,self.level.background)
         self.bg.draw(disp)
         pygame.display.flip()

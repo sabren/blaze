@@ -20,7 +20,20 @@ import data
 
 class Wall(Sprite):
 
-    def __init__(self,length=100,pos=(0,0)):
-        self.image = data.texture('data/wall.png',(15,length))
+    def __init__(self,pos=(0,0),lvl=None):
+        self.image = data.wall
         Sprite.__init__(self)
-        self.rect.topleft = pos
+        self.rect.center = pos
+        if lvl:
+            lvl.all.add(self)
+            lvl.walls.add(self)
+
+class Floor(Sprite):
+
+    def __init__(self,pos=(0,0),lvl=None):
+        self.image = data.floor
+        Sprite.__init__(self)
+        self.rect.center = pos
+        if lvl:
+            lvl.all.add(self)
+            lvl.floors.add(self)

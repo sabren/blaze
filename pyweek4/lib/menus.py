@@ -24,6 +24,8 @@ class GameMenu(Menu):
     Game-specific menu class, nothing for now.
     '''
 
+    color = (0,0,0)
+
     def __init__(self):
         self.background = pygame.image.load('data/menu.png').convert()
         Menu.__init__(self)

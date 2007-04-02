@@ -23,8 +23,12 @@ from directicus.gfx import Animation,loadGrid
 import pygame
 
 class Hero:
-    walk_left = Animation(loadGrid('data/animations/walk-left.png',(35,50))[0],True)
-    walk_right = Animation(loadGrid('data/animations/walk-right.png',(35,50))[0],True)
+    walk_left = Animation(loadGrid('data/animations/walk-left.png',(35,48))[0],True)
+    walk_right = Animation(loadGrid('data/animations/walk-right.png',(35,48))[0],True)
+    button = loadGrid('data/animations/walk-left.png',(35,48))[0][0]
+
+wall = pygame.image.load('data/wall.png').convert()
+floor = pygame.image.load('data/floor.png').convert()
 
 def texture(filename,size=(20,20)):
     surf = pygame.Surface(size)

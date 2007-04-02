@@ -35,6 +35,7 @@ class Player(AnimatedSprite,Handler):
         AnimatedSprite.__init__(self)
         self.capture()
         self.rect.topleft = (0,0)
+        self.image.set_colorkey(self.image.get_at((0,0)))
 
     def kill(self):
         self.release()
@@ -44,17 +45,20 @@ class Player(AnimatedSprite,Handler):
         self.level = level
         self.image = self.anim.seq[0]
         old = self.rect.center
-        self.rect.centerx += self.vx
         self.rect.centery += self.vy
-        if self.rect.bottom == clampRect.height:
-            self.vy = 0
-        else:
-            self.vy += 0.1
-
-        # Make sure we're not leaving the level
         clampRect = pygame.Rect(self.level.s)
         clampRect.topleft = (0,0)
-        if not clampRect.contains(self.rect):
+        if self.vy:
+            self.vy += 0.1
+
+        if pygame.sprite.spritecollideany(self,self.level.floors) or \
+           pygame.sprite.spritecollideany(self,self.level.walls):
+            self.rect.center = old
+
+        old = self.rect.center
+        self.rect.centerx += self.vx
+        if pygame.sprite.spritecollideany(self,self.level.floors) or \
+           pygame.sprite.spritecollideany(self,self.level.walls):
             self.rect.center = old
 
         if self.vx > 0:
@@ -67,7 +71,6 @@ class Player(AnimatedSprite,Handler):
             self.anim = Hero.walk_left
             self.anim.index = i
             AnimatedSprite.update(self)
-        self.rect.clamp(clampRect)
         self.image.set_colorkey(self.image.get_at((0,0)))
 
     def EVT_KeyDown(self,event):
