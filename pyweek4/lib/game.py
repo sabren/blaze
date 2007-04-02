@@ -35,10 +35,9 @@ class GameState(State):
         self.level.clear()
         self.level.update()
         self.level.draw()
-        self.level.s.rect.left = self.level.player.rect.left
-        self.level.s.rect.top = self.level.player.rect.top
         self.bg.clear(disp,self.level.background)
         self.bg.draw(disp)
+        pygame.display.flip()
 
     def EVT_KeyDown(self,event):
         if event.key == pygame.K_ESCAPE:

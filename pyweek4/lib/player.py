@@ -17,19 +17,58 @@
 
 from directicus.sprite import AnimatedSprite
 from data import Hero
+from eventnet.driver import Handler
 import pygame
 
-class Player(AnimatedSprite):
+class Player(AnimatedSprite,Handler):
     '''
     Our hero.
     '''
 
     anim = Hero.walk_right
     level = None
+    speed = 5
+    vy = 0
+    vx = 0
 
     def __init__(self):
         AnimatedSprite.__init__(self)
+        self.capture()
         self.rect.topleft = (0,0)
+
+    def kill(self):
+        self.release()
+        AnimatedSprite.kill(self)
 
     def update(self,level):
         self.level = level
+        self.image = self.anim.seq[0]
+        old = list(self.rect.center)
+        self.rect.centerx += self.vx
+        self.rect.centery += self.vy
+        clampRect = pygame.Rect(self.level.s)
+        clampRect.topleft = (0,0)
+        if self.rect.bottom > clampRect.bottom:
+            self.rect.center = old
+        if self.vx > 0:
+            i = self.anim.index
+            self.anim = Hero.walk_right
+            self.anim.index = i
+            AnimatedSprite.update(self)
+        elif self.vx < 0:
+            i = self.anim.index
+            self.anim = Hero.walk_left
+            self.anim.index = i
+            AnimatedSprite.update(self)
+        self.image.set_colorkey(self.image.get_at((0,0)))
+
+    def EVT_KeyDown(self,event):
+        if event.key == pygame.K_RIGHT:
+            print 'moving right'
+            self.vx = self.speed
+        elif event.key == pygame.K_LEFT:
+            self.vx = -self.speed
+
+    def EVT_KeyUp(self,event):
+        if event.key in (pygame.K_RIGHT,pygame.K_LEFT):
+            self.vx = 0
