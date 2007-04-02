@@ -27,8 +27,8 @@ class Player(AnimatedSprite,Handler):
 
     anim = Hero.walk_right
     level = None
-    speed = 5
-    vy = 0
+    speed = 3
+    vy = 3
     vx = 0
 
     def __init__(self):
@@ -43,12 +43,16 @@ class Player(AnimatedSprite,Handler):
     def update(self,level):
         self.level = level
         self.image = self.anim.seq[0]
-        old = list(self.rect.center)
-        self.rect.centerx += self.vx
-        self.rect.centery += self.vy
         clampRect = pygame.Rect(self.level.s)
         clampRect.topleft = (0,0)
-        if self.rect.bottom > clampRect.bottom:
+        old = self.rect.center
+        self.rect.centerx += self.vx
+        self.rect.centery += self.vy
+        if self.rect.bottom == clampRect.height:
+            self.vy = 0
+        else:
+            self.vy += 0.1
+        if not clampRect.contains(self.rect):
             self.rect.center = old
         if self.vx > 0:
             i = self.anim.index
@@ -60,15 +64,21 @@ class Player(AnimatedSprite,Handler):
             self.anim = Hero.walk_left
             self.anim.index = i
             AnimatedSprite.update(self)
+        self.rect.clamp(clampRect)
         self.image.set_colorkey(self.image.get_at((0,0)))
 
     def EVT_KeyDown(self,event):
         if event.key == pygame.K_RIGHT:
-            print 'moving right'
             self.vx = self.speed
         elif event.key == pygame.K_LEFT:
             self.vx = -self.speed
+        elif event.key == pygame.K_SPACE:
+            self.vy = -3
+        elif event.key in (pygame.K_LSHIFT,pygame.K_RSHIFT):
+            self.vx *= 3
 
     def EVT_KeyUp(self,event):
         if event.key in (pygame.K_RIGHT,pygame.K_LEFT):
             self.vx = 0
+        elif event.key in (pygame.K_LSHIFT,pygame.K_RSHIFT):
+            self.vx /= 3
