@@ -13,7 +13,6 @@ You might need to install some of these before running the game:
     Python:     http://www.python.org/
     PyGame:     http://www.pygame.org/
     Directicus:   http://blazeofglory.org/projects/directicus
-	Psyco (optional): http://psyco.sourceforge.net
 
 
 RUNNING THE GAME:
@@ -29,7 +28,15 @@ Othewise open a terminal / console and "cd" to the game directory and run:
   
 HOW TO PLAY THE GAME:
 
-	### In Progress ###
+		Once the game is started you can select "Start Game" or if you've saved 
+	a previous game you can select "Load Game".
+	
+	Controls:
+		Right Arrow:  Move right
+		Left Arrow:   Move left
+		Left Control: Kick
+		Left Alt:     Punch
+		Left Shift:   Sprint
 
 
 LICENSE:
