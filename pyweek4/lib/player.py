@@ -16,6 +16,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from directicus.sprite import AnimatedSprite
+from directicus.gfx import Animation
 from data import Hero
 from eventnet.driver import Handler
 import pygame
@@ -36,6 +37,7 @@ class Player(AnimatedSprite,Handler):
         self.capture()
         self.rect.topleft = (0,0)
         self.image.set_colorkey(self.image.get_at((0,0)))
+        self.attacking = False
 
     def kill(self):
         self.release()
@@ -61,7 +63,12 @@ class Player(AnimatedSprite,Handler):
            pygame.sprite.spritecollideany(self,self.level.walls):
             self.rect.center = old
 
-        if self.vx > 0:
+        if self.attacking:
+            if self.anim.index == len(self.anim.seq)-1:
+                self.recover()
+            else:
+                AnimatedSprite.update(self)
+        elif self.vx > 0:
             i = self.anim.index
             self.anim = Hero.walk_right
             self.anim.index = i
@@ -73,6 +80,27 @@ class Player(AnimatedSprite,Handler):
             AnimatedSprite.update(self)
         self.image.set_colorkey(self.image.get_at((0,0)))
 
+    def kick(self):
+        self.attacking = True
+        if self.anim == Hero.walk_left:
+            self.anim = Animation(Hero.kick_left,False)
+        elif self.anim == Hero.walk_right:
+            self.anim = Animation(Hero.kick_right,False)
+
+    def punch(self):
+        self.attacking = True
+        if self.anim == Hero.walk_left:
+            self.anim = Animation(Hero.punch_left,False)
+        elif self.anim == Hero.walk_right:
+            self.anim = Animation(Hero.punch_right,False)
+
+    def recover(self):
+        self.attacking = False
+        if self.anim == Hero.kick_left:
+            self.anim = Hero.walk_left
+        elif self.anim == Hero.kick_right:
+            self.anim = Hero.walk_right
+
     def EVT_KeyDown(self,event):
         if event.key == pygame.K_RIGHT:
             self.vx = self.speed
@@ -80,7 +108,11 @@ class Player(AnimatedSprite,Handler):
             self.vx = -self.speed
         elif event.key == pygame.K_SPACE:
             self.vy = -3
-        elif event.key in (pygame.K_LSHIFT,pygame.K_RSHIFT):
+        elif event.key == pygame.K_LCTRL:
+            self.kick()
+        elif event.key == pygame.K_LALT:
+            self.punch()
+        elif event.key == pygame.K_LSHIFT:
             self.vx *= 3
 
     def EVT_KeyUp(self,event):

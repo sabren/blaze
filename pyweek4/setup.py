@@ -18,7 +18,8 @@ try:
 except ImportError:
     pass
 
-setup(data_files=[
+setup(scripts=['editor.py','levelGen.py'],
+      data_files=[
           ('',['README.txt','LICENSE.txt']),
           ('data',glob.glob('data/*.png')),
           ('data/animations',glob.glob('data/animations/*.png')),

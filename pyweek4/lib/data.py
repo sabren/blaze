@@ -25,6 +25,10 @@ import pygame
 class Hero:
     walk_left = Animation(loadGrid('data/animations/walk-left.png',(35,48))[0],True)
     walk_right = Animation(loadGrid('data/animations/walk-right.png',(35,48))[0],True)
+    kick_left = loadGrid('data/animations/kick-left.png',(35,48))[0]
+    kick_right = loadGrid('data/animations/kick-right.png',(35,48))[0]
+    punch_left = loadGrid('data/animations/punch-left.png',(35,48))[0]
+    punch_right = loadGrid('data/animations/punch-right.png',(35,48))[0]
     button = loadGrid('data/animations/walk-left.png',(35,48))[0][0]
 
 wall = pygame.image.load('data/wall.png').convert()
