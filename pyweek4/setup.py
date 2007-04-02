@@ -14,7 +14,7 @@ except ImportError:
 try:
     import py2app
     extra_opts.update({'zipfile': '', # zipfile=None confuses py2app
-                       'app': ['run_game.py']}
+                       'app': ['run_game.py']})
 except ImportError:
     pass
 
@@ -23,6 +23,7 @@ setup(data_files=[
           ('data',glob.glob('data/*.png')),
           ('data/animations',glob.glob('data/animations/*.png')),
           ('data/levels',glob.glob('data/levels/*.lvl')),
+          ('data/textures',glob.glob('data/textures/*.png')),
       ],
       name='Ascent of Justice',
       version='0.1',

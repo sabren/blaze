@@ -27,7 +27,7 @@ class Level(object):
         self.walls = pygame.sprite.Group()
         self.all.add(self.player)
         self.s = pygame.sprite.Sprite()
-        self.s.image = data.texture('data/textures/brick.jpg',size).convert()
+        self.s.image = data.texture('data/textures/brick.png',size).convert()
         self.s.rect = self.s.image.get_rect()
         self.background = self.s.image.copy()
         for x in range(size[0]/data.floor.get_width()+1):
