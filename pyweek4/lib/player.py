@@ -43,8 +43,6 @@ class Player(AnimatedSprite,Handler):
     def update(self,level):
         self.level = level
         self.image = self.anim.seq[0]
-        clampRect = pygame.Rect(self.level.s)
-        clampRect.topleft = (0,0)
         old = self.rect.center
         self.rect.centerx += self.vx
         self.rect.centery += self.vy
@@ -52,8 +50,13 @@ class Player(AnimatedSprite,Handler):
             self.vy = 0
         else:
             self.vy += 0.1
+
+        # Make sure we're not leaving the level
+        clampRect = pygame.Rect(self.level.s)
+        clampRect.topleft = (0,0)
         if not clampRect.contains(self.rect):
             self.rect.center = old
+
         if self.vx > 0:
             i = self.anim.index
             self.anim = Hero.walk_right
