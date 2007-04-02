@@ -56,6 +56,8 @@ class Player(AnimatedSprite,Handler):
         if pygame.sprite.spritecollideany(self,self.level.floors) or \
            pygame.sprite.spritecollideany(self,self.level.walls):
             self.rect.center = old
+            if self.vy:
+                self.vy = 0.1
 
         old = self.rect.center
         self.rect.centerx += self.vx
@@ -107,7 +109,7 @@ class Player(AnimatedSprite,Handler):
         elif event.key == pygame.K_LEFT:
             self.vx = -self.speed
         elif event.key == pygame.K_SPACE:
-            self.vy = -3
+            self.vy = -2
         elif event.key == pygame.K_LCTRL:
             self.kick()
         elif event.key == pygame.K_LALT:
