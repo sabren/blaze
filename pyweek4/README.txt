@@ -45,7 +45,10 @@ LEVEL EDITOR (SOURCE DISTRIBUTION):
 		To create a new level change directory into the game folder and run:
 	python levelGen.py <filename> <width> <height> and a new level will be created.
 	
-		To edit levels use the levelEdit.py script like so: python levelEdit.py <filename>.
+		To edit levels use the levelEdit.py script like so: python levelEdit.py <filename>. 
+	The arrow keys scroll the map, use left mouse button to select objects (drag to get a 
+	placement preview) and click again to place. Right mouse button deletes selected object 
+	type.
 
 
 LICENSE:

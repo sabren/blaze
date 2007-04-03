@@ -33,8 +33,6 @@ class Hero:
 
 wall = pygame.image.load('data/wall.png').convert()
 floor = pygame.image.load('data/floor.png').convert()
-computer = pygame.image.load('data/pc.png').convert()
-computer.set_colorkey(computer.get_at((0,0)))
 
 def texture(filename,size=(20,20)):
     surf = pygame.Surface(size)
