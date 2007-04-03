@@ -52,14 +52,20 @@ class LevelEditor(State):
         self.wallBtn.rect = self.wallBtn.image.get_rect()
         self.wallBtn.rect.topleft = (10,self.floorBtn.rect.bottom+10)
 
+        self.camBtn = pygame.sprite.Sprite()
+        self.camBtn.image = data.Camera.still
+        self.camBtn.rect = self.camBtn.image.get_rect()
+        self.camBtn.rect.topleft = (10,self.wallBtn.rect.bottom+10)
+
         self.saveBtn = pygame.sprite.Sprite()
         self.saveBtn.image = font.render('Save',True,(255,255,255))
         self.saveBtn.rect = self.saveBtn.image.get_rect()
-        self.saveBtn.rect.topleft = (10,self.wallBtn.rect.bottom+10)
+        self.saveBtn.rect.topleft = (10,self.camBtn.rect.bottom+10)
 
         self.buttons.add(self.playerBtn,
                          self.floorBtn,
                          self.wallBtn,
+                         self.camBtn,
                          self.saveBtn)
 
         self.keys = [0,0,0,0]
@@ -87,10 +93,21 @@ class LevelEditor(State):
                 wall = sprites.Wall(event.pos,self.level)
             elif self.selected == self.floorBtn:
                 floor = sprites.Floor(event.pos,self.level)
+            elif self.selected == self.camBtn:
+                camera = sprites.Camera(event.pos,self.level)
         else:
-            for sprite in self.level.floors.sprites()+self.level.walls.sprites():
-                if sprite.rect.collidepoint(event.pos):
-                    sprite.kill()
+            if self.selected == self.wallBtn:
+                for sprite in self.level.walls:
+                    if sprite.rect.collidepoint(event.pos):
+                        sprite.kill()
+            elif self.selected == self.floorBtn:
+                for sprite in self.level.floors:
+                    if sprite.rect.collidepoint(event.pos):
+                        sprite.kill()
+            elif self.selected == self.camBtn:
+                for sprite in self.level.cameras:
+                    if sprite.rect.collidepoint(event.pos):
+                        sprite.kill()
 
     def EVT_MouseButtonUp(self,event):
         self.cursor = None

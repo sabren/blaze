@@ -31,6 +31,10 @@ class Hero:
     punch_right = loadGrid('data/animations/punch-right.png',(35,48))[0]
     button = loadGrid('data/animations/walk-left.png',(35,48))[0][0]
 
+class Camera:
+    anim = loadGrid('data/animations/camera.png',(35,30))[0]
+    still = loadGrid('data/animations/camera.png',(35,30))[0][0]
+
 wall = pygame.image.load('data/wall.png').convert()
 floor = pygame.image.load('data/floor.png').convert()
 

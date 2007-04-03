@@ -16,6 +16,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from directicus.engine import State
+from directicus.sfx import Audio, Music
 import level,pygame,eventnet.driver
 
 class GameState(State):
@@ -28,6 +29,13 @@ class GameState(State):
             self.level = lvl
         self.bg = pygame.sprite.Group(self.level.s)
         self.selected = None
+        self.audio = Audio()
+        self.music = Music()
+        self.music.volume = 1
+        self.audio.volume = 0.5
+        self.alarm = 0
+        self.music.stop(500)
+        self.music.play('data/music/play.mp3',-1)
 
     def EVT_tick(self,event):
         disp = pygame.display.get_surface()
@@ -40,8 +48,20 @@ class GameState(State):
         self.bg.clear(disp,self.level.background)
         self.bg.draw(disp)
         pygame.display.flip()
+        if self.alarm:
+            self.alarm -= 1
 
     def EVT_KeyDown(self,event):
         if event.key == pygame.K_ESCAPE:
             self.quit()
-            #eventnet.driver.post('pause',game=self)
+
+    def EVT_alarm(self,event):
+        if not self.alarm:
+            self.audio.play('data/sounds/alarm.wav')
+            self.alarm = 520
+
+    def quit(self,next=None):
+        self.audio.stop(500)
+        self.music.stop(500)
+        self.music.play('data/music/menu.mp3',-1)
+        State.quit(self,next)

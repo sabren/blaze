@@ -16,6 +16,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from directicus.engine import Menu
+from directicus.sfx import Music
 from game import GameState
 import pygame,eventnet.driver
 
@@ -35,6 +36,12 @@ class MainMenu(GameMenu):
     options = ['New Game',
                'Load Game',
                'Exit']
+
+    def __init__(self):
+        GameMenu.__init__(self)
+        self.music = Music()
+        self.music.volume = 1
+        self.music.play('data/music/menu.mp3')
 
     def EVT_Menu_NewGame(self,event):
         self.quit(GameState())

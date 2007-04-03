@@ -15,8 +15,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from directicus.sprite import Sprite
-import data
+from directicus.sprite import Sprite, AnimatedSprite
+from directicus.gfx import Animation
+import data, eventnet.driver
 
 class Wall(Sprite):
 
@@ -37,3 +38,47 @@ class Floor(Sprite):
         if lvl:
             lvl.all.add(self)
             lvl.floors.add(self)
+
+class Camera(AnimatedSprite):
+
+    def __init__(self,pos,lvl):
+        self.anim = Animation(data.Camera.anim,True)
+        AnimatedSprite.__init__(self)
+        self.rect.center = pos
+        if lvl:
+            lvl.all.add(self)
+            lvl.cameras.add(self)
+        self.image.set_colorkey(self.image.get_at((0,0)))
+        self.direction = 'right'
+        self.level = None
+
+    def update(self,level=None):
+        self.level = level
+        AnimatedSprite.update(self)
+        if self.anim.index < 35 or self.anim.index > 205:
+            self.direction = 'right'
+        elif 138 > self.anim.index > 103:
+            self.direction = 'left'
+        else:
+            self.direction = 'center'
+        self.image.set_colorkey(self.image.get_at((0,0)))
+
+        if self._dist(self.level.player.rect.centery,self.rect.centery) < 100 \
+           and self._dist(self.level.player.rect) < 500:
+
+            if self.direction == 'left' and \
+               self.level.player.rect.right < self.rect.left and \
+               200 > self._dist(self.level.player.rect.right,self.rect.left) > 20:
+                eventnet.driver.post('alarm',pos=self.rect.center)
+            elif self.direction == 'right' and \
+                 self.level.player.rect.left > self.rect.right and \
+                 200 > self._dist(self.level.player.rect.left,self.rect.right) > 20:
+                eventnet.driver.post('alarm',pos=self.rect.center)
+
+    def _dist(self,a,b=None):
+        if b == None:
+            b = self.rect.center
+        if type(a) == type(1):
+            return max(a,b)-min(a,b)
+        else:
+            return (max(a[0],b[0])-min(a[0],b[0]))+(max(a[1],b[1])-min(a[1],b[1]))
