@@ -32,12 +32,12 @@ class Level(object):
         self.background = self.s.image.copy()
         for x in range(size[0]/data.floor.get_width()+1):
             x *= data.floor.get_width()
-            floor = sprites.Floor((x,0),self)
-            floor = sprites.Floor((x,size[1]),self)
+            floor = sprites.Floor((x,-data.floor.get_height()),self)
+            floor = sprites.Floor((x,size[1]+data.floor.get_height()/2),self)
         for y in range(size[1]/data.wall.get_height()+1):
             y *= data.wall.get_height()
-            wall = sprites.Wall((0,y),self)
-            wall = sprites.Wall((size[0],y),self)
+            wall = sprites.Wall((-data.wall.get_width(),y),self)
+            wall = sprites.Wall((size[0]+data.wall.get_width(),y),self)
 
     def clear(self):
         self.all.clear(self.s.image,self.background)
