@@ -37,6 +37,15 @@ HOW TO PLAY THE GAME:
 		Left Control: Kick
 		Left Alt:     Punch
 		Left Shift:   Sprint
+		
+		
+		
+LEVEL EDITOR (SOURCE DISTRIBUTION):
+
+		To create a new level change directory into the game folder and run:
+	python levelGen.py <filename> <width> <height> and a new level will be created.
+	
+		To edit levels use the levelEdit.py script like so: python levelEdit.py <filename>.
 
 
 LICENSE:
