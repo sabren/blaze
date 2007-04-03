@@ -38,6 +38,7 @@ class Player(AnimatedSprite,Handler):
         self.rect.topleft = (0,0)
         self.image.set_colorkey(self.image.get_at((0,0)))
         self.attacking = False
+        self.grounded = False # Are we in midair?
 
     def kill(self):
         self.release()
@@ -53,11 +54,13 @@ class Player(AnimatedSprite,Handler):
         if self.vy:
             self.vy += 0.1
 
+        self.grounded = False
         if pygame.sprite.spritecollideany(self,self.level.floors) or \
            pygame.sprite.spritecollideany(self,self.level.walls):
             self.rect.center = old
             if self.vy:
                 self.vy = 0.1
+            self.grounded = True
 
         old = self.rect.center
         self.rect.centerx += self.vx
@@ -108,7 +111,7 @@ class Player(AnimatedSprite,Handler):
             self.vx = self.speed
         elif event.key == pygame.K_LEFT:
             self.vx = -self.speed
-        elif event.key == pygame.K_SPACE and self.vy = 0.1:
+        elif event.key == pygame.K_SPACE:
             self.vy = -2
         elif event.key == pygame.K_LCTRL:
             self.kick()

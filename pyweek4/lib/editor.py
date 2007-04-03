@@ -87,6 +87,10 @@ class LevelEditor(State):
                 wall = sprites.Wall(event.pos,self.level)
             elif self.selected == self.floorBtn:
                 floor = sprites.Floor(event.pos,self.level)
+        else:
+            for sprite in self.level.floors.sprites()+self.level.walls.sprites():
+                if sprite.rect.collidepoint(event.pos):
+                    sprite.kill()
 
     def EVT_MouseButtonUp(self,event):
         self.cursor = None
