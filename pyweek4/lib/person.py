@@ -17,8 +17,9 @@
 
 from directicus.sprite import AnimatedSprite
 from directicus.gfx import Animation
+from directicus.sfx import Audio
 from eventnet.driver import Handler
-import pygame, data
+import pygame, data, random
 
 class Person(AnimatedSprite,Handler):
     speed = 3
@@ -33,6 +34,8 @@ class Person(AnimatedSprite,Handler):
                      'die_forward_right']:
             anim = getattr(self.animation_set,name)
             setattr(self.animation_set,name,Animation(anim,True))
+        self.audio = Audio()
+        self.audio.volume = 0.5
         self.anim = self.animation_set.walk_right
         AnimatedSprite.__init__(self)
         self.level = None
@@ -46,6 +49,8 @@ class Person(AnimatedSprite,Handler):
         self.direction = 'right'
 
     def die(self,direction):
+        if not self.dying:
+            self.audio.play(random.choice(data.punch))
         self.dying = True
         if direction == 1:
             # We're attacked from the right
@@ -83,13 +88,14 @@ class Person(AnimatedSprite,Handler):
            pygame.sprite.spritecollideany(self,self.level.walls):
             self.rect.center = old
             self.vy = 0.1
-            self.grounded = True
 
         old = self.rect.center
         self.rect.centerx += self.vx
         if pygame.sprite.spritecollideany(self,self.level.floors) or \
            pygame.sprite.spritecollideany(self,self.level.walls):
             self.rect.center = old
+            if self.flying:
+                self.audio.play(random.choice(data.punch))
 
         if self.punching or self.kicking:
             if self.anim.index == len(self.anim.seq)-1:

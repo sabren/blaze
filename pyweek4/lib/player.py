@@ -20,7 +20,7 @@ from directicus.gfx import Animation
 from data import Hero,Enemy
 from eventnet.driver import Handler
 from person import Person
-import pygame
+import pygame, random
 
 class Player(Person):
     '''
@@ -31,6 +31,7 @@ class Player(Person):
         self.animation_set = Hero()
         Person.__init__(self)
         self.rect.topleft = (0,0)
+        self.flying = False
 
     def update(self,level):
         Person.update(self,level)

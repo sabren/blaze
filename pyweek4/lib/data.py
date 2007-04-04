@@ -57,6 +57,9 @@ stairs = pygame.image.load('data/stairs.png')
 
 wall = pygame.image.load('data/wall.png').convert()
 floor = pygame.image.load('data/floor.png').convert()
+punch = ['data/sounds/punch.wav',
+         'data/sounds/punch1.wav',
+         'data/sounds/punch2.wav']
 
 def texture(filename,size=(20,20)):
     surf = pygame.Surface(size)

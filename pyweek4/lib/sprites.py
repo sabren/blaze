@@ -18,7 +18,7 @@
 from directicus.sprite import Sprite, AnimatedSprite
 from directicus.gfx import Animation
 from person import Person
-import data, eventnet.driver, pygame
+import data, eventnet.driver, pygame, random
 
 class Wall(Sprite):
 
@@ -64,7 +64,7 @@ class Camera(AnimatedSprite):
             self.direction = 'center'
         self.image.set_colorkey(self.image.get_at((0,0)))
 
-        if self._dist(self.level.player.rect.centery,self.rect.centery) < 100 \
+        if self.level.player.rect.centery > self.rect.bottom \
            and self._dist(self.level.player.rect) < 500:
 
             if self.direction == 'left' and \
