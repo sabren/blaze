@@ -96,18 +96,22 @@ class Stair(Sprite):
         self.image.set_colorkey(self.image.get_at((10,0)))
 
 class Enemy(Person):
+    speed = 2
 
     def __init__(self,pos,level):
         self.animation_set = data.Enemy()
-        Person.__init__(self)
+        Person.__init__(self,level)
         self.rect.center = pos
         self.level = level
         self.level.enemies.add(self)
         self.level.all.add(self)
         self.flying = False
+        self.lastpos = self.rect.center
 
     def update(self,level):
         Person.update(self,level)
+        if self in self.enemies:
+            self.enemies.remove(self)
         for ally in pygame.sprite.spritecollide(self,self.level.enemies,False):
             if self.flying:
                 if ally.rect.centerx > self.rect.centerx:
@@ -132,6 +136,31 @@ class Enemy(Person):
                         self.flying = True
                         self.vy = -3
                         self.vx = 10
+        if self.direction == 'left':
+            self.vx = -self.speed
+        else:
+            self.vx = self.speed
+        if abs(self.vx) > 3:
+            self.vx /= 3
+        if (self._dist(self.level.player.rect.bottom,self.rect.bottom) < 20 and \
+           (self.direction == 'left' and self.level.player.rect.centerx < self.rect.centerx) or \
+           (self.direction == 'right' and self.level.player.rect.centerx > self.rect.centerx) and \
+           self._dist(self.level.player.rect.center,self.rect.center) < 500) or \
+           self._dist(self.level.player.rect.center,self.rect.center) < 10:
+            self.vx *= 3
+            if self._dist(self.level.player.rect.center,self.rect.center) < 10:
+                self.vx = 0
+                self.punch()
+        if self._dist(self.lastpos, self.rect.center) < 2:
+            if self.direction == 'left':
+                self.direction = 'right'
+                self.vx = self.speed
+            else:
+                self.direction = 'left'
+                self.vx = -self.speed
+            self.rect.centerx += self.vx*2
+            Person.update(self,level)
+        self.lastpos = self.rect.center
 
 class Exit(Sprite):
 

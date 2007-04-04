@@ -40,6 +40,9 @@ class GameState(State):
     def EVT_win(self,event):
         self.quit(Win())
 
+    def EVT_lose(self,event):
+        self.quit(Lose())
+
     def EVT_tick(self,event):
         disp = pygame.display.get_surface()
         disp.fill((0,0,0))
@@ -142,6 +145,8 @@ class Win(State):
         self.audio.volume = 0.5
         self.music = Music()
         self.music.volume = 0.7
+        seconds = 8
+        self.delay = seconds*40
 
     def start(self):
         self.music.stop(500)
@@ -152,8 +157,13 @@ class Win(State):
         disp.blit(text,(400-text.get_width()/2,
                         300-text.get_height()/2))
         pygame.display.flip()
-        pygame.time.wait(8000)
-        self.quit()
+        State.start(self)
+
+    def EVT_tick(self,event):
+        if self.delay:
+            self.delay -= 1
+        else:
+            self.quit()
 
 class Lose(State):
 
@@ -163,15 +173,22 @@ class Lose(State):
         self.audio.volume = 0.5
         self.music = Music()
         self.music.volume = 0.7
+        seconds = 8
+        self.delay = seconds*40
 
     def start(self):
         self.music.stop(500)
         self.music.play('data/sounds/loser.wav')
         fnt = pygame.font.SysFont('Verdana',30,italic=True)
-        text = fnt.render('You Died!',True,(255,0,0))
+        text = fnt.render('You Were Killed!',True,(255,0,0))
         disp = pygame.display.get_surface()
         disp.blit(text,(400-text.get_width()/2,
                         300-text.get_height()/2))
         pygame.display.flip()
-        pygame.time.wait(10000)
-        self.quit()
+        State.start(self)
+
+    def EVT_tick(self,event):
+        if self.delay:
+            self.delay -= 1
+        else:
+            self.quit()

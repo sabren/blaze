@@ -20,7 +20,7 @@ from directicus.gfx import Animation
 from data import Hero,Enemy
 from eventnet.driver import Handler
 from person import Person
-import pygame, random
+import pygame, random, level, eventnet.driver
 
 class Player(Person):
     '''
@@ -29,21 +29,31 @@ class Player(Person):
 
     def __init__(self):
         self.animation_set = Hero()
-        Person.__init__(self)
+        Person.__init__(self,None)
         self.rect.topleft = (0,0)
         self.flying = False
+        self.delay = -1
 
     def update(self,level):
         Person.update(self,level)
+        self.enemies = self.level.enemies
         for enemy in pygame.sprite.spritecollide(self,self.level.enemies,False):
             if enemy.rect.centerx > self.rect.centerx:
                 # Enemy is to our right
-                if enemy.anim == enemy.animation_set.punch_left:
+                if enemy.punching:
                     self.die(1)
             elif enemy.rect.centerx < self.rect.centerx:
                 # Enemy is to our left
-                if enemy.anim == enemy.animation_set.punch_right:
+                if enemy.punching:
                     self.die(-1)
+        if self.delay == 0:
+            eventnet.driver.post('lose')
+        else:
+            self.delay -= 1
+
+    def die(self,direction):
+        Person.die(self,direction)
+        self.delay = 15
 
     def EVT_KeyDown(self,event):
         if event.key == pygame.K_RIGHT:
@@ -78,11 +88,3 @@ class Player(Person):
             self.vx = 0
         elif event.key in (pygame.K_LSHIFT,pygame.K_RSHIFT):
             self.vx /= 3
-
-    def _dist(self,a,b=None):
-        if b == None:
-            b = self.rect.center
-        if type(a) == type(1):
-            return max(a,b)-min(a,b)
-        else:
-            return (max(a[0],b[0])-min(a[0],b[0]))+(max(a[1],b[1])-min(a[1],b[1]))

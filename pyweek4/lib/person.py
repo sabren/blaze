@@ -25,7 +25,7 @@ class Person(AnimatedSprite,Handler):
     speed = 3
     animation_set = None
 
-    def __init__(self):
+    def __init__(self,level):
         for name in ['walk_left',
                      'walk_right',
                      'die_back_left',
@@ -38,7 +38,7 @@ class Person(AnimatedSprite,Handler):
         self.audio.volume = 0.5
         self.anim = self.animation_set.walk_right
         AnimatedSprite.__init__(self)
-        self.level = None
+        self.level = level
         self.vy = 3
         self.vx = 0
         self.capture()
@@ -47,6 +47,7 @@ class Person(AnimatedSprite,Handler):
         self.kicking = False
         self.dying = False
         self.direction = 'right'
+        self.enemies = []
 
     def die(self,direction):
         if not self.dying:
@@ -70,6 +71,8 @@ class Person(AnimatedSprite,Handler):
         AnimatedSprite.kill(self)
 
     def update(self,level):
+        self.level = level
+        self.level.enemies.sprites()
         if self.anim in [self.animation_set.walk_left,
                          self.animation_set.punch_left,
                          self.animation_set.die_forward_left,
@@ -85,14 +88,16 @@ class Person(AnimatedSprite,Handler):
             self.vy += 0.1
 
         if pygame.sprite.spritecollideany(self,self.level.floors) or \
-           pygame.sprite.spritecollideany(self,self.level.walls):
+           pygame.sprite.spritecollideany(self,self.level.walls) or \
+           pygame.sprite.spritecollideany(self,self.enemies):
             self.rect.center = old
             self.vy = 0.1
 
         old = self.rect.center
         self.rect.centerx += self.vx
         if pygame.sprite.spritecollideany(self,self.level.floors) or \
-           pygame.sprite.spritecollideany(self,self.level.walls):
+           pygame.sprite.spritecollideany(self,self.level.walls) or \
+           pygame.sprite.spritecollideany(self,self.enemies):
             self.rect.center = old
             if self.flying:
                 self.audio.play(random.choice(data.punch))
@@ -152,3 +157,11 @@ class Person(AnimatedSprite,Handler):
             self.anim = self.animation_set.walk_left
         elif self.anim.seq in [self.animation_set.kick_right,self.animation_set.punch_right]:
             self.anim = self.animation_set.walk_right
+
+    def _dist(self,a,b=None):
+        if b == None:
+            b = self.rect.center
+        if type(a) == type(1):
+            return max(a,b)-min(a,b)
+        else:
+            return (max(a[0],b[0])-min(a[0],b[0]))+(max(a[1],b[1])-min(a[1],b[1]))

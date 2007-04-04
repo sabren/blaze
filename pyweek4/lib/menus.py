@@ -70,7 +70,10 @@ class ConfirmExit(GameMenu):
         if self.next:
             old = self.next
             self.next = self.next.__new__(type(self.next))
-            self.next.__init__(old.gamestate)
+            if hasattr(old,'gamestate'):
+                self.next.__init__(old.gamestate)
+            else:
+                self.next.__init__()
         self.quit(self.next)
 
 def Paused(GameMenu):
