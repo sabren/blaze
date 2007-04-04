@@ -27,6 +27,7 @@ class Level(object):
         self.walls = pygame.sprite.Group()
         self.cameras = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
+        self.stairs = pygame.sprite.Group()
         self.all.add(self.player)
         self.s = pygame.sprite.Sprite()
         self.s.image = data.texture('data/textures/brick.png',size).convert()
@@ -58,6 +59,7 @@ def save(level,filename):
     floors = [floor.rect.center for floor in level.floors]
     cameras = [camera.rect.center for camera in level.cameras]
     enemies = [enemy.rect.center for enemy in level.enemies]
+    stairs = [stair.rect.center for stair in level.stairs]
 
     f = open(filename,'w')
     cPickle.dump(size,f)
@@ -66,6 +68,7 @@ def save(level,filename):
     cPickle.dump(floors,f)
     cPickle.dump(cameras,f)
     cPickle.dump(enemies,f)
+    cPickle.dump(stairs,f)
     f.close()
 
 def load(filename):
@@ -76,6 +79,7 @@ def load(filename):
     floors = cPickle.load(f)
     cameras = cPickle.load(f)
     enemies = cPickle.load(f)
+    stairs = cPickle.load(f)
     f.close()
 
     lvl = Level(size)
@@ -88,4 +92,6 @@ def load(filename):
         camera = sprites.Camera(camera,lvl)
     for enemy in enemies:
         enemy = sprites.Enemy(enemy,lvl)
+    for stair in stairs:
+        stair = sprites.Stair(stair,lvl)
     return lvl

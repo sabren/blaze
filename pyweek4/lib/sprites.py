@@ -84,6 +84,13 @@ class Camera(AnimatedSprite):
         else:
             return (max(a[0],b[0])-min(a[0],b[0]))+(max(a[1],b[1])-min(a[1],b[1]))
 
-class Enemy(Person):
+class Stair(Sprite):
 
-    animation_set = data.Enemy()
+    def __init__(self,pos,level):
+        self.image = data.stairs.copy()
+        Sprite.__init__(self)
+        self.rect.center = pos
+        self.level = level
+        self.level.all.add(self)
+        self.level.stairs.add(self)
+        self.image.set_colorkey(self.image.get_at((10,0)))

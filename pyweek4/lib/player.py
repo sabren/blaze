@@ -37,6 +37,20 @@ class Player(Person):
             self.vx = self.speed
         elif event.key == pygame.K_LEFT:
             self.vx = -self.speed
+        elif event.key == pygame.K_UP and \
+             pygame.sprite.spritecollideany(self,self.level.stairs):
+            collisions = pygame.sprite.spritecollide(self,self.level.stairs,False)
+            for stair in collisions:
+                if self._dist(self.rect.bottom,stair.rect.bottom < 5):
+                    self.rect.bottom = stair.rect.top-10
+                    return
+        elif event.key == pygame.K_DOWN and \
+             pygame.sprite.spritecollideany(self,self.level.stairs):
+            collisions = pygame.sprite.spritecollide(self,self.level.stairs,False)
+            for stair in collisions:
+                if self._dist(self.rect.bottom,stair.rect.top) < 10:
+                    self.rect.bottom = stair.rect.bottom
+                    return
         elif event.key == pygame.K_SPACE:
             self.interact()
         elif event.key == pygame.K_LCTRL:
@@ -51,3 +65,11 @@ class Player(Person):
             self.vx = 0
         elif event.key in (pygame.K_LSHIFT,pygame.K_RSHIFT):
             self.vx /= 3
+
+    def _dist(self,a,b=None):
+        if b == None:
+            b = self.rect.center
+        if type(a) == type(1):
+            return max(a,b)-min(a,b)
+        else:
+            return (max(a[0],b[0])-min(a[0],b[0]))+(max(a[1],b[1])-min(a[1],b[1]))

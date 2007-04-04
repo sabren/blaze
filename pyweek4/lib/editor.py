@@ -57,20 +57,27 @@ class LevelEditor(State):
         self.camBtn.rect = self.camBtn.image.get_rect()
         self.camBtn.rect.topleft = (10,self.wallBtn.rect.bottom+10)
 
+        self.stairBtn = pygame.sprite.Sprite()
+        self.stairBtn.image = data.stairs
+        self.stairBtn.rect = self.stairBtn.image.get_rect()
+        self.stairBtn.rect.topleft = (10,self.camBtn.rect.bottom+10)
+
         self.saveBtn = pygame.sprite.Sprite()
         self.saveBtn.image = font.render('Save',True,(255,255,255))
         self.saveBtn.rect = self.saveBtn.image.get_rect()
-        self.saveBtn.rect.topleft = (10,self.camBtn.rect.bottom+10)
+        self.saveBtn.rect.topleft = (10,self.stairBtn.rect.bottom+10)
 
         self.buttons.add(self.playerBtn,
                          self.floorBtn,
                          self.wallBtn,
                          self.camBtn,
+                         self.stairBtn,
                          self.saveBtn)
 
         self.keys = [0,0,0,0]
         self.selected = None
         self.cursor = None
+        self.level.player.release()
 
     def EVT_MouseButtonDown(self,event):
         if self.saveBtn.rect.collidepoint(event.pos):
@@ -95,6 +102,8 @@ class LevelEditor(State):
                 floor = sprites.Floor(event.pos,self.level)
             elif self.selected == self.camBtn:
                 camera = sprites.Camera(event.pos,self.level)
+            elif self.selected == self.stairBtn:
+                stair = sprites.Stair(event.pos,self.level)
         else:
             if self.selected == self.wallBtn:
                 for sprite in self.level.walls:
@@ -106,6 +115,10 @@ class LevelEditor(State):
                         sprite.kill()
             elif self.selected == self.camBtn:
                 for sprite in self.level.cameras:
+                    if sprite.rect.collidepoint(event.pos):
+                        sprite.kill()
+            elif self.selected == self.stairBtn:
+                for sprite in self.level.stairs:
                     if sprite.rect.collidepoint(event.pos):
                         sprite.kill()
 
@@ -134,6 +147,8 @@ class LevelEditor(State):
         if self.cursor:
             self.cursor.rect.center = pygame.mouse.get_pos()
             disp.blit(self.cursor.image,self.cursor.rect)
+        for enemy in self.level.enemies:
+            enemy.release()
         pygame.display.flip()
 
     def EVT_KeyDown(self,event):
