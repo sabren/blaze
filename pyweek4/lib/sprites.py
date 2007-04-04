@@ -95,18 +95,25 @@ class Stair(Sprite):
         self.level.stairs.add(self)
         self.image.set_colorkey(self.image.get_at((10,0)))
 
-class Enemy(Person):
+class Enemy(Person,eventnet.driver.Handler):
     speed = 2
 
     def __init__(self,pos,level):
         self.animation_set = data.Enemy()
+        eventnet.driver.Handler.__init__(self)
         Person.__init__(self,level)
+        self.capture()
         self.rect.center = pos
         self.level = level
         self.level.enemies.add(self)
         self.level.all.add(self)
         self.flying = False
         self.lastpos = self.rect.center
+        self.alarm = 0
+
+    def kill(self):
+        Person.kill(self)
+        self.release()
 
     def update(self,level):
         Person.update(self,level)
@@ -118,6 +125,10 @@ class Enemy(Person):
                     ally.die(1)
                 else:
                     ally.die(-1)
+        if pygame.sprite.spritecollideany(self,self.enemies):
+            self.rect.center = old
+            if self.flying:
+                self.audio.play(random.choice(data.punch))
         if self.level.player.rect.colliderect(self.rect):
             enemy = self.level.player
             if enemy.rect.centerx > self.rect.centerx:
@@ -146,11 +157,14 @@ class Enemy(Person):
            (self.direction == 'left' and self.level.player.rect.centerx < self.rect.centerx) or \
            (self.direction == 'right' and self.level.player.rect.centerx > self.rect.centerx) and \
            self._dist(self.level.player.rect.center,self.rect.center) < 500) or \
-           self._dist(self.level.player.rect.center,self.rect.center) < 10:
+           self._dist(self.level.player.rect.center,self.rect.center) < 10 or \
+           self.alarm:
             self.vx *= 3
-            if self._dist(self.level.player.rect.center,self.rect.center) < 10:
+            if self.rect.colliderect(self.level.player.rect):
                 self.vx = 0
                 self.punch()
+        if self.alarm:
+            self.alarm -= 1
         if self._dist(self.lastpos, self.rect.center) < 2:
             if self.direction == 'left':
                 self.direction = 'right'
@@ -161,6 +175,9 @@ class Enemy(Person):
             self.rect.centerx += self.vx*2
             Person.update(self,level)
         self.lastpos = self.rect.center
+
+    def EVT_alarm(self,event):
+        self.alarm = 480
 
 class Exit(Sprite):
 
