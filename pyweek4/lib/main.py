@@ -38,13 +38,6 @@ class Game(Engine):
         if event.key == pygame.K_F9:
             pygame.image.save(pygame.display.get_surface(),'screenshot.bmp')
 
-    def EVT_tick(self,event):
-        screen = pygame.display.get_surface()
-        i = 0
-        while os.path.exists('record/%s.bmp' % str(i).zfill(4)):
-            i += 1
-        pygame.image.save(screen,'record/%s.bmp' % str(i).zfill(4))
-
 def main():
     e = Game(40)
     e.run()
