@@ -132,3 +132,18 @@ class Enemy(Person):
                         self.flying = True
                         self.vy = -3
                         self.vx = 10
+
+class Exit(Sprite):
+
+    def __init__(self,pos=(50,0),level=None):
+        self.image = data.exitDoor
+        Sprite.__init__(self)
+        self.rect.center = pos
+        self.level = level
+        self.level.exit = self
+        self.level.all.add(self)
+
+    def update(self,level):
+        self.level = level
+        if self.rect.colliderect(self.level.player.rect):
+            eventnet.driver.post('win')

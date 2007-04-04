@@ -37,6 +37,9 @@ class GameState(State):
         self.music.stop(500)
         self.music.play('data/music/play.mp3',-1)
 
+    def EVT_win(self,event):
+        self.quit(Win())
+
     def EVT_tick(self,event):
         disp = pygame.display.get_surface()
         disp.fill((0,0,0))
@@ -130,3 +133,45 @@ class ConfirmQuit(Menu):
 
     def EVT_Menu_No(self,event):
         self.quit(self.pauseMenu)
+
+class Win(State):
+
+    def __init__(self):
+        State.__init__(self)
+        self.audio = Audio()
+        self.audio.volume = 0.5
+        self.music = Music()
+        self.music.volume = 0.7
+
+    def start(self):
+        self.music.stop(500)
+        self.music.play('data/sounds/winner.wav')
+        fnt = pygame.font.SysFont('Verdana',30,italic=True)
+        text = fnt.render('Level Completed!',True,(0,255,0))
+        disp = pygame.display.get_surface()
+        disp.blit(text,(400-text.get_width()/2,
+                        300-text.get_height()/2))
+        pygame.display.flip()
+        pygame.time.wait(8000)
+        self.quit()
+
+class Lose(State):
+
+    def __init__(self):
+        State.__init__(self)
+        self.audio = Audio()
+        self.audio.volume = 0.5
+        self.music = Music()
+        self.music.volume = 0.7
+
+    def start(self):
+        self.music.stop(500)
+        self.music.play('data/sounds/loser.wav')
+        fnt = pygame.font.SysFont('Verdana',30,italic=True)
+        text = fnt.render('You Died!',True,(255,0,0))
+        disp = pygame.display.get_surface()
+        disp.blit(text,(400-text.get_width()/2,
+                        300-text.get_height()/2))
+        pygame.display.flip()
+        pygame.time.wait(10000)
+        self.quit()
