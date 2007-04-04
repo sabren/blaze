@@ -88,16 +88,14 @@ class Person(AnimatedSprite,Handler):
             self.vy += 0.1
 
         if pygame.sprite.spritecollideany(self,self.level.floors) or \
-           pygame.sprite.spritecollideany(self,self.level.walls) or \
-           pygame.sprite.spritecollideany(self,self.enemies):
+           pygame.sprite.spritecollideany(self,self.level.walls):
             self.rect.center = old
             self.vy = 0.1
 
         old = self.rect.center
         self.rect.centerx += self.vx
         if pygame.sprite.spritecollideany(self,self.level.floors) or \
-           pygame.sprite.spritecollideany(self,self.level.walls) or \
-           pygame.sprite.spritecollideany(self,self.enemies):
+           pygame.sprite.spritecollideany(self,self.level.walls):
             self.rect.center = old
             if self.flying:
                 self.audio.play(random.choice(data.punch))

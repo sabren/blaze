@@ -61,6 +61,7 @@ punch = ['data/sounds/punch.wav',
          'data/sounds/punch1.wav',
          'data/sounds/punch2.wav']
 exitDoor = pygame.image.load('data/exit.png').convert()
+exitDoor.set_colorkey(exitDoor.get_at((0,0)))
 
 def texture(filename,size=(20,20)):
     surf = pygame.Surface(size)
