@@ -104,16 +104,31 @@ class Enemy(Person):
         self.level = level
         self.level.enemies.add(self)
         self.level.all.add(self)
+        self.flying = False
 
     def update(self,level):
         Person.update(self,level)
+        for ally in pygame.sprite.spritecollide(self,self.level.enemies,False):
+            if self.flying:
+                if ally.rect.centerx > self.rect.centerx:
+                    ally.die(1)
+                else:
+                    ally.die(-1)
         if self.level.player.rect.colliderect(self.rect):
             enemy = self.level.player
             if enemy.rect.centerx > self.rect.centerx:
                 # Enemy is to our right
-                if enemy.punching:
+                if enemy.punching or enemy.kicking:
                     self.die(1)
+                    if enemy.kicking:
+                        self.flying = True
+                        self.vy = -3
+                        self.vx = -10
             elif enemy.rect.centerx < self.rect.centerx:
                 # Enemy is to our left
-                if enemy.punching:
+                if enemy.punching or enemy.kicking:
                     self.die(-1)
+                    if enemy.kicking:
+                        self.flying = True
+                        self.vy = -3
+                        self.vx = 10
