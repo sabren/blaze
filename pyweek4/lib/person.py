@@ -25,7 +25,12 @@ class Person(AnimatedSprite,Handler):
     animation_set = None
 
     def __init__(self):
-        for name in ('walk_left','walk_right'):
+        for name in ['walk_left',
+                     'walk_right',
+                     'die_back_left',
+                     'die_back_right',
+                     'die_forward_left',
+                     'die_forward_right']:
             anim = getattr(self.animation_set,name)
             setattr(self.animation_set,name,Animation(anim,True))
         self.anim = self.animation_set.walk_right
@@ -35,14 +40,38 @@ class Person(AnimatedSprite,Handler):
         self.vx = 0
         self.capture()
         self.image.set_colorkey(self.image.get_at((0,0)))
-        self.attacking = False
-        self.grounded = False # Are we in midair?
+        self.punching = False
+        self.kicking = False
+        self.dying = False
+        self.direction = 'right'
+
+    def die(self,direction):
+        self.dying = True
+        if direction == 1:
+            # We're attacked from the right
+            if self.direction == 'left':
+                self.anim = self.animation_set.die_forward_left
+            else:
+                self.anim = self.animation_set.die_back_right
+        else:
+            # We're attacked from the left
+            if self.direction == 'left':
+                self.anim = self.animation_set.die_back_left
+            else:
+                self.anim = self.animation_set.die_forward_right
 
     def kill(self):
         self.release()
         AnimatedSprite.kill(self)
 
     def update(self,level):
+        if self.anim in [self.animation_set.walk_left,
+                         self.animation_set.punch_left,
+                         self.animation_set.die_forward_left,
+                         self.animation_set.die_back_left]:
+            self.direction = 'left'
+        else:
+            self.direction = 'right'
         self.level = level
         self.image = self.anim.seq[0]
         old = self.rect.center
@@ -50,7 +79,6 @@ class Person(AnimatedSprite,Handler):
         if self.vy:
             self.vy += 0.1
 
-        self.grounded = False
         if pygame.sprite.spritecollideany(self,self.level.floors) or \
            pygame.sprite.spritecollideany(self,self.level.walls):
             self.rect.center = old
@@ -63,11 +91,28 @@ class Person(AnimatedSprite,Handler):
            pygame.sprite.spritecollideany(self,self.level.walls):
             self.rect.center = old
 
-        if self.attacking:
+        if self.punching or self.kicking:
             if self.anim.index == len(self.anim.seq)-1:
                 self.recover()
             else:
                 AnimatedSprite.update(self)
+        elif self.dying:
+            if self.anim.index < len(self.anim.seq)-1:
+                AnimatedSprite.update(self)
+                self.rect.centery += 2
+                if self.anim in [self.animation_set.die_back_left,
+                                 self.animation_set.die_back_right]:
+                    if self.direction == 'right':
+                        self.rect.centerx -= 2
+                    else:
+                        self.rect.centerx += 2
+                else:
+                    if self.direction == 'right':
+                        self.rect.centerx += 2
+                    else:
+                        self.rect.centerx -= 2
+            else:
+                self.kill()
         elif self.vx > 0:
             i = self.anim.index
             self.anim = self.animation_set.walk_right
@@ -81,25 +126,23 @@ class Person(AnimatedSprite,Handler):
         self.image.set_colorkey(self.image.get_at((0,0)))
 
     def kick(self):
-        self.attacking = True
+        self.kicking = True
         if self.anim == self.animation_set.walk_left:
             self.anim = Animation(self.animation_set.kick_left,False)
         elif self.anim == self.animation_set.walk_right:
             self.anim = Animation(self.animation_set.kick_right,False)
 
     def punch(self):
-        self.attacking = True
+        self.punching = True
         if self.anim == self.animation_set.walk_left:
             self.anim = Animation(self.animation_set.punch_left,False)
         elif self.anim == self.animation_set.walk_right:
             self.anim = Animation(self.animation_set.punch_right,False)
 
     def recover(self):
-        self.attacking = False
+        self.kicking = False
+        self.punching = False
         if self.anim.seq in [self.animation_set.kick_left,self.animation_set.punch_left]:
             self.anim = self.animation_set.walk_left
         elif self.anim.seq in [self.animation_set.kick_right,self.animation_set.punch_right]:
             self.anim = self.animation_set.walk_right
-
-    def interact(self):
-        pass

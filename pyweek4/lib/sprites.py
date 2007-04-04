@@ -18,7 +18,7 @@
 from directicus.sprite import Sprite, AnimatedSprite
 from directicus.gfx import Animation
 from person import Person
-import data, eventnet.driver
+import data, eventnet.driver, pygame
 
 class Wall(Sprite):
 
@@ -94,3 +94,26 @@ class Stair(Sprite):
         self.level.all.add(self)
         self.level.stairs.add(self)
         self.image.set_colorkey(self.image.get_at((10,0)))
+
+class Enemy(Person):
+
+    def __init__(self,pos,level):
+        self.animation_set = data.Enemy()
+        Person.__init__(self)
+        self.rect.center = pos
+        self.level = level
+        self.level.enemies.add(self)
+        self.level.all.add(self)
+
+    def update(self,level):
+        Person.update(self,level)
+        if self.level.player.rect.colliderect(self.rect):
+            enemy = self.level.player
+            if enemy.rect.centerx > self.rect.centerx:
+                # Enemy is to our right
+                if enemy.punching:
+                    self.die(1)
+            elif enemy.rect.centerx < self.rect.centerx:
+                # Enemy is to our left
+                if enemy.punching:
+                    self.die(-1)

@@ -29,6 +29,10 @@ class Hero:
     kick_right = loadGrid('data/animations/kick-right.png',(35,48))[0]
     punch_left = loadGrid('data/animations/punch-left.png',(35,48))[0]
     punch_right = loadGrid('data/animations/punch-right.png',(35,48))[0]
+    die_forward_left = loadGrid('data/animations/die-forward-left.png',(45,48))[0]
+    die_forward_right = loadGrid('data/animations/die-forward-right.png',(45,48))[0]
+    die_back_left = loadGrid('data/animations/die-back-left.png',(45,48))[0]
+    die_back_right = loadGrid('data/animations/die-back-right.png',(45,48))[0]
     button = loadGrid('data/animations/walk-left.png',(35,48))[0][0]
 
 class Enemy:
@@ -39,6 +43,11 @@ class Enemy:
     punch_left = loadGrid('data/animations/enemy-punch-left.png',(35,48))[0]
     kick_left = loadGrid('data/animations/enemy-kick-left.png',(35,48))[0]
     kick_right = loadGrid('data/animations/enemy-kick-right.png',(35,48))[0]
+
+    die_forward_left = loadGrid('data/animations/enemy-die-forward-left.png',(45,48))[0]
+    die_forward_right = loadGrid('data/animations/enemy-die-forward-right.png',(45,48))[0]
+    die_back_left = loadGrid('data/animations/enemy-die-back-left.png',(45,48))[0]
+    die_back_right = loadGrid('data/animations/enemy-die-back-right.png',(45,48))[0]
 
 class Camera:
     anim = loadGrid('data/animations/camera.png',(35,30))[0]

@@ -32,6 +32,18 @@ class Player(Person):
         Person.__init__(self)
         self.rect.topleft = (0,0)
 
+    def update(self,level):
+        Person.update(self,level)
+        for enemy in pygame.sprite.spritecollide(self,self.level.enemies,False):
+            if enemy.rect.centerx > self.rect.centerx:
+                # Enemy is to our right
+                if enemy.anim == enemy.animation_set.punch_left:
+                    self.die(1)
+            elif enemy.rect.centerx < self.rect.centerx:
+                # Enemy is to our left
+                if enemy.anim == enemy.animation_set.punch_right:
+                    self.die(-1)
+
     def EVT_KeyDown(self,event):
         if event.key == pygame.K_RIGHT:
             self.vx = self.speed

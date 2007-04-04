@@ -48,6 +48,7 @@ class Level(object):
     def update(self):
         self.player.update(self)
         self.cameras.update(self)
+        self.enemies.update(self)
 
     def draw(self):
         self.all.draw(self.s.image)

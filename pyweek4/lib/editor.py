@@ -62,16 +62,22 @@ class LevelEditor(State):
         self.stairBtn.rect = self.stairBtn.image.get_rect()
         self.stairBtn.rect.topleft = (10,self.camBtn.rect.bottom+10)
 
+        self.enemyBtn = pygame.sprite.Sprite()
+        self.enemyBtn.image = data.Enemy.button
+        self.enemyBtn.rect = self.enemyBtn.image.get_rect()
+        self.enemyBtn.rect.topleft = (10,self.stairBtn.rect.bottom+10)
+
         self.saveBtn = pygame.sprite.Sprite()
         self.saveBtn.image = font.render('Save',True,(255,255,255))
         self.saveBtn.rect = self.saveBtn.image.get_rect()
-        self.saveBtn.rect.topleft = (10,self.stairBtn.rect.bottom+10)
+        self.saveBtn.rect.topleft = (10,self.enemyBtn.rect.bottom+10)
 
         self.buttons.add(self.playerBtn,
                          self.floorBtn,
                          self.wallBtn,
                          self.camBtn,
                          self.stairBtn,
+                         self.enemyBtn,
                          self.saveBtn)
 
         self.keys = [0,0,0,0]
@@ -104,6 +110,8 @@ class LevelEditor(State):
                 camera = sprites.Camera(event.pos,self.level)
             elif self.selected == self.stairBtn:
                 stair = sprites.Stair(event.pos,self.level)
+            elif self.selected == self.enemyBtn:
+                enemy = sprites.Enemy(event.pos,self.level)
         else:
             if self.selected == self.wallBtn:
                 for sprite in self.level.walls:
@@ -119,6 +127,10 @@ class LevelEditor(State):
                         sprite.kill()
             elif self.selected == self.stairBtn:
                 for sprite in self.level.stairs:
+                    if sprite.rect.collidepoint(event.pos):
+                        sprite.kill()
+            elif self.selected == self.enemyBtn:
+                for sprite in self.level.enemies:
                     if sprite.rect.collidepoint(event.pos):
                         sprite.kill()
 
