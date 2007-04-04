@@ -17,94 +17,20 @@
 
 from directicus.sprite import AnimatedSprite
 from directicus.gfx import Animation
-from data import Hero
+from data import Hero,Enemy
 from eventnet.driver import Handler
+from person import Person
 import pygame
 
-class Player(AnimatedSprite,Handler):
+class Player(Person):
     '''
     Our hero.
     '''
 
-    anim = Hero.walk_right
-    level = None
-    speed = 3
-    vy = 3
-    vx = 0
-
     def __init__(self):
-        AnimatedSprite.__init__(self)
-        self.capture()
+        self.animation_set = Hero()
+        Person.__init__(self)
         self.rect.topleft = (0,0)
-        self.image.set_colorkey(self.image.get_at((0,0)))
-        self.attacking = False
-        self.grounded = False # Are we in midair?
-
-    def kill(self):
-        self.release()
-        AnimatedSprite.kill(self)
-
-    def update(self,level):
-        self.level = level
-        self.image = self.anim.seq[0]
-        old = self.rect.center
-        self.rect.centery += self.vy
-        if self.vy:
-            self.vy += 0.1
-
-        self.grounded = False
-        if pygame.sprite.spritecollideany(self,self.level.floors) or \
-           pygame.sprite.spritecollideany(self,self.level.walls):
-            self.rect.center = old
-            self.vy = 0.1
-            self.grounded = True
-
-        old = self.rect.center
-        self.rect.centerx += self.vx
-        if pygame.sprite.spritecollideany(self,self.level.floors) or \
-           pygame.sprite.spritecollideany(self,self.level.walls):
-            self.rect.center = old
-
-        if self.attacking:
-            if self.anim.index == len(self.anim.seq)-1:
-                self.recover()
-            else:
-                AnimatedSprite.update(self)
-        elif self.vx > 0:
-            i = self.anim.index
-            self.anim = Hero.walk_right
-            self.anim.index = i
-            AnimatedSprite.update(self)
-        elif self.vx < 0:
-            i = self.anim.index
-            self.anim = Hero.walk_left
-            self.anim.index = i
-            AnimatedSprite.update(self)
-        self.image.set_colorkey(self.image.get_at((0,0)))
-
-    def kick(self):
-        self.attacking = True
-        if self.anim == Hero.walk_left:
-            self.anim = Animation(Hero.kick_left,False)
-        elif self.anim == Hero.walk_right:
-            self.anim = Animation(Hero.kick_right,False)
-
-    def punch(self):
-        self.attacking = True
-        if self.anim == Hero.walk_left:
-            self.anim = Animation(Hero.punch_left,False)
-        elif self.anim == Hero.walk_right:
-            self.anim = Animation(Hero.punch_right,False)
-
-    def recover(self):
-        self.attacking = False
-        if self.anim.seq in [Hero.kick_left,Hero.punch_left]:
-            self.anim = Hero.walk_left
-        elif self.anim.seq in [Hero.kick_right,Hero.punch_right]:
-            self.anim = Hero.walk_right
-
-    def interact(self):
-        pass
 
     def EVT_KeyDown(self,event):
         if event.key == pygame.K_RIGHT:

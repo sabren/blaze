@@ -17,6 +17,7 @@
 
 from directicus.sprite import Sprite, AnimatedSprite
 from directicus.gfx import Animation
+from person import Person
 import data, eventnet.driver
 
 class Wall(Sprite):
@@ -82,3 +83,7 @@ class Camera(AnimatedSprite):
             return max(a,b)-min(a,b)
         else:
             return (max(a[0],b[0])-min(a[0],b[0]))+(max(a[1],b[1])-min(a[1],b[1]))
+
+class Enemy(Person):
+
+    animation_set = data.Enemy()

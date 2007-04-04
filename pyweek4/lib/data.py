@@ -23,17 +23,28 @@ from directicus.gfx import Animation,loadGrid
 import pygame
 
 class Hero:
-    walk_left = Animation(loadGrid('data/animations/walk-left.png',(35,48))[0],True)
-    walk_right = Animation(loadGrid('data/animations/walk-right.png',(35,48))[0],True)
+    walk_left = loadGrid('data/animations/walk-left.png',(35,48))[0]
+    walk_right = loadGrid('data/animations/walk-right.png',(35,48))[0]
     kick_left = loadGrid('data/animations/kick-left.png',(35,48))[0]
     kick_right = loadGrid('data/animations/kick-right.png',(35,48))[0]
     punch_left = loadGrid('data/animations/punch-left.png',(35,48))[0]
     punch_right = loadGrid('data/animations/punch-right.png',(35,48))[0]
     button = loadGrid('data/animations/walk-left.png',(35,48))[0][0]
 
+class Enemy:
+    button = loadGrid('data/animations/enemy-left.png',(35,48))[0][0]
+    walk_left = loadGrid('data/animations/enemy-left.png',(35,48))[0]
+    walk_right = loadGrid('data/animations/enemy-right.png',(35,48))[0]
+    punch_right = loadGrid('data/animations/enemy-punch-right.png',(35,48))[0]
+    punch_left = loadGrid('data/animations/enemy-punch-left.png',(35,48))[0]
+    kick_left = loadGrid('data/animations/enemy-kick-left.png',(35,48))[0]
+    kick_right = loadGrid('data/animations/enemy-kick-right.png',(35,48))[0]
+
 class Camera:
     anim = loadGrid('data/animations/camera.png',(35,30))[0]
     still = loadGrid('data/animations/camera.png',(35,30))[0][0]
+
+stairs = pygame.image.load('data/stairs.png')
 
 wall = pygame.image.load('data/wall.png').convert()
 floor = pygame.image.load('data/floor.png').convert()

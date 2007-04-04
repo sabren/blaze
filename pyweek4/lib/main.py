@@ -28,6 +28,7 @@ class Game(Engine):
 
     DEFAULT = menus.MainMenu
     size = (800,600)
+    oldState = None
 
     def __init__(self,fps=40):
         Engine.__init__(self,fps)
@@ -37,6 +38,10 @@ class Game(Engine):
     def EVT_KeyDown(self,event):
         if event.key == pygame.K_F9:
             pygame.image.save(pygame.display.get_surface(),'screenshot.bmp')
+
+    def EVT_Quit(self,event):
+        self.oldState = self.state
+        self.state.quit(menus.ConfirmExit(self.oldState))
 
 def main():
     e = Game(40)

@@ -15,9 +15,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from directicus.engine import State
+from directicus.engine import State, Menu
 from directicus.sfx import Audio, Music
-import level,pygame,eventnet.driver
+import level,pygame,eventnet.driver,os
 
 class GameState(State):
 
@@ -53,7 +53,8 @@ class GameState(State):
 
     def EVT_KeyDown(self,event):
         if event.key == pygame.K_ESCAPE:
-            self.quit()
+            #self.quit()
+            self.quit(PauseMenu(self))
 
     def EVT_alarm(self,event):
         if not self.alarm:
@@ -65,3 +66,67 @@ class GameState(State):
         self.music.stop(500)
         self.music.play('data/music/menu.mp3',-1)
         State.quit(self,next)
+
+class PauseMenu(Menu):
+    title = 'Pause Menu'
+    options = ['Resume Game',
+               'Save Game',
+               'Quit Game',
+               'Exit to System']
+    background = pygame.image.load('data/menu.png').convert()
+    color = (0,0,0)
+
+    def __init__(self,gamestate):
+        self.gamestate = gamestate
+        Menu.__init__(self)
+
+    def EVT_Menu_ResumeGame(self,event):
+        self.quit(self.gamestate)
+
+    def EVT_Menu_SaveGame(self,event):
+        if not os.path.exists('save.lvl'):
+            level.save(self.gamestate.level,'save.lvl')
+            self.quit(self.gamestate)
+        else:
+            self.quit(Overwrite(self))
+
+    def EVT_Menu_QuitGame(self,event):
+        self.quit(ConfirmQuit(self))
+
+    def EVT_Menu_ExittoSystem(self,event):
+        eventnet.driver.post('Quit')
+
+class Overwrite(Menu):
+    title = 'Overwrite old save game?'
+    options = ['Yes',
+               'No']
+    background = pygame.image.load('data/menu.png').convert()
+    color = (0,0,0)
+
+    def __init__(self,pausestate):
+        Menu.__init__(self)
+        self.pausestate = pausestate
+
+    def EVT_Menu_Yes(self,event):
+        level.save(self.pausestate.gamestate.level,'save.lvl')
+        self.quit(self.pausestate.gamestate)
+
+    def EVT_Menu_No(self,event):
+        self.quit(self.pausestate)
+
+class ConfirmQuit(Menu):
+    title = 'Quit this game?'
+    options = ['Yes',
+               'No']
+    background = pygame.image.load('data/menu.png').convert()
+    color = (0,0,0)
+
+    def __init__(self,pauseMenu):
+        self.pauseMenu = pauseMenu
+        Menu.__init__(self)
+
+    def EVT_Menu_Yes(self,event):
+        self.quit()
+
+    def EVT_Menu_No(self,event):
+        self.quit(self.pauseMenu)

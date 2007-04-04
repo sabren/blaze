@@ -18,7 +18,7 @@
 from directicus.engine import Menu
 from directicus.sfx import Music
 from game import GameState
-import pygame,eventnet.driver
+import pygame,eventnet.driver,sys,os,level
 
 class GameMenu(Menu):
     '''
@@ -34,10 +34,11 @@ class GameMenu(Menu):
 class MainMenu(GameMenu):
     title = 'Ascent of Justice'
     options = ['New Game',
-               'Load Game',
                'Exit']
 
     def __init__(self):
+        if os.path.exists('save.lvl') and len(self.options) < 3:
+            self.options.insert(1,'Continue')
         GameMenu.__init__(self)
         self.music = Music()
         self.music.volume = 1
@@ -46,19 +47,31 @@ class MainMenu(GameMenu):
     def EVT_Menu_NewGame(self,event):
         self.quit(GameState())
 
+    def EVT_Menu_Continue(self,event):
+        self.quit(GameState(level.load('save.lvl')))
+
     def EVT_Menu_Exit(self,event):
-        self.quit(ConfirmExit())
+        eventnet.driver.post('Quit')
 
 class ConfirmExit(GameMenu):
     title = 'Exit to system?'
     options = ['Yes',
                'No']
 
+    def __init__(self,next=None):
+        GameMenu.__init__(self)
+        self.next = next
+
     def EVT_Menu_Yes(self,event):
-        eventnet.driver.post('Quit')
+        pygame.quit()
+        sys.exit()
 
     def EVT_Menu_No(self,event):
-        self.quit()
+        if self.next:
+            old = self.next
+            self.next = self.next.__new__(type(self.next))
+            self.next.__init__(old.gamestate)
+        self.quit(self.next)
 
 def Paused(GameMenu):
     title = 'Pause Menu'
