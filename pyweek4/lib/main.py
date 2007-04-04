@@ -19,7 +19,7 @@ import pygame
 pygame.display.set_mode((800,600)) # this is for our .convert()s
 
 from directicus.engine import Engine
-import menus,data
+import menus,data,os
 
 class Game(Engine):
     '''
@@ -38,9 +38,12 @@ class Game(Engine):
         if event.key == pygame.K_F9:
             pygame.image.save(pygame.display.get_surface(),'screenshot.bmp')
 
-    #def EVT_pause(self,event):
-    #    event.game.release()
-    #    self.state = menus.Paused(event.game)
+    def EVT_tick(self,event):
+        screen = pygame.display.get_surface()
+        i = 0
+        while os.path.exists('record/%s.bmp' % str(i).zfill(4)):
+            i += 1
+        pygame.image.save(screen,'record/%s.bmp' % str(i).zfill(4))
 
 def main():
     e = Game(40)
