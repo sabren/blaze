@@ -160,7 +160,7 @@ class Enemy(Person,eventnet.driver.Handler):
            self._dist(self.level.player.rect.center,self.rect.center) < 10 or \
            self.alarm:
             self.vx *= 3
-            if self._dist(self.rect.center,self.level.player.rect) < 7:
+            if self._dist(self.rect.center,self.level.player.rect.center) < 7:
                 self.vx = 0
                 self.punch()
         if self.alarm:
