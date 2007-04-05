@@ -15,7 +15,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import pygame,player,data,cPickle,sprites
+import pygame,player,data,cPickle,sprites,os
+from campaign import Campaign
 
 class Level(object):
     tileset = data.Basement
@@ -46,6 +47,27 @@ class Level(object):
             y *= data.wall.get_height()
             wall = sprites.Wall((-self.tileset.wall.get_width(),y),self)
             wall = sprites.Wall((size[0]+self.tileset.wall.get_width(),y),self)
+
+    def intro(self):
+        surf = pygame.Surface((800,600))
+        surf.fill((0,0,0))
+        surf.set_colorkey((0,0,0))
+        try:
+            intro_file = os.path.join(
+                os.path.dirname(self.filename),
+                os.path.splitext(os.path.basename(self.filename))[0]+'.txt')
+            f = open(intro_file)
+            intro = [line.strip() for line in f.readlines()]
+            f.close()
+            fnt = pygame.font.SysFont('Verdana',20,italic=True)
+            y = 5
+            for line in intro:
+                line = fnt.render(line,True,(0,255,0))
+                surf.blit(line,(400-(line.get_width()/2),y))
+                y += line.get_height()+5
+        except:
+            pass
+        return surf
 
     def clear(self):
         self.all.clear(self.s.image,self.background)

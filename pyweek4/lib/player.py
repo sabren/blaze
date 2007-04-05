@@ -74,8 +74,6 @@ class Player(Person):
                 if self._dist(self.rect.bottom,stair.rect.top) < 50:
                     self.rect.bottom = stair.rect.bottom
                     return
-        elif event.key == pygame.K_SPACE:
-            self.interact()
         elif event.key == pygame.K_LCTRL:
             self.kick()
         elif event.key == pygame.K_LALT:

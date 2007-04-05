@@ -17,7 +17,7 @@
 
 from directicus.engine import State, Menu
 from directicus.sfx import Audio, Music
-import level,pygame,eventnet.driver,os
+import level,pygame,eventnet.driver,os,data
 from campaign import Campaign
 
 class GameState(State):
@@ -37,6 +37,14 @@ class GameState(State):
         self.alarm = 0
         self.music.stop(500)
         self.music.play('data/music/play.mp3',-1)
+        self.playing = True
+
+    def start(self):
+        State.start(self)
+        self.EVT_tick(None)
+        self.playing = False
+        pygame.display.get_surface().blit(self.level.intro(),(0,0))
+        pygame.display.flip()
 
     def EVT_win(self,event):
         self.quit(Win(self.level.filename))
@@ -45,6 +53,8 @@ class GameState(State):
         self.quit(Lose(self.level.filename))
 
     def EVT_tick(self,event):
+        if not self.playing:
+            return
         disp = pygame.display.get_surface()
         disp.fill((0,0,0))
         self.level.clear()
@@ -59,7 +69,9 @@ class GameState(State):
             self.alarm -= 1
 
     def EVT_KeyDown(self,event):
-        if event.key == pygame.K_ESCAPE:
+        if not self.playing:
+            self.playing = True
+        elif event.key == pygame.K_ESCAPE:
             self.quit(PauseMenu(self))
 
     def EVT_alarm(self,event):
@@ -168,7 +180,8 @@ class Win(State):
             if filename:
                 self.quit(GameState(level.load(filename)))
             else:
-                self.quit()
+                print 'we\'re done!'
+                self.quit(Ending())
 
 class Lose(State):
 
@@ -202,3 +215,74 @@ class Lose(State):
         else:
             lvl = level.load(self.level)
             self.quit(GameState(lvl))
+
+class Ending(State):
+
+    def __init__(self):
+        State.__init__(self)
+        self.audio = Audio()
+        self.audio.volume = 0.5
+        self.music = Music()
+        self.music.volume = 0.7
+        self.music.stop(500)
+        self.delay = 25500
+        self.image = pygame.display.get_surface().copy()
+        self.image.fill((0,0,0))
+        self.image.set_alpha(0)
+        self.playing = False
+
+    def start(self):
+        State.start(self)
+        self.text = self.intro()
+        pygame.display.get_surface().blit(self.text,(0,0))
+        pygame.display.flip()
+        self.music.play('data/sounds/winner.wav')
+
+    def EVT_KeyDown(self,event):
+        self.playing = True
+
+    def intro(self):
+        '''
+        Copied almost straight from level.py
+        '''
+
+        surf = pygame.Surface((800,600))
+        surf.fill((0,0,0))
+        surf.set_colorkey((0,0,0))
+        try:
+            intro_file = 'data/ending.txt'
+            f = open(intro_file)
+            intro = [line.strip() for line in f.readlines()]
+            f.close()
+            fnt = pygame.font.SysFont('Verdana',20,italic=True)
+            y = 5
+            for line in intro:
+                line = fnt.render(line,True,(0,255,0))
+                surf.blit(line,(400-(line.get_width()/2),y))
+                y += line.get_height()+5
+        except:
+            pass
+        return surf
+
+    def EVT_credits(self,event):
+        self.quit()
+
+    def EVT_tick(self,event):
+        if not self.playing:
+            return
+        disp = pygame.display.get_surface()
+        if self.image.get_alpha() == 255 and self.image != data.candy:
+            self.delay = 25500
+            self.image = data.candy
+        elif self.image == data.candy:
+            self.quit()
+        else:
+            self.image.set_alpha(self.delay/100)
+        disp.fill((0,0,0))
+        disp.blit(self.image,(400-self.image.get_width()/2,
+                              300-self.image.get_height()/2))
+        pygame.display.flip()
+        if self.delay:
+            self.delay -= 1
+        else:
+            self.quit()

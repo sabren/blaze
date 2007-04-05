@@ -20,7 +20,6 @@ import eventnet.driver
 class Campaign(object):
     levels = [
         'data/levels/test.lvl',
-        'data/levels/2.lvl',
         ]
 
     @staticmethod

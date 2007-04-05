@@ -53,6 +53,8 @@ class Camera:
     anim = loadGrid('data/animations/camera.png',(35,30))[0]
     still = loadGrid('data/animations/camera.png',(35,30))[0][0]
 
+candy = pygame.image.load('data/crunch.png').convert()
+candy.set_alpha(0)
 wall = pygame.image.load('data/wall.png').convert()
 floor = pygame.image.load('data/floor.png').convert()
 punch = ['data/sounds/punch.wav',
