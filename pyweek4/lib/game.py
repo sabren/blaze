@@ -226,17 +226,14 @@ class Ending(State):
         self.music.volume = 0.7
         self.music.stop(500)
         self.delay = 25500
-        self.image = pygame.display.get_surface().copy()
-        self.image.fill((0,0,0))
-        self.image.set_alpha(0)
         self.playing = False
 
     def start(self):
         State.start(self)
-        self.text = self.intro()
-        pygame.display.get_surface().blit(self.text,(0,0))
-        pygame.display.flip()
         self.music.play('data/sounds/winner.wav')
+        pygame.display.get_surface().fill((0,0,0))
+        pygame.display.get_surface().blit(self.intro(),(0,0))
+        pygame.display.flip()
 
     def EVT_KeyDown(self,event):
         self.playing = True
