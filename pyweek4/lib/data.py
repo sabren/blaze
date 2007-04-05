@@ -80,7 +80,7 @@ icon.set_colorkey(icon.get_at((0,0)))
 class Basement:
     _name = 'Basement'
     background = pygame.image.load('data/textures/brick.png').convert()
-    stair = stairs
+    stair = pygame.image.load('data/ladder.png').convert()
     wall = wall
     floor = floor
     exitDoor = exitDoor
