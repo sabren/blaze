@@ -63,9 +63,10 @@ punch = ['data/sounds/punch.wav',
 exitDoor = pygame.image.load('data/exit.png').convert()
 exitDoor.set_colorkey(exitDoor.get_at((0,0)))
 
-def texture(filename,size=(20,20)):
+def texture(filename='',img=None,size=(20,20)):
     surf = pygame.Surface(size)
-    img = pygame.image.load(filename)
+    if filename:
+        img = pygame.image.load(filename)
     for y in range(size[1]/img.get_height()+1):
         y = y*img.get_height()
         for x in range(size[0]/img.get_width()+1):
@@ -75,3 +76,11 @@ def texture(filename,size=(20,20)):
 
 icon = pygame.image.load('data/icon.png').convert()
 icon.set_colorkey(icon.get_at((0,0)))
+
+class Basement:
+    _name = 'Basement'
+    background = pygame.image.load('data/textures/brick.png').convert()
+    stair = stairs
+    wall = wall
+    floor = floor
+    exitDoor = exitDoor

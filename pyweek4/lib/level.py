@@ -18,6 +18,7 @@
 import pygame,player,data,cPickle,sprites
 
 class Level(object):
+    tileset = data.Basement
 
     def __init__(self,size=(800,600)):
         self.size = size
@@ -31,7 +32,7 @@ class Level(object):
         self.exit = sprites.Exit(level=self)
         self.all.add(self.player)
         self.s = pygame.sprite.Sprite()
-        self.s.image = data.texture('data/textures/brick.png',size).convert()
+        self.s.image = data.texture(img=self.tileset.background,size=size)
         self.s.rect = self.s.image.get_rect()
         self.background = self.s.image.copy()
         for x in range(size[0]/data.floor.get_width()+1):
@@ -65,6 +66,7 @@ def save(level,filename):
     stairs = [stair.rect.center for stair in level.stairs]
 
     f = open(filename,'w')
+    cPickle.dump(level.tileset._name,f)
     cPickle.dump(size,f)
     cPickle.dump(player,f)
     cPickle.dump(walls,f)
@@ -77,6 +79,7 @@ def save(level,filename):
 
 def load(filename):
     f = open(filename,'r')
+    tileset = cPickle.load(f)
     size = cPickle.load(f)
     player = cPickle.load(f)
     walls = cPickle.load(f)
@@ -88,6 +91,7 @@ def load(filename):
     f.close()
 
     lvl = Level(size)
+    lvl.tileset = getattr(data,tileset)
     lvl.player.rect.center = player
     for wall in walls:
         wall = sprites.Wall(wall,lvl)

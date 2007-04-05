@@ -145,7 +145,7 @@ class Win(State):
         self.audio.volume = 0.5
         self.music = Music()
         self.music.volume = 0.7
-        seconds = 8
+        seconds = 5
         self.delay = seconds*40
 
     def start(self):
@@ -173,7 +173,7 @@ class Lose(State):
         self.audio.volume = 0.5
         self.music = Music()
         self.music.volume = 0.7
-        seconds = 8
+        seconds = 5
         self.delay = seconds*40
 
     def start(self):

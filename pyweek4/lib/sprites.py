@@ -23,7 +23,7 @@ import data, eventnet.driver, pygame, random
 class Wall(Sprite):
 
     def __init__(self,pos=(0,0),lvl=None):
-        self.image = data.wall
+        self.image = lvl.tileset.wall
         Sprite.__init__(self)
         self.rect.center = pos
         if lvl:
@@ -33,7 +33,7 @@ class Wall(Sprite):
 class Floor(Sprite):
 
     def __init__(self,pos=(0,0),lvl=None):
-        self.image = data.floor
+        self.image = lvl.tileset.floor
         Sprite.__init__(self)
         self.rect.center = pos
         if lvl:
@@ -87,7 +87,7 @@ class Camera(AnimatedSprite):
 class Stair(Sprite):
 
     def __init__(self,pos,level):
-        self.image = data.stairs.copy()
+        self.image = level.tileset.stair
         Sprite.__init__(self)
         self.rect.center = pos
         self.level = level
