@@ -18,13 +18,14 @@
 from directicus.engine import State, Menu
 from directicus.sfx import Audio, Music
 import level,pygame,eventnet.driver,os
+from campaign import Campaign
 
 class GameState(State):
 
     def __init__(self,lvl=None):
         State.__init__(self)
         if lvl == None:
-            self.level = level.load('data/levels/test.lvl')
+            self.level = level.load(Campaign.next())
         else:
             self.level = lvl
         self.bg = pygame.sprite.Group(self.level.s)
@@ -38,10 +39,10 @@ class GameState(State):
         self.music.play('data/music/play.mp3',-1)
 
     def EVT_win(self,event):
-        self.quit(Win())
+        self.quit(Win(self.level.filename))
 
     def EVT_lose(self,event):
-        self.quit(Lose())
+        self.quit(Lose(self.level.filename))
 
     def EVT_tick(self,event):
         disp = pygame.display.get_surface()
@@ -59,7 +60,6 @@ class GameState(State):
 
     def EVT_KeyDown(self,event):
         if event.key == pygame.K_ESCAPE:
-            #self.quit()
             self.quit(PauseMenu(self))
 
     def EVT_alarm(self,event):
@@ -139,8 +139,9 @@ class ConfirmQuit(Menu):
 
 class Win(State):
 
-    def __init__(self):
+    def __init__(self,level):
         State.__init__(self)
+        self.level = level
         self.audio = Audio()
         self.audio.volume = 0.5
         self.music = Music()
@@ -163,12 +164,17 @@ class Win(State):
         if self.delay:
             self.delay -= 1
         else:
-            self.quit()
+            filename = Campaign.next(self.level)
+            if filename:
+                self.quit(GameState(level.load(filename)))
+            else:
+                self.quit()
 
 class Lose(State):
 
-    def __init__(self):
+    def __init__(self,level):
         State.__init__(self)
+        self.level = level
         self.audio = Audio()
         self.audio.volume = 0.5
         self.music = Music()
@@ -187,8 +193,12 @@ class Lose(State):
         pygame.display.flip()
         State.start(self)
 
+    def EVT_credits(self,event):
+        self.quit()
+
     def EVT_tick(self,event):
         if self.delay:
             self.delay -= 1
         else:
-            self.quit()
+            lvl = level.load(self.level)
+            self.quit(GameState(lvl))

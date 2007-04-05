@@ -21,6 +21,7 @@ class Level(object):
     tileset = data.Basement
 
     def __init__(self,size=(800,600)):
+        self.filename = ''
         self.size = size
         self.all = pygame.sprite.Group()
         self.player = player.Player()
@@ -106,5 +107,6 @@ def load(filename):
     for stair in stairs:
         stair = sprites.Stair(stair,lvl)
     lvl.exit.rect.center = exit
+    lvl.filename = filename
 
     return lvl
