@@ -30,19 +30,21 @@ class Level(object):
         self.enemies = pygame.sprite.Group()
         self.stairs = pygame.sprite.Group()
         self.exit = sprites.Exit(level=self)
-        self.all.add(self.player)
+        self.all.add(self.player,self.exit)
         self.s = pygame.sprite.Sprite()
         self.s.image = data.texture(img=self.tileset.background,size=size)
         self.s.rect = self.s.image.get_rect()
         self.background = self.s.image.copy()
-        for x in range(size[0]/data.floor.get_width()+1):
-            x *= data.floor.get_width()
-            floor = sprites.Floor((x,-data.floor.get_height()),self)
-            floor = sprites.Floor((x,size[1]+data.floor.get_height()/2),self)
-        for y in range(size[1]/data.wall.get_height()+1):
+
+        # Draw platforms around the border
+        for x in range(size[0]/self.tileset.floor.get_width()+1):
+            x *= self.tileset.floor.get_width()
+            floor = sprites.Floor((x,-self.tileset.floor.get_height()),self)
+            floor = sprites.Floor((x,size[1]+self.tileset.floor.get_height()/2),self)
+        for y in range(size[1]/self.tileset.wall.get_height()+1):
             y *= data.wall.get_height()
-            wall = sprites.Wall((-data.wall.get_width(),y),self)
-            wall = sprites.Wall((size[0]+data.wall.get_width(),y),self)
+            wall = sprites.Wall((-self.tileset.wall.get_width(),y),self)
+            wall = sprites.Wall((size[0]+self.tileset.wall.get_width(),y),self)
 
     def clear(self):
         self.all.clear(self.s.image,self.background)
@@ -103,6 +105,6 @@ def load(filename):
         enemy = sprites.Enemy(enemy,lvl)
     for stair in stairs:
         stair = sprites.Stair(stair,lvl)
-    lvl.exit = sprites.Exit(exit,lvl)
+    lvl.exit.rect.center = exit
 
     return lvl

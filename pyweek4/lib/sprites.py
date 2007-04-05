@@ -50,6 +50,7 @@ class Camera(AnimatedSprite):
             lvl.all.add(self)
             lvl.cameras.add(self)
         self.image.set_colorkey(self.image.get_at((0,0)))
+        self.anim.index = random.randint(0,len(self.anim.seq))
         self.direction = 'right'
         self.level = None
 
@@ -181,13 +182,13 @@ class Enemy(Person,eventnet.driver.Handler):
 
 class Exit(Sprite):
 
-    def __init__(self,pos=(50,0),level=None):
+    def __init__(self,pos=(100,100),level=None):
         self.image = data.exitDoor
         Sprite.__init__(self)
         self.rect.center = pos
         self.level = level
-        self.level.exit = self
-        self.level.all.add(self)
+        #self.level.exit = self
+        #self.level.all.add(self)
 
     def update(self,level):
         self.level = level
