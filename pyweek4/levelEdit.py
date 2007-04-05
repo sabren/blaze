@@ -46,12 +46,12 @@ class LevelEditor(State):
         self.playerBtn.rect.topleft = (10,10)
 
         self.floorBtn = pygame.sprite.Sprite()
-        self.floorBtn.image = data.floor
+        self.floorBtn.image = self.level.tileset.floor
         self.floorBtn.rect = self.floorBtn.image.get_rect()
         self.floorBtn.rect.topleft = (10,self.playerBtn.rect.bottom+10)
 
         self.wallBtn = pygame.sprite.Sprite()
-        self.wallBtn.image = data.wall
+        self.wallBtn.image = self.level.tileset.wall
         self.wallBtn.rect = self.wallBtn.image.get_rect()
         self.wallBtn.rect.topleft = (10,self.floorBtn.rect.bottom+10)
 
@@ -61,7 +61,7 @@ class LevelEditor(State):
         self.camBtn.rect.topleft = (10,self.wallBtn.rect.bottom+10)
 
         self.stairBtn = pygame.sprite.Sprite()
-        self.stairBtn.image = data.stairs
+        self.stairBtn.image = self.level.tileset.stair
         self.stairBtn.rect = self.stairBtn.image.get_rect()
         self.stairBtn.rect.topleft = (10,self.camBtn.rect.bottom+10)
 
@@ -71,7 +71,7 @@ class LevelEditor(State):
         self.enemyBtn.rect.topleft = (10,self.stairBtn.rect.bottom+10)
 
         self.exitBtn = pygame.sprite.Sprite()
-        self.exitBtn.image = data.exitDoor
+        self.exitBtn.image = self.level.tileset.exitDoor
         self.exitBtn.rect = self.exitBtn.image.get_rect()
         self.exitBtn.rect.topleft = (10,self.enemyBtn.rect.bottom+10)
 

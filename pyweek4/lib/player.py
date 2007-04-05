@@ -65,13 +65,13 @@ class Player(Person):
             collisions = pygame.sprite.spritecollide(self,self.level.stairs,False)
             for stair in collisions:
                 if self._dist(self.rect.bottom,stair.rect.bottom < 5):
-                    self.rect.bottom = stair.rect.top-10
+                    self.rect.bottom = stair.rect.top
                     return
         elif event.key == pygame.K_DOWN and \
              pygame.sprite.spritecollideany(self,self.level.stairs):
             collisions = pygame.sprite.spritecollide(self,self.level.stairs,False)
             for stair in collisions:
-                if self._dist(self.rect.bottom,stair.rect.top) < 10:
+                if self._dist(self.rect.bottom,stair.rect.top) < 50:
                     self.rect.bottom = stair.rect.bottom
                     return
         elif event.key == pygame.K_SPACE:
