@@ -180,7 +180,6 @@ class Win(State):
             if filename:
                 self.quit(GameState(level.load(filename)))
             else:
-                print 'we\'re done!'
                 self.quit(Ending())
 
 class Lose(State):
@@ -239,6 +238,7 @@ class Ending(State):
 
     def EVT_KeyDown(self,event):
         self.playing = True
+        self.audio.play('data/sounds/fanfare.wav')
 
     def intro(self):
         '''
@@ -276,5 +276,4 @@ class Ending(State):
         if self.delay:
             self.delay -= 1
         else:
-            self.audio.play('data/sounds/fanfare.wav')
             self.quit()
