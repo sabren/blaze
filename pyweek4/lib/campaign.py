@@ -23,7 +23,8 @@ class Campaign(object):
         #'data/levels/tut2.lvl',
         #'data/levels/tut3.lvl',
         #'data/levels/office.lvl',
-        'data/levels/server-room.lvl',
+        #'data/levels/server-room.lvl',
+        'data/levels/apartment.lvl',
         ]
 
     @staticmethod
