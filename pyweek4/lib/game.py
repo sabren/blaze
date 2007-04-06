@@ -238,7 +238,7 @@ class Ending(State):
 
     def EVT_KeyDown(self,event):
         self.playing = True
-        self.audio.stop(500)
+        self.music.stop(500)
         self.audio.play('data/sounds/fanfare.wav')
 
     def intro(self):
