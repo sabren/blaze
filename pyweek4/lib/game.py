@@ -180,7 +180,9 @@ class Win(State):
             if filename:
                 self.quit(GameState(level.load(filename)))
             else:
-                self.quit(Ending())
+                self.quit()
+                # Not allowed to see the ending yet!
+                #self.quit(Ending())
 
 class Lose(State):
 

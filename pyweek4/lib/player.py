@@ -37,15 +37,16 @@ class Player(Person):
     def update(self,level):
         Person.update(self,level)
         self.enemies = self.level.enemies
-        for enemy in pygame.sprite.spritecollide(self,self.level.enemies,False):
-            if enemy.rect.centerx > self.rect.centerx:
-                # Enemy is to our right
-                if enemy.punching:
-                    self.die(1)
-            elif enemy.rect.centerx < self.rect.centerx:
-                # Enemy is to our left
-                if enemy.punching:
-                    self.die(-1)
+        if not self.dying:
+            for enemy in pygame.sprite.spritecollide(self,self.level.enemies,False):
+                if enemy.rect.centerx > self.rect.centerx:
+                    # Enemy is to our right
+                    if enemy.punching:
+                        self.die(1)
+                elif enemy.rect.centerx < self.rect.centerx:
+                    # Enemy is to our left
+                    if enemy.punching:
+                        self.die(-1)
         if self.delay == 0:
             eventnet.driver.post('lose')
         else:
@@ -53,7 +54,7 @@ class Player(Person):
 
     def die(self,direction):
         Person.die(self,direction)
-        self.delay = 15
+        self.delay = 9
 
     def EVT_KeyDown(self,event):
         if event.key == pygame.K_RIGHT:

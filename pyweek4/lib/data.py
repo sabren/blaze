@@ -23,16 +23,16 @@ from directicus.gfx import Animation,loadGrid
 import pygame
 
 class Hero:
-    walk_left = loadGrid('data/animations/walk-left.png',(35,48))[0]
-    walk_right = loadGrid('data/animations/walk-right.png',(35,48))[0]
-    kick_left = loadGrid('data/animations/kick-left.png',(35,48))[0]
-    kick_right = loadGrid('data/animations/kick-right.png',(35,48))[0]
-    punch_left = loadGrid('data/animations/punch-left.png',(35,48))[0]
-    punch_right = loadGrid('data/animations/punch-right.png',(35,48))[0]
-    die_forward_left = loadGrid('data/animations/die-forward-left.png',(45,48))[0]
-    die_forward_right = loadGrid('data/animations/die-forward-right.png',(45,48))[0]
-    die_back_left = loadGrid('data/animations/die-back-left.png',(45,48))[0]
-    die_back_right = loadGrid('data/animations/die-back-right.png',(45,48))[0]
+    walk_left = loadGrid('data/animations/walk-left.png',(35,50))[0]
+    walk_right = loadGrid('data/animations/walk-right.png',(35,50))[0]
+    kick_left = loadGrid('data/animations/kick-left.png',(35,55))[0]
+    kick_right = loadGrid('data/animations/kick-right.png',(35,55))[0]
+    punch_left = loadGrid('data/animations/punch-left.png',(35,50))[0]
+    punch_right = loadGrid('data/animations/punch-right.png',(35,50))[0]
+    die_forward_left = loadGrid('data/animations/die-forward-left.png',(55,48))[0]
+    die_forward_right = loadGrid('data/animations/die-forward-right.png',(55,48))[0]
+    die_back_left = loadGrid('data/animations/die-back-right.png',(55,48))[0]
+    die_back_right = loadGrid('data/animations/die-back-right.png',(55,48))[0]
     button = loadGrid('data/animations/walk-left.png',(35,48))[0][0]
 
 class Enemy:

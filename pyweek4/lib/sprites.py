@@ -111,13 +111,28 @@ class Enemy(Person,eventnet.driver.Handler):
         self.flying = False
         self.lastpos = self.rect.center
         self.alarm = 0
+        self.dead = False
 
     def kill(self):
         Person.kill(self)
         self.release()
 
     def update(self,level):
+        if self.dead:
+            return
         Person.update(self,level)
+        if self.dying:
+            self.rect.centery += 2
+            if self.anim in [self.animation_set.die_back_left,
+                             self.animation_set.die_forward_right]:
+                self.rect.centerx  += 2
+            else:
+                self.rect.centerx -= 2
+            if self.anim.surf == self.anim.seq[-1]:
+                if self.flying:
+                    self.rect.y += 35
+                self.dead = True
+            return
         if self in self.enemies:
             self.enemies.remove(self)
         for ally in pygame.sprite.spritecollide(self,self.level.enemies,False):
@@ -148,33 +163,33 @@ class Enemy(Person,eventnet.driver.Handler):
                         self.flying = True
                         self.vy = -3
                         self.vx = 10
-        if self.direction == 'left':
-            self.vx = -self.speed
-        else:
-            self.vx = self.speed
+        #if self.direction == 'left':
+        #    self.vx = -self.speed
+        #else:
+        #    self.vx = self.speed
         if abs(self.vx) > 3:
             self.vx /= 3
-        if (self._dist(self.level.player.rect.bottom,self.rect.bottom) < 20 and \
-           (self.direction == 'left' and self.level.player.rect.centerx < self.rect.centerx) or \
-           (self.direction == 'right' and self.level.player.rect.centerx > self.rect.centerx) and \
-           self._dist(self.level.player.rect.center,self.rect.center) < 500) or \
-           self._dist(self.level.player.rect.center,self.rect.center) < 10 or \
-           self.alarm:
-            self.vx *= 3
-            if self._dist(self.rect.center,self.level.player.rect.center) < 7:
-                self.vx = 0
-                self.punch()
+        #if (self._dist(self.level.player.rect.bottom,self.rect.bottom) < 20 and \
+        #   (self.direction == 'left' and self.level.player.rect.centerx < self.rect.centerx) or \
+        #   (self.direction == 'right' and self.level.player.rect.centerx > self.rect.centerx) and \
+        #   self._dist(self.level.player.rect.center,self.rect.center) < 500) or \
+        #   self._dist(self.level.player.rect.center,self.rect.center) < 10 or \
+        #   self.alarm:
+        #    self.vx *= 3
+        #    if self._dist(self.rect.center,self.level.player.rect.center) < 7:
+        #        self.vx = 0
+        #        self.punch()
         if self.alarm:
             self.alarm -= 1
-        if self._dist(self.lastpos, self.rect.center) < 2:
-            if self.direction == 'left':
-                self.direction = 'right'
-                self.vx = self.speed
-            else:
-                self.direction = 'left'
-                self.vx = -self.speed
-            self.rect.centerx += self.vx*2
-            Person.update(self,level)
+        #if self._dist(self.lastpos, self.rect.center) < 2:
+        #    if self.direction == 'left':
+        #        self.direction = 'right'
+        #        self.vx = self.speed
+        #    else:
+        #        self.direction = 'left'
+        #        self.vx = -self.speed
+        #    self.rect.centerx += self.vx*2
+        #    Person.update(self,level)
         self.lastpos = self.rect.center
 
     def EVT_alarm(self,event):
@@ -187,8 +202,6 @@ class Exit(Sprite):
         Sprite.__init__(self)
         self.rect.center = pos
         self.level = level
-        #self.level.exit = self
-        #self.level.all.add(self)
 
     def update(self,level):
         self.level = level

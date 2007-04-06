@@ -108,7 +108,7 @@ class Person(AnimatedSprite,Handler):
         elif self.dying:
             if self.anim.index < len(self.anim.seq)-1:
                 AnimatedSprite.update(self)
-                self.rect.centery += 2
+                self.rect.centery += 0.5
                 if self.anim in [self.animation_set.die_back_left,
                                  self.animation_set.die_back_right]:
                     if self.direction == 'right':
@@ -120,8 +120,6 @@ class Person(AnimatedSprite,Handler):
                         self.rect.centerx += 2
                     else:
                         self.rect.centerx -= 2
-            else:
-                self.kill()
         elif self.vx > 0:
             i = self.anim.index
             self.anim = self.animation_set.walk_right
