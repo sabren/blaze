@@ -225,8 +225,10 @@ class Ending(State):
         self.music = Music()
         self.music.volume = 0.7
         self.music.stop(500)
-        self.delay = 25500
+        self.delay = 10*40
         self.playing = False
+        self.image = data.candy
+        self.image.set_alpha(0)
 
     def start(self):
         State.start(self)
@@ -261,20 +263,12 @@ class Ending(State):
             pass
         return surf
 
-    def EVT_credits(self,event):
-        self.quit()
-
     def EVT_tick(self,event):
         if not self.playing:
             return
         disp = pygame.display.get_surface()
-        if self.image.get_alpha() == 255 and self.image != data.candy:
-            self.delay = 25500
-            self.image = data.candy
-        elif self.image == data.candy:
-            self.quit()
-        else:
-            self.image.set_alpha(self.delay/100)
+        if self.image.get_alpha() != 255:
+            self.image.set_alpha(self.image.get_alpha()+1)
         disp.fill((0,0,0))
         disp.blit(self.image,(400-self.image.get_width()/2,
                               300-self.image.get_height()/2))
@@ -282,4 +276,5 @@ class Ending(State):
         if self.delay:
             self.delay -= 1
         else:
+            self.audio.play('data/sounds/fanfare.wav')
             self.quit()
