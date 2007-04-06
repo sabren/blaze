@@ -1,0 +1,17 @@
+Level 2:
+
+Yipe! security cameras! These weren't 
+here when I last visited! He must have
+installed them after he stole it from me.
+
+
+Security Cameras:
+
+Being seen by a camera will trigger an
+alarm and alert security on this floor
+to your presence. To get past slip
+underneath it while it's turned away
+and wait until it turns back the other
+way, allowing you to continue. When
+you are directly underneath a camera
+it will not see you.

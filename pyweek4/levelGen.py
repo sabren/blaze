@@ -17,14 +17,14 @@
 
 import sys,pygame
 pygame.display.set_mode((800,600))
-from lib import level
+from lib import level,data
 
 if __name__=='__main__':
     if len(sys.argv) == 4:
         filename = sys.argv[1]
         size = (int(sys.argv[2]),
                 int(sys.argv[3]))
-        lvl = level.Level(size)
+        lvl = level.Level(data.Basement,size)
         level.save(lvl,filename)
     else:
         print 'usage: python %s <filename> <width> <height>' % sys.argv[0]

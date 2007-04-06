@@ -1,0 +1,15 @@
+Aha! A guard! No doubt there are more 
+of them around here somewhere.
+
+Security Guards:
+
+To engage a guard you have two options:
+punching or kicking, either of which will
+incapacitate them for the time being.
+The difference is that if you kick an
+enemy from behind he will fly a few
+feet and knock out any guards he hits.
+Do NOT do this if he is running at you
+however as they are quite heavy and will
+have the same effect on you as on their
+comrades.

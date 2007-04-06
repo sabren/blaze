@@ -163,33 +163,33 @@ class Enemy(Person,eventnet.driver.Handler):
                         self.flying = True
                         self.vy = -3
                         self.vx = 10
-        #if self.direction == 'left':
-        #    self.vx = -self.speed
-        #else:
-        #    self.vx = self.speed
+        if self.direction == 'left':
+            self.vx = -self.speed
+        else:
+            self.vx = self.speed
         if abs(self.vx) > 3:
             self.vx /= 3
-        #if (self._dist(self.level.player.rect.bottom,self.rect.bottom) < 20 and \
-        #   (self.direction == 'left' and self.level.player.rect.centerx < self.rect.centerx) or \
-        #   (self.direction == 'right' and self.level.player.rect.centerx > self.rect.centerx) and \
-        #   self._dist(self.level.player.rect.center,self.rect.center) < 500) or \
-        #   self._dist(self.level.player.rect.center,self.rect.center) < 10 or \
-        #   self.alarm:
-        #    self.vx *= 3
-        #    if self._dist(self.rect.center,self.level.player.rect.center) < 7:
-        #        self.vx = 0
-        #        self.punch()
+        if (self._dist(self.level.player.rect.bottom,self.rect.bottom) < 20 and \
+           (self.direction == 'left' and self.level.player.rect.centerx < self.rect.centerx) or \
+           (self.direction == 'right' and self.level.player.rect.centerx > self.rect.centerx) and \
+           self._dist(self.level.player.rect.center,self.rect.center) < 500) or \
+           self._dist(self.level.player.rect.center,self.rect.center) < 10 or \
+           self.alarm:
+            self.vx *= 3
+            if self._dist(self.rect.center,self.level.player.rect.center) < 7:
+                self.vx = 0
+                self.punch()
         if self.alarm:
             self.alarm -= 1
-        #if self._dist(self.lastpos, self.rect.center) < 2:
-        #    if self.direction == 'left':
-        #        self.direction = 'right'
-        #        self.vx = self.speed
-        #    else:
-        #        self.direction = 'left'
-        #        self.vx = -self.speed
-        #    self.rect.centerx += self.vx*2
-        #    Person.update(self,level)
+        if self._dist(self.lastpos, self.rect.center) < 2:
+            if self.direction == 'left':
+                self.direction = 'right'
+                self.vx = self.speed
+            else:
+                self.direction = 'left'
+                self.vx = -self.speed
+            self.rect.centerx += self.vx*2
+            Person.update(self,level)
         self.lastpos = self.rect.center
 
     def EVT_alarm(self,event):
@@ -198,7 +198,7 @@ class Enemy(Person,eventnet.driver.Handler):
 class Exit(Sprite):
 
     def __init__(self,pos=(100,100),level=None):
-        self.image = data.exitDoor
+        self.image = level.tileset.exitDoor
         Sprite.__init__(self)
         self.rect.center = pos
         self.level = level

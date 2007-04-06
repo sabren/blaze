@@ -23,16 +23,16 @@ from directicus.gfx import Animation,loadGrid
 import pygame
 
 class Hero:
-    walk_left = loadGrid('data/animations/walk-left.png',(35,50))[0]
-    walk_right = loadGrid('data/animations/walk-right.png',(35,50))[0]
-    kick_left = loadGrid('data/animations/kick-left.png',(35,55))[0]
-    kick_right = loadGrid('data/animations/kick-right.png',(35,55))[0]
-    punch_left = loadGrid('data/animations/punch-left.png',(35,50))[0]
-    punch_right = loadGrid('data/animations/punch-right.png',(35,50))[0]
-    die_forward_left = loadGrid('data/animations/die-forward-left.png',(55,48))[0]
-    die_forward_right = loadGrid('data/animations/die-forward-right.png',(55,48))[0]
-    die_back_left = loadGrid('data/animations/die-back-right.png',(55,48))[0]
-    die_back_right = loadGrid('data/animations/die-back-right.png',(55,48))[0]
+    walk_left = loadGrid('data/animations/walk-left.png',(35,48))[0]
+    walk_right = loadGrid('data/animations/walk-right.png',(35,48))[0]
+    kick_left = loadGrid('data/animations/kick-left.png',(35,48))[0]
+    kick_right = loadGrid('data/animations/kick-right.png',(35,48))[0]
+    punch_left = loadGrid('data/animations/punch-left.png',(35,48))[0]
+    punch_right = loadGrid('data/animations/punch-right.png',(35,48))[0]
+    die_forward_left = loadGrid('data/animations/die-forward-left.png',(45,48))[0]
+    die_forward_right = loadGrid('data/animations/die-forward-right.png',(45,48))[0]
+    die_back_left = loadGrid('data/animations/die-back-right.png',(45,48))[0]
+    die_back_right = loadGrid('data/animations/die-back-right.png',(45,48))[0]
     button = loadGrid('data/animations/walk-left.png',(35,48))[0][0]
 
 class Enemy:
@@ -53,15 +53,11 @@ class Camera:
     anim = loadGrid('data/animations/camera.png',(35,30))[0]
     still = loadGrid('data/animations/camera.png',(35,30))[0][0]
 
-candy = pygame.image.load('data/crunch.png').convert()
+candy = pygame.image.load('data/x.png').convert()
 candy.set_alpha(0)
-wall = pygame.image.load('data/wall.png').convert()
-floor = pygame.image.load('data/floor.png').convert()
 punch = ['data/sounds/punch.wav',
          'data/sounds/punch1.wav',
          'data/sounds/punch2.wav']
-exitDoor = pygame.image.load('data/exit.png').convert()
-exitDoor.set_colorkey(exitDoor.get_at((0,0)))
 
 def texture(filename='',img=None,size=(20,20)):
     surf = pygame.Surface(size)
@@ -79,8 +75,15 @@ icon.set_colorkey(icon.get_at((0,0)))
 
 class Basement:
     _name = 'Basement'
-    background = pygame.image.load('data/textures/brick.png').convert()
-    stair = pygame.image.load('data/ladder.png').convert()
-    wall = wall
-    floor = floor
-    exitDoor = exitDoor
+    background = pygame.image.load('data/brick/brick.png').convert()
+    stair = pygame.image.load('data/brick/ladder.png').convert()
+    wall = pygame.image.load('data/brick/wall.png').convert()
+    wall.set_colorkey(wall.get_at((0,0)))
+    floor = pygame.image.load('data/brick/floor.png').convert()
+    floor.set_colorkey(floor.get_at((0,0)))
+    exitDoor = pygame.image.load('data/brick/exit.png').convert()
+    exitDoor.set_colorkey(exitDoor.get_at((0,0)))
+
+class Office(Basement):
+    _name = 'Office'
+    background = pygame.image.load('data/office/blue.png').convert()

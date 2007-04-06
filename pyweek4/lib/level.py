@@ -19,9 +19,9 @@ import pygame,player,data,cPickle,sprites,os
 from campaign import Campaign
 
 class Level(object):
-    tileset = data.Basement
-
-    def __init__(self,size=(800,600)):
+    def __init__(self,tileset=data.Basement,size=(800,600)):
+        object.__init__(self)
+        self.tileset = tileset
         self.filename = ''
         self.size = size
         self.all = pygame.sprite.Group()
@@ -44,7 +44,7 @@ class Level(object):
             floor = sprites.Floor((x,-self.tileset.floor.get_height()),self)
             floor = sprites.Floor((x,size[1]+self.tileset.floor.get_height()/2),self)
         for y in range(size[1]/self.tileset.wall.get_height()+1):
-            y *= data.wall.get_height()
+            y *= self.tileset.wall.get_height()
             wall = sprites.Wall((-self.tileset.wall.get_width(),y),self)
             wall = sprites.Wall((size[0]+self.tileset.wall.get_width(),y),self)
 
@@ -115,8 +115,8 @@ def load(filename):
     exit = cPickle.load(f)
     f.close()
 
-    lvl = Level(size)
-    lvl.tileset = getattr(data,tileset)
+    tileset = getattr(data,tileset)
+    lvl = Level(tileset,size)
     lvl.player.rect.center = player
     for wall in walls:
         wall = sprites.Wall(wall,lvl)
