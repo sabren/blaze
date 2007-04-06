@@ -147,7 +147,9 @@ class ConfirmQuit(Menu):
         self.quit()
 
     def EVT_Menu_No(self,event):
-        self.quit(self.pauseMenu)
+        s = self.pauseMenu.__new__(type(self.pauseMenu))
+        s.__init__(self.pauseMenu.gamestate)
+        self.quit(s)
 
 class Win(State):
 

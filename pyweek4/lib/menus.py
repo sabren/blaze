@@ -75,22 +75,3 @@ class ConfirmExit(GameMenu):
             else:
                 self.next.__init__()
         self.quit(self.next)
-
-def Paused(GameMenu):
-    title = 'Pause Menu'
-    options = ['Resume Game',
-               'Quit',
-               'Exit to System']
-
-    def __init__(self,game):
-        self.game = game
-        GameMenu.__init__(self)
-
-    def EVT_Menu_ResumeGame(self,event):
-        self.quit(self.game)
-
-    def EVT_Menu_Quit(self,event):
-        self.quit()
-
-    def EVT_Menu_ExittoSystem(self,event):
-        self.quit(ConfirmExit())
