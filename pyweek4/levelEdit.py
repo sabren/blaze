@@ -186,8 +186,15 @@ class LevelEditor(State):
         elif event.key == pygame.K_ESCAPE:
             import sys
             sys.exit()
+        elif event.key in [pygame.K_LSHIFT,pygame.K_RSHIFT]:
+            if self.selected:
+                self.cursor = pygame.sprite.Sprite()
+                self.cursor.image = self.selected.image.copy()
+                self.cursor.rect = self.cursor.image.get_rect()
+                self.cursor.rect.center = pygame.mouse.get_pos()
 
     def EVT_KeyUp(self,event):
+        self.cursor = None
         if event.key == pygame.K_LEFT:
             self.keys[0] = 0
         elif event.key == pygame.K_RIGHT:

@@ -87,3 +87,9 @@ class Basement:
 class Office(Basement):
     _name = 'Office'
     background = pygame.image.load('data/office/blue.png').convert()
+
+class ServerRoom(Basement):
+    _name = 'ServerRoom'
+    background = pygame.image.load('data/metal.png').convert()
+    exitDoor = pygame.image.load('data/pc.png').convert()
+    exitDoor.set_colorkey(exitDoor.get_at((0,0)))

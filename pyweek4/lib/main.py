@@ -32,6 +32,12 @@ class Game(Engine):
 
     def __init__(self,fps=40):
         Engine.__init__(self,fps)
+        try:
+            import psyco
+            psyco.profile()
+        except ImportError:
+            print 'psyco not detected, if your game runs slowly try installing \
+it from http://psyco.sourceforge.net.'
         pygame.display.set_caption('Ascent of Justice')
         pygame.display.set_icon(data.icon)
 

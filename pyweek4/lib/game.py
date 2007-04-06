@@ -60,8 +60,8 @@ class GameState(State):
         self.level.clear()
         self.level.update()
         self.level.draw()
-        self.level.s.rect.left = -self.level.player.rect.left + self.level.s.rect.width/2
-        self.level.s.rect.top = -self.level.player.rect.top + self.level.s.rect.height/2
+        self.level.s.rect.left = -self.level.player.rect.left + pygame.display.get_surface().get_width()/2
+        self.level.s.rect.top = -self.level.player.rect.top + pygame.display.get_surface().get_height()/2
         self.bg.clear(disp,self.level.background)
         self.bg.draw(disp)
         pygame.display.flip()
@@ -200,7 +200,7 @@ class Lose(State):
         self.music.stop(500)
         self.music.play('data/sounds/loser.wav')
         fnt = pygame.font.SysFont('Verdana',30,italic=True)
-        text = fnt.render('You Were Killed!',True,(255,0,0))
+        text = fnt.render('You Got Knocked Out!',True,(255,0,0))
         disp = pygame.display.get_surface()
         disp.blit(text,(400-text.get_width()/2,
                         300-text.get_height()/2))
