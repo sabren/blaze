@@ -75,7 +75,7 @@ class Custom(GameMenu):
             self.quit()
 
     def launch(self,lvl):
-        lvl = 'data\\levels\\' + self.selected
+        lvl = 'data/levels/' + self.selected
         self.quit(GameState(level.load(lvl)))
 
 class ConfirmExit(GameMenu):
