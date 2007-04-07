@@ -61,7 +61,7 @@ class Boss(Enemy):
     die_forward_left = loadGrid('data/animations/boss-die-front-left.png',(45,50))[0]
     die_forward_back = loadGrid('data/animations/boss-die-front-right.png',(45,50))[0]
     die_back_left = loadGrid('data/animations/boss-die-back-left.png',(50,50))[0]
-    die_back_right = loadGdir('data/animations/boss-die-back-right.png',(50,50))[0]
+    die_back_right = loadGrid('data/animations/boss-die-back-right.png',(50,50))[0]
 
 class Camera:
     anim = loadGrid('data/animations/camera.png',(35,30))[0]
