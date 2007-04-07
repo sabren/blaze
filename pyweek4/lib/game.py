@@ -254,7 +254,7 @@ class Ending(State):
         surf.fill((0,0,0))
         surf.set_colorkey((0,0,0))
         try:
-            intro_file = 'data/ending.txt'
+            intro_file = 'data/end.txt'
             f = open(intro_file,'rb')
             intro = [line.strip() for line in f.readlines()]
             f.close()
