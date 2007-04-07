@@ -100,7 +100,7 @@ class Basement:
 
 class Office(Basement):
     _name = 'Office'
-    background = pygame.image.load('data/office/blue.png').convert()
+    background = pygame.image.load('data/blue.png').convert()
 
 class ServerRoom(Basement):
     _name = 'ServerRoom'
