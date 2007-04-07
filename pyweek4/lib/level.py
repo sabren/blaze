@@ -59,7 +59,7 @@ class Level(object):
             f = open(intro_file)
             intro = [line.strip() for line in f.readlines()]
             f.close()
-            fnt = pygame.font.SysFont('Verdana',20,italic=True)
+            fnt = pygame.font.SysFont('verdana',20,italic=True)
             y = 5
             for line in intro:
                 line = fnt.render(line,True,(0,255,0))
