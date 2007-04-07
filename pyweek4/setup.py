@@ -21,7 +21,7 @@ except ImportError:
 setup(scripts=['run_game.py','levelEdit.py','levelGen.py'],
       data_files=[
           ('',['README.txt','LICENSE.txt']),
-          ('data',glob.glob('data/*.png')+['data/ending.txt']),
+          ('data',glob.glob('data/*.png')),
           ('data/animations',glob.glob('data/animations/*.png')),
           ('data/levels',glob.glob('data/levels/*.lvl')+glob.glob('data/levels/*.txt')),
           ('data/brick',glob.glob('data/brick/*.png')),
