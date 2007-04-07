@@ -207,7 +207,7 @@ class Boss(Enemy):
         level.enemies.add(self)
 
     def update(self,level):
-        if self.dying:
+        if self.dying and not level.player.dying:
             eventnet.driver.post('win')
         Enemy.update(self,level)
         for ladder in pygame.sprite.spritecollide(self,level.stairs,False):
