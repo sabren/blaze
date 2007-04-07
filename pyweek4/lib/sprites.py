@@ -18,6 +18,7 @@
 from directicus.sprite import Sprite, AnimatedSprite
 from directicus.gfx import Animation
 from person import Person
+from campaign import Campaign
 import data, eventnet.driver, pygame, random
 
 class Wall(Sprite):
@@ -195,7 +196,18 @@ class Enemy(Person,eventnet.driver.Handler):
     def EVT_alarm(self,event):
         self.alarm = 480
 
-class Exit(Sprite):
+class Boss(Enemy):
+    speed = 2
+
+    def __init__(self,pos,level):
+        Enemy.__init__(self,pos,level)
+        self.kill()
+        self.animation_set = data.Boss()
+        Person.__init__(self,level)
+        self.rect.center = pos
+
+class Exit(Boss):
+    alive = False
 
     def __init__(self,pos=(100,100),level=None):
         self.image = level.tileset.exitDoor
@@ -204,6 +216,12 @@ class Exit(Sprite):
         self.level = level
 
     def update(self,level):
-        self.level = level
-        if self.rect.colliderect(self.level.player.rect):
-            eventnet.driver.post('win')
+        if level.filename.replace('\\','/') == 'data/levels/boss.lvl':
+            if not self.alive:
+                Boss.__init__(self,self.rect.center,level)
+                self.alive = True
+            Boss.update(self,level)
+        else:
+            self.level = level
+            if self.rect.colliderect(self.level.player.rect):
+                eventnet.driver.post('win')

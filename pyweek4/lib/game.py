@@ -178,9 +178,11 @@ class Win(State):
         if self.delay:
             self.delay -= 1
         else:
-            filename = Campaign.next(self.level)
+            filename = Campaign.next(self.level.replace('\\','/'))
             if filename:
-                self.quit(GameState(level.load(filename)))
+                lvl = level.load(filename)
+                level.save(lvl,'save.lvl')
+                self.quit(GameState(lvl))
             else:
                 self.quit()
                 # Not allowed to see the ending yet!

@@ -100,6 +100,7 @@ def save(level,filename):
     cPickle.dump(enemies,f)
     cPickle.dump(stairs,f)
     cPickle.dump(level.exit.rect.center,f)
+    cPickle.dump(level.filename,f)
     f.close()
 
 def load(filename):
@@ -113,6 +114,7 @@ def load(filename):
     enemies = cPickle.load(f)
     stairs = cPickle.load(f)
     exit = cPickle.load(f)
+    filename = cPickle.load(f)
     f.close()
 
     tileset = getattr(data,tileset)

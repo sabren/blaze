@@ -25,7 +25,8 @@ class Campaign(object):
         #'data/levels/office.lvl',
         #'data/levels/server-room.lvl',
         #'data/levels/apartment.lvl',
-        'data/levels/roof.lvl',
+        #'data/levels/roof.lvl',
+        'data/levels/boss.lvl'
         ]
 
     @staticmethod
