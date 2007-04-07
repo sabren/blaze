@@ -259,7 +259,7 @@ I have reclaimed my own.
 
 Boss: All right already, you can have it, it's
 stale anyway.'''
-            intro = [line.strip() for line in f.split('\n')]
+            intro = [line.strip() for line in intro.split('\n')]
             fnt = pygame.font.SysFont('Verdana',20,italic=True)
             y = 5
             for line in intro:
