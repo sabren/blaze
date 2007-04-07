@@ -49,6 +49,15 @@ class Enemy:
     die_back_left = loadGrid('data/animations/enemy-die-back-left.png',(45,48))[0]
     die_back_right = loadGrid('data/animations/enemy-die-back-right.png',(45,48))[0]
 
+class Boss(Enemy):
+    button = loadGrid('data/animations/boss-walk-left.png',(35,50))[0][0]
+    walk_left = loadGrid('data/animations/boss-walk-left.png',(35,50))[0]
+    walk_right = loadGrid('data/animations/boss-walk-right.png',(35,50))[0]
+    punch_left = loadGrid('data/animations/boss-punch-left.png',(35,50))[0]
+    punch_right = loadGrid('data/animations/boss-punch-right.png',(35,50))[0]
+    kick_left = loadGrid('data/animations/boss-kick-left.png',(35,50))[0]
+    kick_right = loadGrid('data/animations/boss-kick-right.png',(35,50))[0]
+
 class Camera:
     anim = loadGrid('data/animations/camera.png',(35,30))[0]
     still = loadGrid('data/animations/camera.png',(35,30))[0][0]
@@ -97,3 +106,9 @@ class ServerRoom(Basement):
 class Apartment(Basement):
     _name = 'Apartment'
     background = pygame.image.load('data/black.png').convert()
+
+class Roof(Basement):
+    _name = 'Roof'
+    background = pygame.image.load('data/sky.png').convert()
+    exitDoor = Boss.button
+    exitDoor.set_colorkey(exitDoor.get_at((0,0)))
