@@ -6,7 +6,7 @@ extra_opts = dict(zipfile=None)
 # If py2exe exists we'll import it
 try:
     import py2exe
-    extra_opts.update({'windows': ['run_game.py']})
+    extra_opts.update({'windows': ['Ascent.py','levelGen.py','levelEdit.py']})
 except ImportError:
     pass
 
@@ -14,16 +14,16 @@ except ImportError:
 try:
     import py2app
     extra_opts.update({'zipfile': '', # zipfile=None confuses py2app
-                       'app': ['run_game.py']})
+                       'app': ['run_game.py','levelGen.py','levelEdit.py']})
 except ImportError:
     pass
 
-setup(scripts=['editor.py','levelGen.py'],
+setup(scripts=['run_game.py','levelEdit.py','levelGen.py'],
       data_files=[
           ('',['README.txt','LICENSE.txt']),
           ('data',glob.glob('data/*.png')+['data/ending.txt']),
           ('data/animations',glob.glob('data/animations/*.png')),
-          ('data/levels',glob.glob('data/levels/*.lvl'),glob.glob('data/levels/*.txt')),
+          ('data/levels',glob.glob('data/levels/*.lvl')+glob.glob('data/levels/*.txt')),
           ('data/brick',glob.glob('data/brick/*.png')),
           ('data/sounds',glob.glob('data/sounds/*.wav')),
           ('data/music',glob.glob('data/music/*.mp3')),
