@@ -254,10 +254,12 @@ class Ending(State):
         surf.fill((0,0,0))
         surf.set_colorkey((0,0,0))
         try:
-            intro_file = 'data/end.txt'
-            f = open(intro_file,'rb')
-            intro = [line.strip() for line in f.readlines()]
-            f.close()
+            intro = '''You: At... last... after such pain and toil,
+I have reclaimed my own.
+
+Boss: All right already, you can have it, it's
+stale anyway.'''
+            intro = [line.strip() for line in f.split('\n')]
             fnt = pygame.font.SysFont('Verdana',20,italic=True)
             y = 5
             for line in intro:
