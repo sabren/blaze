@@ -255,7 +255,7 @@ class Ending(State):
         surf.set_colorkey((0,0,0))
         try:
             intro_file = 'data/ending.txt'
-            f = open(intro_file)
+            f = open(intro_file,'rb')
             intro = [line.strip() for line in f.readlines()]
             f.close()
             fnt = pygame.font.SysFont('Verdana',20,italic=True)
