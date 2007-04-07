@@ -63,7 +63,11 @@ class Level(object):
             y = 5
             for line in intro:
                 line = fnt.render(line,True,(0,255,0))
-                surf.blit(line,(400-(line.get_width()/2),y))
+                bg = line.copy()
+                bg.fill((100,100,100,255))
+                bg.blit(line,(0,0))
+                line = bg
+                surf.blit(bg,(400-(line.get_width()/2),y))
                 y += line.get_height()+5
         except:
             pass

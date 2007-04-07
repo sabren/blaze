@@ -18,7 +18,8 @@
 from directicus.engine import Menu
 from directicus.sfx import Music
 from game import GameState
-import pygame,eventnet.driver,sys,os,level
+from campaign import Campaign
+import pygame,eventnet.driver,sys,os,level,glob,posixpath
 
 class GameMenu(Menu):
     '''
@@ -34,6 +35,7 @@ class GameMenu(Menu):
 class MainMenu(GameMenu):
     title = 'Ascent of Justice'
     options = ['New Game',
+               'Play Custom',
                'Exit']
 
     def __init__(self):
@@ -50,8 +52,31 @@ class MainMenu(GameMenu):
     def EVT_Menu_Continue(self,event):
         self.quit(GameState(level.load('save.lvl')))
 
+    def EVT_Menu_PlayCustom(self,event):
+        self.quit(Custom())
+
     def EVT_Menu_Exit(self,event):
         eventnet.driver.post('Quit')
+
+class Custom(GameMenu):
+    title = 'Choose a Level'
+    options = []
+    color = (255,255,255)
+
+    def __init__(self):
+        self.options = [f.replace('\\','/').split('/')[-1]
+                        for f in Campaign.levels]
+        for option in self.options:
+            setattr(self,'EVT_Menu_%s' % option,self.launch)
+        GameMenu.__init__(self)
+
+    def EVT_KeyDown(self,event):
+        if event.key == pygame.K_ESCAPE:
+            self.quit()
+
+    def launch(self,lvl):
+        lvl = 'data\\levels\\' + self.selected
+        self.quit(GameState(level.load(lvl)))
 
 class ConfirmExit(GameMenu):
     title = 'Exit to system?'
