@@ -184,9 +184,7 @@ class Win(State):
                 level.save(lvl,'save.lvl')
                 self.quit(GameState(lvl))
             else:
-                self.quit()
-                # Not allowed to see the ending yet!
-                #self.quit(Ending())
+                self.quit(Ending())
 
 class Lose(State):
 
