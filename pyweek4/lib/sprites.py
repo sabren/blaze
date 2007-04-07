@@ -197,7 +197,6 @@ class Enemy(Person,eventnet.driver.Handler):
         self.alarm = 480
 
 class Boss(Enemy):
-    speed = 2
 
     def __init__(self,pos,level):
         Enemy.__init__(self,pos,level)
@@ -205,6 +204,20 @@ class Boss(Enemy):
         self.animation_set = data.Boss()
         Person.__init__(self,level)
         self.rect.center = pos
+        level.enemies.add(self)
+
+    def update(self,level):
+        Enemy.update(self,level)
+        for ladder in pygame.sprite.spritecollide(self,level.stairs,False):
+            if not self.rect.centerx == ladder.rect.centerx:
+                continue
+            if self._dist(level.player.rect.centery, self.rect.centery) > 10:
+                if level.player.rect.centery < self.rect.centery \
+                   and ladder.rect.top < self.rect.centery:
+                    self.rect.bottom = ladder.rect.top - 10
+                elif level.player.rect.centery > self.rect.centery and \
+                     ladder.rect.bottom > self.rect.bottom:
+                    self.rect.bottom = ladder.rect.bottom
 
 class Exit(Boss):
     alive = False
