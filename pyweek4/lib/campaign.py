@@ -38,4 +38,4 @@ class Campaign(object):
             if i == len(Campaign.levels):
                 return None
             else:
-                return Campaign.levels[i]
+                return Campaign.levels[i].replace('\\','/')

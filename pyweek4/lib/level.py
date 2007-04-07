@@ -135,6 +135,6 @@ def load(filename):
     for stair in stairs:
         stair = sprites.Stair(stair,lvl)
     lvl.exit.rect.center = exit
-    lvl.filename = filename
+    lvl.filename = filename.replace('\\','/')
 
     return lvl
