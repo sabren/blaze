@@ -44,7 +44,7 @@ class MainMenu(GameMenu):
         GameMenu.__init__(self)
         self.music = Music()
         self.music.volume = 1
-        self.music.play('data/music/menu.mp3')
+        self.music.play('data/music/menu.ogg')
 
     def EVT_Menu_NewGame(self,event):
         self.quit(GameState())

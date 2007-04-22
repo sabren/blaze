@@ -36,7 +36,7 @@ class GameState(State):
         self.audio.volume = 0.5
         self.alarm = 0
         self.music.stop(500)
-        self.music.play('data/music/play.mp3',-1)
+        self.music.play('data/music/play.ogg',-1)
         self.playing = True
 
     def start(self):
@@ -82,7 +82,7 @@ class GameState(State):
     def quit(self,next=None):
         self.audio.stop(500)
         self.music.stop(500)
-        self.music.play('data/music/menu.mp3',-1)
+        self.music.play('data/music/menu.ogg',-1)
         State.quit(self,next)
 
 class PauseMenu(Menu):
