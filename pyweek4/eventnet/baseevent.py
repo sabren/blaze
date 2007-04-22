@@ -48,7 +48,6 @@ class Observer(object):
                 if func: func(event)
             return self.events[event.type]
         else:
-            print 'Unhandled event %s.' % (eventType)
             return []
 
 class Handler(object):
