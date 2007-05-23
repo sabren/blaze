@@ -17,7 +17,7 @@
 
 from directicus.sprite import AnimatedSprite
 from directicus.gfx import Animation
-from data import Hero,Enemy
+from data import Hero,Enemy,AnimationSet
 from eventnet.driver import Handler
 from person import Person
 import pygame, random, level, eventnet.driver
@@ -28,7 +28,7 @@ class Player(Person):
     '''
 
     def __init__(self):
-        self.animation_set = Hero()
+        self.animation_set = AnimationSet(Hero)
         Person.__init__(self,None)
         self.rect.topleft = (0,0)
         self.flying = False

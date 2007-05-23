@@ -120,3 +120,23 @@ class Roof(Basement):
 
 class BossFight(Roof):
     _name = 'BossFight'
+
+class AnimationSet(object):
+
+    def __init__(self,src):
+        object.__init__(self)
+        for name in ['walk_left',
+             'walk_right',
+             'die_back_left',
+             'die_back_right',
+             'die_forward_left',
+             'die_forward_right']:
+            anim = getattr(src,name)
+            setattr(self,name,Animation(anim,True))
+        for name in ['punch_left',
+                     'punch_right',
+                     'kick_left',
+                     'kick_right']:
+            setattr(self,name,getattr(src,name))
+
+enemy = AnimationSet(Enemy)

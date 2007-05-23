@@ -26,14 +26,14 @@ class Person(AnimatedSprite,Handler):
     animation_set = None
 
     def __init__(self,level):
-        for name in ['walk_left',
-                     'walk_right',
-                     'die_back_left',
-                     'die_back_right',
-                     'die_forward_left',
-                     'die_forward_right']:
-            anim = getattr(self.animation_set,name)
-            setattr(self.animation_set,name,Animation(anim,True))
+        #for name in ['walk_left',
+        #             'walk_right',
+        #             'die_back_left',
+        #             'die_back_right',
+        #             'die_forward_left',
+        #             'die_forward_right']:
+        #    anim = getattr(self.animation_set,name)
+        #    setattr(self.animation_set,name,Animation(anim,True))
         self.audio = Audio()
         self.audio.volume = 0.5
         self.anim = self.animation_set.walk_right

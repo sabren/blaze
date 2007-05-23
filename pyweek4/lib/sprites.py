@@ -101,7 +101,7 @@ class Enemy(Person,eventnet.driver.Handler):
     speed = 2
 
     def __init__(self,pos,level):
-        self.animation_set = data.Enemy()
+        self.animation_set = data.AnimationSet(data.Enemy)
         eventnet.driver.Handler.__init__(self)
         Person.__init__(self,level)
         self.capture()
