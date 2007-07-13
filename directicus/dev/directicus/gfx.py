@@ -56,7 +56,7 @@ class SpriteSheet(object):
         
 class GridSheet(SpriteSheet):
     '''
-    A gridded variation of our spritesheet.
+    A grid variation of our spritesheet.
     '''
     
     def __init__(self,filename=None,surf=None,size=None,x=0,y=0,spacing=0):
