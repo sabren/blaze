@@ -21,6 +21,77 @@ Storage of multiple images in a single file and animations.
 
 import pygame
 
+class SpriteSheet(object):
+    def __init__(self,filename=None,surf=None):
+        object.__init__(self)
+        self.filename = filename
+        if surf:
+            self.surf = surf
+        else:
+            self.surf = pygame.image.load(filename)
+            
+    def get(self,rect=None,x=0,y=0,width=0,height=0,size=None,pos=None):
+        if rect:
+            x,y,width,height = rect.x,rect.y,rect.width,rect.height
+        elif size:
+            width,height = size
+            if pos:
+                x,y = pos
+        elif not (width and height):
+            raise ValueError, 'You must use either a pygame rect "rect", tuples for "size" and "pos", or "x", "y", "width", and "height" arguments.'
+        clipRect = pygame.Rect(x,y,width,height)
+        clipSurf = pygame.Surface(clipRect.size)
+        clipSurf.blit(self.surf,(-x,-y))
+        return clipSurf
+    
+    def set(self,surf,x=0,y=0,pos=None):
+        if pos:
+            x,y = pos
+        self.surf.blit(surf,(x,y))
+        
+    def save(self,filename=None):
+        if not filename:
+            filename = self.filename
+        pygame.image.save(self.surf,filename)
+        
+class GridSheet(SpriteSheet):
+    '''
+    A gridded variation of our spritesheet.
+    '''
+    
+    def __init__(self,filename=None,surf=None,size=None,x=0,y=0,spacing=0):
+        SpriteSheet.__init__(self,filename,surf)
+        if size:
+            x,y = size
+        elif not x and not y:
+            raise ValueError, 'You must specify the size via "size" or x and y args.'
+        self.size = size
+        self.spacing = spacing
+        
+    def get(self,row=0,col=0):
+        pos = ((col*self.size[0])+(self.spacing*col),
+               (row*self.size[1])+(self.spacing*row))
+        return SpriteSheet.get(self,pos=pos,size=self.size)
+    
+    def set(self,surf,row=0,col=0):
+        pos = ((col*self.size[0])+(self.spacing*col),
+               (row*self.size[1])+(self.spacing*row))
+        SpriteSheet.set(self,surf,pos=pos)
+        
+    def getMatrix(self):
+        matrix = []
+        for y in range(self.surf.get_height()/self.size[1]):
+            row = []
+            for x in range(self.surf.get_width()/self.size[0]):
+                row.append(self.get(y,x))
+            matrix.append(row)
+        return matrix
+    
+    def setMatrix(self,matrix):
+        for row in matrix:
+            for col in row:
+                self.set(col,matrix.index(row),row.index(col))
+
 def saveGrid(map,filename):
     '''
     saveGrid(map,filename) - save a 2d map of images into a single file
