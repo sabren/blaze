@@ -1,27 +1,27 @@
-#Directicus
-#Copyright (C) 2006 Team Trailblazer
-#
-#This program is free software; you can redistribute it and/or modify
-#it under the terms of the GNU General Public License as published by
-#the Free Software Foundation; either version 2 of the License, or
-#(at your option) any later version.
-#
-#This program is distributed in the hope that it will be useful,
-#but WITHOUT ANY WARRANTY; without even the implied warranty of
-#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#GNU General Public License for more details.
-#
-#You should have received a copy of the GNU General Public License
-#along with this program; if not, write to the Free Software
-#Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# Directicus
+# Copyright (C) 2006-2007 Team Trailblazer
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 '''
 Easy sprites with support for animations and pixel-perfect collision detection.
 '''
 
-import pygame, eventnet.driver
+import pygame, event
 
-class Sprite(pygame.sprite.Sprite,eventnet.driver.Handler):
+class Sprite(pygame.sprite.Sprite,event.Listener):
     '''
     When subclassing be sure to specify a Sprite.image before __init__().
     '''
@@ -35,7 +35,7 @@ class Sprite(pygame.sprite.Sprite,eventnet.driver.Handler):
         '''
 
         pygame.sprite.Sprite.__init__(self, groups)
-        eventnet.driver.Handler.__init__(self)
+        event.Listener.__init__(self)
         self.rect = self.image.get_rect()
         self.points = [] #for collisions
 

@@ -1,27 +1,27 @@
-#Directicus
-#Copyright (C) 2006 Team Trailblazer
-#
-#This program is free software; you can redistribute it and/or modify
-#it under the terms of the GNU General Public License as published by
-#the Free Software Foundation; either version 2 of the License, or
-#(at your option) any later version.
-#
-#This program is distributed in the hope that it will be useful,
-#but WITHOUT ANY WARRANTY; without even the implied warranty of
-#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#GNU General Public License for more details.
-#
-#You should have received a copy of the GNU General Public License
-#along with this program; if not, write to the Free Software
-#Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# Directicus
+# Copyright (C) 2006-2007 Team Trailblazer
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 '''
 Easy to use state engine.
 '''
 
-import pygame, eventnet.driver
+import pygame,event
 
-class State(eventnet.driver.Handler):
+class State(event.Listener):
     '''
     Our basic state object. See the methods for specifics.
     '''
@@ -33,7 +33,7 @@ class State(eventnet.driver.Handler):
         __init__ superclasses, load data, etc.
         '''
 
-        eventnet.driver.Handler.__init__(self)
+        event.Listener.__init__(self)
         self.done = True
         self.next = None
 
@@ -42,10 +42,9 @@ class State(eventnet.driver.Handler):
         State.start() - Called right before it starts ticking.
         '''
 
-        self.capture() #start eventnet for this object
         self.done = False
 
-    def EVT_tick(self,event):
+    def onTick(self,event):
         '''
         State.EVT_tick(event)
 
@@ -61,7 +60,7 @@ class State(eventnet.driver.Handler):
         If next is none default state will load.
         '''
         
-        self.release()
+        self.unRegister()
         self.next = next
         self.done = True
 
@@ -107,7 +106,7 @@ class Menu(State):
         self.options = opts
         self.selected = None
 
-    def EVT_tick(self,event):
+    def onTick(self,event):
         '''
         Menu.EVT_tick(event) - reload options and check for a mouseover
         '''
@@ -125,22 +124,22 @@ class Menu(State):
             pygame.display.get_surface().blit(option[1],option[2])
         pygame.display.flip()
 
-    def EVT_MouseButtonDown(self,event):
+    def onMouseButtonDown(self,event):
         '''
         Menu.EVT_MouseButtonDown(event) - if an option is clicked launch it.
         '''
 
         if self.selected != None:
-            eventnet.driver.post(self.prefix + self.selected)
+            event.dispatcher.dispatch(self.prefix + self.selected)
 
-    def EVT_Menu_Quit(self,event):
+    def onMenu_Quit(self,event):
         '''
         Menu.EVT_Menu_Quit(event) - "Quit" option clicked, exit program.
         '''
 
-        eventnet.driver.post('Quit')
+        event.dispatcher.dispatch('Quit')
 
-class Engine(eventnet.driver.Handler):
+class Engine(event.Listener):
     '''
     Toplevel control object. "DEFAULT" will be loaded at start and whenever no
     "next" is supplied.
@@ -153,13 +152,12 @@ class Engine(eventnet.driver.Handler):
         Engine.__init__(fps) - compute settings and prepare to launch with "fps"
         '''
 
-        eventnet.driver.Handler.__init__(self)
+        event.Listener.__init__(self)
         self.state = None
         self.size = (800,600)
         self.fullscreen = False
         self.fps = fps
         self.clock = pygame.time.Clock()
-        self.capture()
 
     def run(self):
         '''
@@ -176,9 +174,10 @@ class Engine(eventnet.driver.Handler):
 
         #mainloop
         while 1:
-            for event in pygame.event.get():
-                eventnet.driver.post(pygame.event.event_name(event.type),
-                                     **event.dict)
+            event.handlePygame()
+            #for event in pygame.event.get():
+            #    eventnet.driver.post(pygame.event.event_name(event.type),
+            #                         **event.dict)
             if self.state.done and self.state.next:
                 self.state = self.state.next
                 self.state.start()
@@ -187,14 +186,22 @@ class Engine(eventnet.driver.Handler):
                 self.state.start()
             else:
                 self.clock.tick(self.fps)
-                eventnet.driver.post('tick')
+                event.dispatch('Tick')
+                #eventnet.driver.post('tick')
 
-    def EVT_Quit(self,event):
+    def onQuit(self,event):
         '''
         Engine.EVT_Quit(event) - shut down the program
         '''
 
-        self.release()
+        self.unRegister()
         pygame.quit()
         import sys
         sys.exit(0)
+
+def test():
+    e = Engine()
+    e.run()
+    
+if __name__=='__main__':
+    test()

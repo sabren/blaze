@@ -1,30 +1,30 @@
-#Directicus
-#Copyright (C) 2006 Team Trailblazer
-#
-#This program is free software; you can redistribute it and/or modify
-#it under the terms of the GNU General Public License as published by
-#the Free Software Foundation; either version 2 of the License, or
-#(at your option) any later version.
-#
-#This program is distributed in the hope that it will be useful,
-#but WITHOUT ANY WARRANTY; without even the implied warranty of
-#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#GNU General Public License for more details.
-#
-#You should have received a copy of the GNU General Public License
-#along with this program; if not, write to the Free Software
-#Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# Directicus
+# Copyright (C) 2006-2007 Team Trailblazer
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 '''
 Sound engine.
 '''
 
-import pygame, eventnet.driver, os
+import pygame, event, os
 
 if not pygame.mixer.get_init():
     pygame.mixer.init()
 
-class Audio(eventnet.driver.Handler):
+class Audio(event.Listener):
     '''
     Audio controller with sound falloff.
     '''
@@ -33,15 +33,7 @@ class Audio(eventnet.driver.Handler):
     sounds = []
     falloff = 0.0 #per-pixel volume falloff
 
-    def __init__(self):
-        '''
-        Audio.__init__() - start event handlers
-        '''
-
-        eventnet.driver.Handler.__init__(self)
-        self.capture()
-
-    def EVT_tick(self,event):
+    def onTick(self,event):
         '''
         Audio.EVT_tick(event) - make sure all effects are on the chosen volume
         '''
@@ -115,7 +107,7 @@ class Music(Audio):
     A music controller.
     '''
 
-    def EVT_tick(self,event):
+    def onTick(self,event):
         '''
         Music.EVT_tick(event) - check music volume is correct.
         '''
