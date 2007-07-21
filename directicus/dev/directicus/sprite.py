@@ -38,6 +38,7 @@ class Sprite(pygame.sprite.Sprite,event.Listener):
         event.Listener.__init__(self)
         self.rect = self.image.get_rect()
         self.points = [] #for collisions
+        self.calcMap()
 
     def start(self):
         '''
@@ -78,12 +79,13 @@ class Sprite(pygame.sprite.Sprite,event.Listener):
         Sprite.collideSprite(sprite - check for a collision with another sprite
         '''
 
-        sprite.calcMap()
-        for point in sprite.points:
-            if point in self.points:
-                return True
-
-        return False
+        if self.usePP or sprite.usePP:
+            for point in sprite.points:
+                if point in self.points:
+                    return True
+            return False
+        else:
+            return self.rect.colliderect(sprite.rect)
 
     def collideGroup(self,group):
         '''
@@ -101,7 +103,7 @@ class Sprite(pygame.sprite.Sprite,event.Listener):
         Sprite.kill() - leave all groups and disconnect events
         '''
 
-        self.release()
+        self.unRegister()
         pygame.sprite.Sprite.kill(self)
 
     def update(self):
@@ -130,9 +132,14 @@ class AnimatedSprite(Sprite):
         '''
 
         self.anim.tick()
+        if self.anim.surf == self.anim.seq[0]:
+            self.onStart()
         if self.anim.surf == self.anim.seq[-1]:
             self.onEnd()
         self.image = self.anim.surf
+        
+    def onStart(self):
+        pass
 
     def onEnd(self):
         '''

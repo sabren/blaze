@@ -1,28 +1,26 @@
+import directicus,pygame
+directicus.event.debugging = False
 
 if __name__=='__main__':
-    import glob
-    from directicus import engine,sprite
-    from directicus.gfx import *
-    seq = glob.glob('exploBig/*.bmp')
-    seq = [[pygame.image.load(img) for img in seq[:7]],
-           [pygame.image.load(img) for img in seq[8:]]]
-    saveGrid(seq,'temp.bmp')
-    seq = loadGrid('temp.bmp',(40,40),(0,0,0))
-    ani = seq [0]
-    ani.extend(seq[1])
-    ani = Animation(ani,loop=True)
-
-    sprite.AnimatedSprite.anim = ani
-    sprite = sprite.AnimatedSprite()
-
-    s = engine.State
-    def tick(self,event):
-        sprite.update()
-        pygame.display.get_surface().fill((0,0,0))
-        pygame.display.get_surface().blit(sprite.image,sprite.rect)
-        pygame.display.flip()
-    s.EVT_tick = tick
-    e = engine.Engine(20)
-    e.DEFAULT = s
+    sheet = directicus.gfx.GridSheet(filename='media/explode.png',size=(40,40))
+    m = sheet.getMatrix()
+    seq = m[0]+m[1]
+    anim = directicus.gfx.Animation(seq,True)
+    
+    class MyState(directicus.engine.State):
+        def start(self):
+            directicus.engine.State.start(self)
+            pygame.display.set_caption('Directicus GridSheet and Animation Demo')
+            
+        def onTick(self,event):
+            directicus.engine.State.onTick(self,event)
+            disp = pygame.display.get_surface()
+            disp.fill((0,0,0))
+            disp.blit(anim.surf,(130,80))
+            anim.tick()
+            pygame.display.flip()
+            
+    e = directicus.engine.Engine(20)
     e.size = (300,200)
+    e.DEFAULT = MyState
     e.run()

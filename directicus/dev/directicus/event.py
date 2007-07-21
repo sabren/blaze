@@ -1,7 +1,26 @@
+# Directicus
+# Copyright (C) 2006-2007 Team Trailblazer
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
 # Change this to turn off "event not handled" messages
 debugging = True
 
 prefix = 'on'
+
+__all__ = ['Listener','dispatch','handlePygame','eventListener','debugging','prefix']
 
 class Event(object):
     def __init__(self,type,**kwargs):
@@ -48,11 +67,13 @@ class Handler(object):
         self.dispatcher = dispatcher
         type = func.func_name[len(prefix):]
         self.type = type
-        dispatcher.connect(type,self)
+        self.dispatcher.connect(type,self)
+        if parent:
+            parent.attach(self)
         
     def __call__(self,event):
         if self.parent:
-            return self.func(event,self.parent)
+            return self.func(self.parent,event)
         else:
             return self.func(event)
 
@@ -86,6 +107,9 @@ class Listener(object):
         self.dispatcher = dispatcher
         self.register()
         
+    def attach(self,handler):
+        setattr(self,prefix+handler.type,handler)
+        
     def register(self):
         self.unRegister()
         for name in dir(self):
@@ -99,33 +123,3 @@ class Listener(object):
             if not isinstance(attr,Handler):
                 continue
             self.dispatcher.disconnect(attr)
-            
-def test():
-    debugging = True
-    class myObject():pass
-    myObject = myObject()
-    
-    @eventListener(myObject)
-    def onKeyDown(self,event):
-        print 'keydown!'
-        
-    class MyObject2(Listener):
-        def onMouseButtonDown(self,event):
-            print 'mousedown!'
-            
-    MyObject2 = MyObject2()
-    del MyObject2
-        
-    @eventListener
-    def onQuit(event):
-        import sys
-        sys.exit()
-        
-    import pygame
-    pygame.init()
-    screen = pygame.display.set_mode((300,200))
-    while True:
-        handlePygame()
-        
-if __name__=='__main__':
-    test()

@@ -27,7 +27,7 @@ class SpriteSheet(object):
         self.filename = filename
         if surf:
             self.surf = surf
-        else:
+        elif filename:
             self.surf = pygame.image.load(filename)
             
     def get(self,rect=None,x=0,y=0,width=0,height=0,size=None,pos=None):
