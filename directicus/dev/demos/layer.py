@@ -23,15 +23,17 @@ if __name__=='__main__':
                 Gun((145,90)),
                 Gun((155,110)),
             ]
-            self.layer1 = IsometricLayer(background=bg1,sprites=sprites)
+            self.layer = IsometricLayer(background_image=bg1,size=(640,480),*sprites)
             disp = pygame.display.get_surface()
-            self.layer1.start(disp)
+            self.layer.start(disp)
+            pygame.display.flip()
             
         def onTick(self,event):
             directicus.engine.State.onTick(self,event)
             disp = pygame.display.get_surface()
             disp.fill((0,0,0))
-            self.layer1.render(disp)
+            self.layer.update()
+            disp.blit(self.layer.image,self.layer.rect)
             pygame.display.flip()
             
     e = directicus.engine.Engine()

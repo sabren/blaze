@@ -172,6 +172,7 @@ class Element(directicus.sprite.Sprite,directicus.event.Listener):
         self._mouseOver = False
         
     def update(self):
+        pygame.sprite.Sprite.update(self)
         self._font = pygame.font.SysFont(self.font,self.font_size)
         if UNDERLINE in self.font_style:
             self._font.set_underline(True)

@@ -19,41 +19,23 @@
 Level object
 '''
 
-import pygame,cPickle,sprite
+import pygame,cPickle,sprite,gui
 
-class Layer(object):
+class Layer(gui.Element):
+    def start(self,dest=None):
+        self.update()
+        if dest:
+            dest.blit(self.image,(0,0))
     
-    def __init__(self,background=None,foreground=None,sprites=[]):
-        object.__init__(self)
-        if background:
-            self.background = background
-        self.foreground = foreground
-        self._sprites = sprites
-        if isinstance(sprites,pygame.sprite.Group):
-            self.sprites = sprites
-        else:
-            self.sprites = pygame.sprite.Group(sprites)
-        self.surf = None
-    
-    def update(self,*args,**kwargs):
-        if not self.surf:
-            self.surf = self.background.copy()
-        self.sprites.clear(self.surf,self.background)
-        self.sprites.update(*args,**kwargs)
-        self.sprites.draw(self.surf)
-        
-    def start(self,dest):
-        dest.blit(self.background,(0,0))
-    
-    def render(self,dest=None):
-        if not dest:
-            dest = self.background.copy()
-        self.sprites.clear(dest,self.background)
-        self.sprites.update()
-        self.sprites.draw(dest)
-        if self.foreground:
-            dest.blit(self.foreground,(0,0),self.foreground.get_rect())
-        return dest
+    def update(self):
+        gui.Element.update(self)
+        self._children.update()
+        self._children.draw(self.image)
+
+def makeIsometric(group):
+    if not isinstance(group,pygame.sprite.OrderedUpdates):
+        group = pygame.sprite.OrderedUpdates(group.sprites())
+    group._spritelist.sort(lambda a,b:-1+(int(a.rect.bottom > b.rect.bottom)*2))
 
 class IsometricLayer(Layer):
     '''
@@ -62,8 +44,11 @@ class IsometricLayer(Layer):
 
     def start(self,dest=None):
         Layer.start(self,dest)
-        self.sprites = pygame.sprite.OrderedUpdates(self.sprites.sprites())
+        self._children = pygame.sprite.OrderedUpdates(self._children.sprites())
 
-    def render(self,*args,**kwargs):
-        self.sprites._spritelist.sort(lambda a,b:-1+(int(a.rect.bottom > b.rect.bottom)*2))
-        Layer.render(self,*args,**kwargs)
+    def update(self):
+        if not isinstance(self._children,pygame.sprite.OrderedUpdates):
+            self.start()
+        self._children._spritelist.sort(lambda a,b:-1+(int(a.rect.bottom > b.rect.bottom)*2))
+        self.children = self._children.sprites()
+        Layer.update(self)
