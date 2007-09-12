@@ -5,7 +5,6 @@ import events, sounds, loader, cPickle, string, random
 from constants import *
 from pygame.locals import *
 from pygame import locals as pg
-from scorelist import ScoreList
 from events import GAME, LEVELLIST, MENU
 from health import Food
 from statusbox import StatusBox

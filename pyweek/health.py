@@ -207,7 +207,10 @@ class NotEnoughCalories(HealthError):
     The calories left to burn are stored in calories_short
     """
     def __init__(self, args=None):
-        self.args = args
+        try:
+            self.args = args
+        except:
+            self.args = (args,)
         self.calories_short = args
 
 class CalorieBank:

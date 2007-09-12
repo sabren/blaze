@@ -26,7 +26,6 @@ g  render.py
 g  room.py
 g  roomphysics.py
 g  rotate.py : used by loader.. may not be working correctly
-g  scorelist.py
 g  scores.py : display score screen
 g  sounds.py
 g  soundtrack.py
