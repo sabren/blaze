@@ -1,4 +1,4 @@
-#Clad in Iron 0.5
+#Clad in Iron (development version)
 #Copyright (C) 2006 Team Trailblazer
 #
 #This program is free software; you can redistribute it and/or modify
@@ -15,46 +15,54 @@
 #along with this program; if not, write to the Free Software
 #Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import pygame, eventnet.driver, os, sys, sprites, scrolling, level, glob
-import cPickle, jukebox, effects, random, time
+import pygame, eventnet.driver, os, sys, glob, cPickle, random, time
 from string import digits, lowercase
-'''
-Store states here.
-'''
+
+import sprites, scrolling, level, jukebox, effects
 
 pygame.font.init()
 
 class State(eventnet.driver.Handler):
     '''
-    State superclass. Doubles as a dummy state.
+    State superclass.
     '''
-    def __init__(self, screen):
+
+    def __init__(self, screen=None):
+        '''
+        __init__() an eventnet handler and define constants.
+        '''
         eventnet.driver.Handler.__init__(self)
         self.next = None
-        self.screen = screen
+        self.screen = pygame.display.get_surface()
 
     def start(self):
         '''
-        Start the state running. (put initialization here)
+        Start the state running.
         '''
+
         self.done = False
         self.capture() #start listening for events
 
     def tick(self):
         '''
-        Called every frame, put updates here.
+        Override.
         '''
+
         pass
 
     def quit(self, next=None):
         '''
-        Exit state and specify next state.
+        Exit state and specify next state (or just revert to main menu if none).
         '''
+
         self.done = True
         self.next = next
         self.release() # stop listening
 
 class Story(State):
+    '''
+    Adam's scrolling story.
+    '''
     def __init__(self, screen):
         State.__init__(self, screen)
 
@@ -115,9 +123,13 @@ class Story(State):
             self.quit()
 
 class Menu(State):
-    def __init__(self, screen, options=['New Game', 'Load Game', 'Level Editor',
-                                        'Highscores', 'Help', 'Quit'],
-                 title='Main Menu'):
+    '''
+    Menu superclass (doubles as main menu state). I use it mostly for the fonts.
+    '''
+
+    def __init__(self, screen=None, options=['Watch the Intro', 'Single Player',
+                                        'Level Editor', 'Quit'],
+                 title='Clad in Iron'):
         State.__init__(self, screen)
         self.selected = None
         title_font = pygame.font.SysFont('Verdana', 50, bold=True)
@@ -126,22 +138,16 @@ class Menu(State):
         self.title_pos = ((screen.get_width()/2)-(self.title.get_width()/2),
                           100)
         self.reg_font = pygame.font.SysFont('Verdana', 40)
-        self.screen = screen
+        self.screen = pygame.display.get_surface()
         self.options = options
         self.evt_prefix = 'MENU_'
-
         self.background = pygame.image.load(
             os.path.join('data', 'background.bmp'))
-        frame = pygame.Surface((800,600))
-        frame.fill((255,255,255))
-        frame.set_alpha(100)
-        self.background.blit(frame, (0,0))
 
     def over_coordinates(self, width, height, top_left):
         '''
         Method to check if the mouse is in a certain position
         '''
-
         ms_pos = pygame.mouse.get_pos()
         bottom_right = (top_left[0]+width,
                         top_left[1]+height)
@@ -192,7 +198,17 @@ class Menu(State):
             self.quit()
 
     def EVT_MENU_Quit(self, event):
+        print 'menu_quit'
         eventnet.driver.post('Quit')
+
+    def EVT_MENU_WatchtheIntro(self, event):
+        self.quit(Story(self.screen))
+
+    def EVT_MENU_SinglePlayer(self, event):
+        self.quit(SinglePlayerMenu(self.screen))
+
+    def EVT_MENU_LevelEditor(self, event):
+        self.quit(EditChoice(self.screen))
 
 class SaveLevel(Menu):
     '''
@@ -258,8 +274,12 @@ class LevelEditor(Menu):
 
     def __init__(self, screen, lvl, lvl_name):
         Menu.__init__(self, screen, ['Hero', 'Tiles', 'Enemies'], '')
+
+        #The reload()s are here because the tiles and sprites kept dissappearing
+        #in the toolbar when the editor was visited twice.
         reload(sprites)
         reload(level)
+
         self.lvl = lvl
         self.lvl_name = lvl_name
         self.background = pygame.Surface((len(lvl['tiles'])*20,
@@ -272,7 +292,7 @@ class LevelEditor(Menu):
             x = 0
             for tile in row:
                 tile = level.tile(tile.image)
-                tile.rect = tile.rect.move((x,y))
+                tile.rect.center = (x,y)
                 self.tiles.add(tile)
                 x += 20
             y += 20
@@ -321,7 +341,7 @@ class LevelEditor(Menu):
         for tile in level.tiles:
             tile.rect = tile.rect.move((x,y))
             self.toolbar_items.add(tile)
-            if x > 140:
+            if tile.rect.right > 150:
                 x = 0
                 y += 22
             else:
@@ -755,6 +775,7 @@ class GameState(State):
             self.sprites.update()
             self.sprites.clear(self.level, self.background)
             self.sprites.draw(self.level)
+            self.FX.sprites.draw(self.level)
             self.HUD.health = self.hero.health
             self.HUD.armor = self.hero.armor
             self.HUD.tick()
